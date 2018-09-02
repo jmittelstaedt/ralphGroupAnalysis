@@ -1,0 +1,1586 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>analysis package &mdash; Ralph Group Analysis 0.1alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="README" href="readme.html" />
+    <link rel="prev" title="analysis" href="modules.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ralph Group Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">analysis</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">analysis package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-analysis.AMRAnalysis">analysis.AMRAnalysis module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-analysis.baseAnalysis">analysis.baseAnalysis module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-analysis.daedalus_STFMRAnalysis">analysis.daedalus_STFMRAnalysis module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-analysis.hallHarm2Analysis">analysis.hallHarm2Analysis module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-analysis.kavli_STFMRAnalysis">analysis.kavli_STFMRAnalysis module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-analysis">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ralph Group Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">analysis</a> &raquo;</li>
+        
+      <li>analysis package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/analysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="analysis-package">
+<h1>analysis package<a class="headerlink" href="#analysis-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-analysis.AMRAnalysis">
+<span id="analysis-amranalysis-module"></span><h2>analysis.AMRAnalysis module<a class="headerlink" href="#module-analysis.AMRAnalysis" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="analysis.AMRAnalysis.AMRAnalysis">
+<em class="property">class </em><code class="descclassname">analysis.AMRAnalysis.</code><code class="descname">AMRAnalysis</code><span class="sig-paren">(</span><em>scan_type='angle'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#analysis.baseAnalysis.baseAnalysis" title="analysis.baseAnalysis.baseAnalysis"><code class="xref py py-class docutils literal"><span class="pre">analysis.baseAnalysis.baseAnalysis</span></code></a></p>
+<dl class="attribute">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.ANGLE_DIM">
+<code class="descname">ANGLE_DIM</code><em class="property"> = 'field_azimuth'</em><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.ANGLE_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.BFIELD_DIM">
+<code class="descname">BFIELD_DIM</code><em class="property"> = 'field_strength'</em><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.BFIELD_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.WHEATSTONE_R1">
+<code class="descname">WHEATSTONE_R1</code><em class="property"> = 'wheatsone_R1'</em><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.WHEATSTONE_R1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.WHEATSTONE_R2">
+<code class="descname">WHEATSTONE_R2</code><em class="property"> = 'wheatsone_R2'</em><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.WHEATSTONE_R2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.WHEATSTONE_R3">
+<code class="descname">WHEATSTONE_R3</code><em class="property"> = 'wheatsone_R3'</em><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.WHEATSTONE_R3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.WHEATSTONE_VOLTAGE">
+<code class="descname">WHEATSTONE_VOLTAGE</code><em class="property"> = 'applied_voltage'</em><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.WHEATSTONE_VOLTAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.X_DATA_VAR">
+<code class="descname">X_DATA_VAR</code><em class="property"> = 'X'</em><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.X_DATA_VAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance">
+<code class="descname">calculate_AMR_resistance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.calculate_AMR_resistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the resistance of the sample given the voltage across
+the wheatstone bridge. Saves it as a new data_var in the sweep_ds</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.deg2rad">
+<code class="descname">deg2rad</code><em class="property"> = 0.017453292519943295</em><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.deg2rad" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.fit_AMR_polycrystalline">
+<code class="descname">fit_AMR_polycrystalline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.fit_AMR_polycrystalline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.fit_AMR_polycrystalline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the angular dependence</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.fit_AMR_uniaxial">
+<code class="descname">fit_AMR_uniaxial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.fit_AMR_uniaxial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.fit_AMR_uniaxial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the AMR to a uniaxial anisotropy model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.guess_polycrystaline">
+<code class="descname">guess_polycrystaline</code><span class="sig-paren">(</span><em>resistance</em>, <em>phi</em>, <em>field_azimuth</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.guess_polycrystaline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.guess_polycrystaline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates guess parameters for modelling AMR with no crysal anisotropy.
+For use with make_fit_dataset_guesses.
+param_names = [phi0, Ramr, R0amr]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.guess_uniaxial">
+<code class="descname">guess_uniaxial</code><span class="sig-paren">(</span><em>resistance</em>, <em>phi</em>, <em>field_strength</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.guess_uniaxial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.guess_uniaxial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates guess parameters for modelling AMR with uniaxial anisotropy.
+For use with make_fit_dataset_guesses.
+param_names = [phi0, Ramr, phiE, an_ratio, R0amr]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.load_sweep">
+<code class="descname">load_sweep</code><span class="sig-paren">(</span><em>direc</em>, <em>series_filename=None</em>, <em>procedure_files=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.load_sweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.load_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is a wrapper around general load sweep so that we can still extract
+wheatstone resistances and add them as attributes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.model_angle_polycrystalline">
+<code class="descname">model_angle_polycrystalline</code><span class="sig-paren">(</span><em>phi</em>, <em>phi0</em>, <em>Ramr</em>, <em>R0amr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.model_angle_polycrystalline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.model_angle_polycrystalline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard AMR angular dependence for polycrystalline/amorphous
+materials. For use in fitting.
+Did some reshuffling using cos^2(x) = 1/2 + 1/2cos(2x). It’s what
+Greg did so probably cos(2X) is easier to fit to?
+Formula is then (R0 + Ramr/2) + Ramr/2cos(2phi)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.model_angle_uniaxial">
+<code class="descname">model_angle_uniaxial</code><span class="sig-paren">(</span><em>phi</em>, <em>phi0</em>, <em>Ramr</em>, <em>phiE</em>, <em>an_ratio</em>, <em>R0amr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.model_angle_uniaxial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.model_angle_uniaxial" title="Permalink to this definition">¶</a></dt>
+<dd><p>AMR Angle dependence assuming there is an easy axis.
+Did some reshuffling using cos^2(x) = 1/2 + 1/2cos(2x). It’s what
+Greg did so probably cos(2X) is easier to fit to?
+Formula is then (R0 + Ramr/2) + Ramr/2cos(2phiM)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence">
+<code class="descname">plot_AMR_angle_dependence</code><span class="sig-paren">(</span><em>field_sel=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_angle_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots AMR angle dependence, either at a specified field
+or for all fields</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence">
+<code class="descname">plot_AMR_field_dependence</code><span class="sig-paren">(</span><em>angle_sel=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_field_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots AMR field dependence, either at a specified angle
+or for all angles</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.rad2deg">
+<code class="descname">rad2deg</code><em class="property"> = 57.29577951308232</em><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.rad2deg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.AMRAnalysis.AMRAnalysis.wheatstone_Rx">
+<code class="descname">wheatstone_Rx</code><span class="sig-paren">(</span><em>Vm</em>, <em>R1</em>, <em>R2</em>, <em>R3</em>, <em>Vs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.wheatstone_Rx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.wheatstone_Rx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the resistance in a wheatsone bridge.</p>
+<p>Vm: measured voltage of the magnet/sample
+Vs: voltage driving current in circuit
+R3: Fixed resisor in-line with Rx
+R2: Variable resistor, across from Rx
+R1: Fixed resistor in-line with R2</p>
+<p>Formula was derived by hand and checked with Wikipedia (also we use
+Wikipedia’s naming convention)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-analysis.baseAnalysis">
+<span id="analysis-baseanalysis-module"></span><h2>analysis.baseAnalysis module<a class="headerlink" href="#module-analysis.baseAnalysis" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="analysis.baseAnalysis.analyzedFit">
+<em class="property">class </em><code class="descclassname">analysis.baseAnalysis.</code><code class="descname">analyzedFit</code><span class="sig-paren">(</span><em>fit_ds</em>, <em>main_ds</em>, <em>fit_func</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#analyzedFit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.analyzedFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class containing the results of fit_dataset. Given for convenience to give
+to plotting functions.</p>
+<dl class="docutils">
+<dt>fit_ds <span class="classifier-delimiter">:</span> <span class="classifier">xarray.Dataset</span></dt>
+<dd>the dataset containing all of the found fit parameters and errors</dd>
+<dt>main_ds <span class="classifier-delimiter">:</span> <span class="classifier">xarray.Dataset</span></dt>
+<dd>dataset which was fit over</dd>
+<dt>coords <span class="classifier-delimiter">:</span> <span class="classifier">xarray.coords</span></dt>
+<dd>coords of fit_ds</dd>
+<dt>dims <span class="classifier-delimiter">:</span> <span class="classifier">xarray.dims</span></dt>
+<dd>dims of fit_ds</dd>
+<dt>data_vars <span class="classifier-delimiter">:</span> <span class="classifier">xarray.data_vars</span></dt>
+<dd>data_vars of fit_ds</dd>
+<dt>fit_func <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
+<dd>function which was fit</dd>
+<dt>guess_func <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
+<dd>function used for generating guesses</dd>
+<dt>param_names <span class="classifier-delimiter">:</span> <span class="classifier">list of str</span></dt>
+<dd>Names of parametrs fit to</dd>
+<dt>xname <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>name of main_ds dim which was fit over</dd>
+<dt>yname <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>the name of the main_ds data_var which was fit over</dd>
+<dt>yerr_name <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>Optional. the name of the main_ds data_var used as errors
+on y data.</dd>
+</dl>
+<dl class="method">
+<dt id="analysis.baseAnalysis.analyzedFit.plot_fits">
+<code class="descname">plot_fits</code><span class="sig-paren">(</span><em>overlay_data=False</em>, <em>hide_large_errors=True</em>, <em>pts_per_plot=200</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#analyzedFit.plot_fits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.analyzedFit.plot_fits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the results from fitting of the internal fit_ds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>overlay_data</strong> (<em>bool</em>) – whether to overlay the actual data on top of the
+corresponding fit. Error bars applied if available.</li>
+<li><strong>pts_per_plot</strong> (<em>int</em>) – How many points to use for the fit_func domain.</li>
+<li><strong>**kwargs</strong> – Can either be:
+- names of dims of fit_ds. values should eitherbe single coordinate
+values or lists of coordinate values of those dims. Only data with
+coordinates given by selections are plotted. If no selections given,
+everything is plotted.
+- kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Just plots the requested fits.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.baseAnalysis.analyzedFit.plot_params">
+<code class="descname">plot_params</code><span class="sig-paren">(</span><em>xname</em>, <em>yname</em>, <em>yerr_name=None</em>, <em>hide_large_errors=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#analyzedFit.plot_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.analyzedFit.plot_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the fit parameters and their errors vs some dimension. Thin
+wrapper around plot_dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xname</strong> (<em>str</em>) – name of some fit_ds dim</li>
+<li><strong>yname</strong> (<em>str</em>) – name of some fit_ds data_var</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – name of some fit_ds data_var representing error in yname.
+If none, defaults to yname + ‘_err’</li>
+<li><strong>hide_large_errors</strong> (<em>bool</em>) – whether to hide larger errors obstructing the plot.</li>
+<li><strong>**kwargs</strong> – can be:
+- any selections of coordinates of fit_ds, besides xname.
+Keywords should be names of dims, values either single
+coordinate valuesor lists of coordinate values.
+- kwargs passed to matplotlib.pyplot.errorbar</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Just plots the requested parameters.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="analysis.baseAnalysis.baseAnalysis">
+<em class="property">class </em><code class="descclassname">analysis.baseAnalysis.</code><code class="descname">baseAnalysis</code><a class="reference internal" href="_modules/analysis/baseAnalysis.html#baseAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.baseAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class which all other analysis classes should inherit from. Implements
+functions which allow fitting data using arbitrary functions and
+saving/loading of entire datasets to/from netcdf files to avoid overhead.</p>
+<dl class="method">
+<dt id="analysis.baseAnalysis.baseAnalysis.load_previous">
+<code class="descname">load_previous</code><span class="sig-paren">(</span><em>direc</em>, <em>fname</em>, <em>is_sweep_ds=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#baseAnalysis.load_previous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.baseAnalysis.load_previous" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads netCDF containing Datasets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – Directory the netCDF file is in</li>
+<li><strong>fname</strong> (<em>str</em>) – Name of the netCDF file</li>
+<li><strong>is_sweep_ds</strong> (<em>bool</em>) – If <code class="code docutils literal"><span class="pre">True</span></code>, puts this dataset into sweep_ds.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dataset contained in the file.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">xarray.Dataset</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.baseAnalysis.baseAnalysis.load_sweep">
+<code class="descname">load_sweep</code><span class="sig-paren">(</span><em>direc</em>, <em>series_file=None</em>, <em>procedure_files=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#baseAnalysis.load_sweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.baseAnalysis.load_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads all of the data from procedure data files into a dataset
+object.</p>
+<p>This general import method depends on procedure_swept_col and
+series_swept_params being defined in __init__ of the child <a href="#id1"><span class="problematic" id="id2">*</span></a>Analysis
+classes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – The directory the sweep file is in</li>
+<li><strong>series_file</strong> (<em>str</em>) – The name of the series file</li>
+<li><strong>procedure_files</strong> (<em>list of str</em>) – Any additional procedure files to include.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ImportError</span></code> – if it could not find files to import</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.baseAnalysis.baseAnalysis.save_dataset">
+<code class="descname">save_dataset</code><span class="sig-paren">(</span><em>direc</em>, <em>fname</em>, <em>ext='nc'</em>, <em>ds=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#baseAnalysis.save_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.baseAnalysis.save_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a dataset as a netCDF file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – Directory to save the netCDF file to</li>
+<li><strong>fname</strong> (<em>str</em>) – filename of the netCDF file</li>
+<li><strong>ext</strong> (<em>str</em>) – desired extension of the filename, default “nc”</li>
+<li><strong>ds</strong> (<em>xarray.Dataset or None</em>) – Dataset to save. If <code class="code docutils literal"><span class="pre">None</span></code>, saves sweep_ds</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.fit_dataset">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">fit_dataset</code><span class="sig-paren">(</span><em>ds</em>, <em>fit_func</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#fit_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.fit_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits values in a dataset to a function. Returns an instance of analyzedFit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ds</strong> (<em>xarray.Dataset</em>) – Dataset containing data to be fit.</li>
+<li><strong>fit_func</strong> (<em>function</em>) – function to fit data to</li>
+<li><strong>guess_func</strong> (<em>function</em>) – function to generate guesses of parameters. Arguments must be:
+- 1D numpy array of y data
+- numpy array of x data
+- keyword arguments, with the keywords being all dims of ds besides
+xname. Values passed will be individual floats of coordinate values
+corresponding to those dims.
+All arguments must be accepted, not all must be used.
+Must return a list of guesses to the parameters, in the order given in
+param_names</li>
+<li><strong>param_names</strong> (<em>list of str</em>) – list of fit parameter names, in the order they are returned
+by guess_func</li>
+<li><strong>xname</strong> (<em>str</em>) – the name of the ds dim to be fit along</li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the ds data_var containing data to be fit to</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – Optional. the name of the ds data_var containing errors in data
+to be fit.</li>
+<li><strong>**kwargs</strong> – can be:
+- names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+are fit to . If no selections given, everything is fit to.
+- kwargs of curve_fit</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Object containing all results of fitting and some convenience methods.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#analysis.baseAnalysis.analyzedFit" title="analysis.baseAnalysis.analyzedFit">analyzedFit</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.get_coord_selection">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">get_coord_selection</code><span class="sig-paren">(</span><em>ds</em>, <em>drop_dim</em>, <em>gen_empty_ds=True</em>, <em>new_dvar_names=[]</em>, <em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#get_coord_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.get_coord_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a selection of coordinates from a dataset, dropping one dimension.
+Can also generate a new dataset having as coordinates the selected
+coordinates and specified data_vars, which are all empty (nonsensical
+entries)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ds</strong> (<em>xarray.Dataset</em>) – base Dataset to generate selection from</li>
+<li><strong>drop_dim</strong> (<em>str</em>) – name of the dimension of ds which should be dropped</li>
+<li><strong>gen_empty_ds</strong> (<em>bool</em>) – whether to generate an empty dataset with the selected coordinates</li>
+<li><strong>new_dvar_names</strong> (<em>list of str</em>) – list of data variable names to put in the empty dataset</li>
+<li><strong>**selections</strong> – keywords should be names of dims of ds, values should either
+be single coordinate values or lists of coordinate values of those dims</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>remaining_dims</strong> (<em>list of str</em>) – the names of the dimensions which remain</li>
+<li><strong>coord_combos</strong> (<em>generator of tuple</em>) – a generator object of all possible combinations of the
+selected coordinates. Each coordinate combination is a tuple</li>
+<li><strong>empty_ds</strong> (<em>xarray.Dataset</em>) – empty dataset created if requested, else None</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.load_procedure_files">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">load_procedure_files</code><span class="sig-paren">(</span><em>direc</em>, <em>series_filenames</em>, <em>procedure_swept_col</em>, <em>series_swept_params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#load_procedure_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.load_procedure_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads data from all procedure datafiles, and returns a Dataset containing
+it all. The output of parse_series_file can be passed (almost) directly
+to this function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – directory containing all of the procedure data files</li>
+<li><strong>series_filenames</strong> (<em>list of str</em>) – filenames of all of the procedures</li>
+<li><strong>procedure_swept_col</strong> (<em>str</em>) – the data column swept in each procedure</li>
+<li><strong>series_swept_params</strong> (<em>list of str</em>) – The procedure parameters swept in the series</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Dataset with a data_var for each procedure data_column (besides the swept
+one), and a coordinate for the swept data column and the swept series
+parameters.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">xarray.Dataset</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.make_fit_dataset_guesses">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">make_fit_dataset_guesses</code><span class="sig-paren">(</span><em>ds</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#make_fit_dataset_guesses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.make_fit_dataset_guesses" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a dataset of guesses of param_names given guess_func. To be used
+in fit_dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ds</strong> (<em>xarray.Dataset</em>) – dataset containing data to fit to</li>
+<li><strong>guess_func</strong> (<em>function</em>) – function to generate guesses of parameters. Arguments must be:
+- 1D numpy array of y data
+- numpy array of x data
+- keyword arguments, with the keywords being all dims of ds besides
+xname. Values passed will be individual floats of coordinate values
+corresponding to those dims.
+All arguments must be accepted, not all must be used.
+Must return a list of guesses to the parameters, in the order given in
+param_names</li>
+<li><strong>param_names</strong> (<em>list of str</em>) – list of fit parameter names, in the order they are returned
+by guess_func</li>
+<li><strong>xname</strong> (<em>str</em>) – the name of the ds dim to be fit along</li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the ds data_var containing data to be fit to</li>
+<li><strong>**selections</strong> – keywords should be names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+have parameter guesses generated. If no selections given, guesses are
+generated for everything</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Dataset with param_names as data_vars containing all guesses, and all
+dims of ds besides xname with the same coordinates, unless otherwise
+specified in <a href="#id3"><span class="problematic" id="id4">**</span></a>selections.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">xarray.Dataset</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.parse_series_file">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">parse_series_file</code><span class="sig-paren">(</span><em>direc</em>, <em>series_fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#parse_series_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.parse_series_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the swept parameter column, all swept series parameters and all
+procedure data files associated with a given series file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – The directory of the series filename.</li>
+<li><strong>series_fname</strong> (<em>str</em>) – the filename of the series file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>series_filenames</strong> (<em>list of str</em>) – filenames (names only) of all procedure data files</li>
+<li><strong>procedure_swept_col</strong> (<em>str</em>) – name of procedure column swept</li>
+<li><strong>series_swept_params</strong> (<em>list of str</em>) – all procedure parameters swept in the series</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.plot_dataset">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">plot_dataset</code><span class="sig-paren">(</span><em>ds</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em>, <em>hide_large_errors=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#plot_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.plot_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots some data in ds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ds</strong> (<em>xarray.Dataset</em>) – Dataset containing data to plot</li>
+<li><strong>xname</strong> (<em>str</em>) – name of ds dim to plot along</li>
+<li><strong>yname</strong> (<em>str</em>) – name of ds data_var containing data to plot</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – optional. If specified, should be the name of some ds data_var
+containing errors in y data.</li>
+<li><strong>hide_large_errors</strong> (<em>bool</em>) – If True, errorbars which are large compared to the mean
+of the data will be rendered smaller with arrows to denote these errors
+are only “bounds” on the actual error.</li>
+<li><strong>**kwargs</strong> – Can either be:
+- names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+are plotted. If no selections given, everything is plotted.
+- kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Just plots the requested plots.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-analysis.daedalus_STFMRAnalysis">
+<span id="analysis-daedalus-stfmranalysis-module"></span><h2>analysis.daedalus_STFMRAnalysis module<a class="headerlink" href="#module-analysis.daedalus_STFMRAnalysis" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis">
+<em class="property">class </em><code class="descclassname">analysis.daedalus_STFMRAnalysis.</code><code class="descname">daedalus_STFMRAnalysis</code><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#analysis.baseAnalysis.baseAnalysis" title="analysis.baseAnalysis.baseAnalysis"><code class="xref py py-class docutils literal"><span class="pre">analysis.baseAnalysis.baseAnalysis</span></code></a></p>
+<p>Class to contain all STFMR related functions, and acts as a convenient
+container for importing and storing datasets etc.
+Note that:</p>
+<blockquote>
+<div>1. this is fairly general, so if you end up sweeping over more stuff
+than before, it should be able to handle that transparently.
+2. this is written so that if names of parameters or data columns
+change, we just need to modify some class variables and all of the
+analysis should still work.</div></blockquote>
+<dl class="docutils">
+<dt>sweep_ds <span class="classifier-delimiter">:</span> <span class="classifier">xarray.Dataset</span></dt>
+<dd>Dataset containing the data</dd>
+<dt>fit_ds <span class="classifier-delimiter">:</span> <span class="classifier">xarray.Dataset or None</span></dt>
+<dd>dataset containing fit parameters. None if fitting has not been done.</dd>
+<dt>procedure_swept_col <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>column swept in the procedure</dd>
+<dt>series_swept_params <span class="classifier-delimiter">:</span> <span class="classifier">list of str</span></dt>
+<dd>parameters swept in the series</dd>
+<dt>gamma <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Gyromagnetic Ratio in GHz/T</dd>
+<dt>mu0 <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Permeability of Free Space</dd>
+<dt>hbar <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Planck’s Reduced Constant</dd>
+<dt>echarge <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>magnitude of electron charnge</dd>
+<dt>muB <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Bohr Magneton</dd>
+</dl>
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.ANGLE_DIM">
+<code class="descname">ANGLE_DIM</code><em class="property"> = 'field_azimuth'</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.ANGLE_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.B0">
+<code class="descname">B0</code><span class="sig-paren">(</span><em>f</em>, <em>Meff</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.B0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.B0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resonant field</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.BFIELD_DIM">
+<code class="descname">BFIELD_DIM</code><em class="property"> = 'field_strength'</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.BFIELD_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.Delta_formula">
+<code class="descname">Delta_formula</code><span class="sig-paren">(</span><em>alpha</em>, <em>offset</em>, <em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.Delta_formula"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.Delta_formula" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expected formula for the Delta parameter in lorentzians</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.FREQUENCY_DIM">
+<code class="descname">FREQUENCY_DIM</code><em class="property"> = 'rf_freq'</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.FREQUENCY_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.X_DATA_VAR">
+<code class="descname">X_DATA_VAR</code><em class="property"> = 'X'</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.X_DATA_VAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.asym_lor">
+<code class="descname">asym_lor</code><span class="sig-paren">(</span><em>B</em>, <em>B0</em>, <em>Delta</em>, <em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.asym_lor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.asym_lor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asymmetric lorentzian</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.combine_fit_params_inplane">
+<code class="descname">combine_fit_params_inplane</code><span class="sig-paren">(</span><em>phi0=270</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.combine_fit_params_inplane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.combine_fit_params_inplane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines fit parameters if measurements had inplane fields</p>
+<p>Since positive and negative fields, when the field is in-plane,
+correspond to phi and phi+180, we should combine them together into
+a single dataset which goes over a full period in phi. We also negate
+phi since daedalus rotate’s clockwise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>phi0</strong> (<em>float</em>) – the offset angle to shift things by.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Saves shifted dataset to combined_angle_fit_params</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.deg2rad">
+<code class="descname">deg2rad</code><em class="property"> = 0.017453292519943295</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.deg2rad" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.echarge">
+<code class="descname">echarge</code><em class="property"> = 1.602e-19</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.echarge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_azimuthal_dependence_inplane">
+<code class="descname">fit_azimuthal_dependence_inplane</code><span class="sig-paren">(</span><em>fit_func</em>, <em>guess_func</em>, <em>yname</em>, <em>param_names</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.fit_azimuthal_dependence_inplane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_azimuthal_dependence_inplane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits angular dependence of some previously fit parameters. Thin wrapper
+around fit_dataset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fit_func</strong> (<em>function</em>) – Function to fit</li>
+<li><strong>guess_func</strong> (<em>function</em>) – function to generate guesses of parameters. Arguments must be:
+- 1D numpy array of y data
+- numpy array of x data
+- keyword arguments, with the keywords being all dims of ds besides
+xname. Values passed will be individual floats of coordinate values
+corresponding to those dims.
+All arguments must be accepted, not all must be used.
+Must return a list of guesses to the parameters, in the order given in
+param_names</li>
+<li><strong>yname</strong> (<em>str</em>) – Name of parameter (data_var) which we will fit over</li>
+<li><strong>param_names</strong> (<em>list of str</em>) – Names of parameters of fit_func, in order.</li>
+<li><strong>**kwargs</strong> – can be:
+- names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+are fit to . If no selections given, everything is fit to.
+- kwargs of curve_fit</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves resulting analyzedFit object to a new attribute, named
+(yname)_azimuth_fit</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_resonance">
+<code class="descname">fit_resonance</code><span class="sig-paren">(</span><em>da</em>, <em>pguess</em>, <em>error=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.fit_resonance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_resonance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits a <em>single</em> STFMR resonance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>da</strong> (<em>xarray.DataArray</em>) – Array to fit over with the field being the only (meaningful)
+dimension and containing lockin X as values.</li>
+<li><strong>pguess</strong> (<em>list</em>) – initial guess for the fit parameters. Structure:
+p = [B0, Delta, S, A, offset]</li>
+<li><strong>error</strong> (<em>np.array or None</em>) – array of errors to use. If not given, uses 1 for every point.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>popt</strong> (<em>list</em>) – List of optimal parameters</li>
+<li><strong>copt</strong> (<em>np.array</em>) – The covariance matrix.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_resonances">
+<code class="descname">fit_resonances</code><span class="sig-paren">(</span><em>Meff_guess</em>, <em>Delta_guess</em>, <em>S45_guess</em>, <em>A45_guess</em>, <em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.fit_resonances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_resonances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits all of the resonances.</p>
+<p>Fits resonances across the different coordinates scanned in
+the sweep (frequency, angle…) and record the results in a new dataset
+which shares all dims and coordinates except field (since we are fitting
+over that). Separates positive and negative field resonances.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Meff_guess</strong> (<em>float</em>) – guess of Meff</li>
+<li><strong>Delta_guess</strong> (<em>float</em>) – guess of lorentzian linewidth</li>
+<li><strong>S45_guess</strong> (<em>float</em>) – Guess of symmetric amplitude of the lorentzian with ang(B, I)=45</li>
+<li><strong>A45_guess</strong> (<em>float</em>) – Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</li>
+<li><strong>selections</strong> – keywords should be names of dims besides the field dim.
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+have parameter guesses generated. If no selections given, guesses are
+generated for everything</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves everything to fit_ds</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_separated_resonances">
+<code class="descname">fit_separated_resonances</code><span class="sig-paren">(</span><em>Meff_guess</em>, <em>alpha_guess</em>, <em>S45_guess</em>, <em>A45_guess</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.fit_separated_resonances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_separated_resonances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits resonances after separate_pnfield_data is ran. Saves it to
+res_fit attribute as an analyzedFit object. This just uses curve_fit,
+none of the fancy harsh penalties given before. Thin wrapper around
+baseAnalysis.fit_dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Meff_guess</strong> (<em>float</em>) – guess of Meff</li>
+<li><strong>alpha_guess</strong> (<em>float</em>) – guess of magnet damping</li>
+<li><strong>S45_guess</strong> (<em>float</em>) – Guess of symmetric amplitude of the lorentzian with ang(B, I)=45</li>
+<li><strong>A45_guess</strong> (<em>float</em>) – Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</li>
+<li><strong>kwargs</strong> – can be:
+- names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+are fit to . If no selections given, everything is fit to.
+- kwargs of curve_fit</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves the results into res_fit as an analyzedFit object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.gamma">
+<code class="descname">gamma</code><em class="property"> = 176.07998504840074</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.gamma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.guess_resonance_params">
+<code class="descname">guess_resonance_params</code><span class="sig-paren">(</span><em>data</em>, <em>f</em>, <em>angle</em>, <em>Meff</em>, <em>Delta</em>, <em>S45</em>, <em>A45</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.guess_resonance_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.guess_resonance_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guesses parameters for the resonance for this data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.guess_separated_resonance_params">
+<code class="descname">guess_separated_resonance_params</code><span class="sig-paren">(</span><em>X</em>, <em>field</em>, <em>field_azimuth</em>, <em>rf_freq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.guess_separated_resonance_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.guess_separated_resonance_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guesses resonance parameters. For use in fit_separated_resonances.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – Data to guess parameters of</li>
+<li><strong>field</strong> (<em>np.ndarray</em>) – Field strengths of data points to fit</li>
+<li><strong>field_azimuth</strong> (<em>float</em>) – Azimuthal angle of field with respect to device angle</li>
+<li><strong>rf_freq</strong> (<em>float</em>) – RF frequency of applied current</li>
+<li><strong>temperature</strong> (<em>float</em>) – Temperature measurements were made at</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of guesses of the resonance parameters. Format:
+[B0, Delta, S, A, offset]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.hbar">
+<code class="descname">hbar</code><em class="property"> = 1.0545606529268985e-34</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.hbar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.load_utilsweep">
+<code class="descname">load_utilsweep</code><span class="sig-paren">(</span><em>direc</em>, <em>fnames=[]</em>, <em>header=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.load_utilsweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.load_utilsweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads utilsweep. If fnames is not specified, assumes only utilsweep
+files are in the directory and loads them all.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>direc</strong> (<em>str</em>) – Directory containing UtilSweep files to include in the sweep.</li>
+<li><strong>fnames</strong> (<em>list of str, optional</em>) – List of additional data files to include</li>
+<li><strong>header</strong> (<em>str, optional</em>) – beginning of the data filenames</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.mu0">
+<code class="descname">mu0</code><em class="property"> = 1.2566370614359173e-06</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.mu0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.muB">
+<code class="descname">muB</code><em class="property"> = 9.27400968e-24</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.muB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.omega0">
+<code class="descname">omega0</code><span class="sig-paren">(</span><em>B</em>, <em>Meff</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.omega0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.omega0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resonant frequency</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.plot_fit_resonances">
+<code class="descname">plot_fit_resonances</code><span class="sig-paren">(</span><em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.plot_fit_resonances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.plot_fit_resonances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot just the fits to the resonances.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selections</strong> – keywords should be names of dims besides the field dim.
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+have parameter guesses generated. If no selections given, guesses are
+generated for everything</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Plots requested plots.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.plot_resonances">
+<code class="descname">plot_resonances</code><span class="sig-paren">(</span><em>overlay_fits=False</em>, <em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.plot_resonances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.plot_resonances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots all resonances subject to the given coordinate constraints.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>overlay_fits</strong> (<em>bool</em>) – whether to overlay fits on the data</li>
+<li><strong>selections</strong> – keywords should be names of dims besides the field dim.
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+have parameter guesses generated. If no selections given, guesses are
+generated for everything</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Plots requested plots.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.rad2deg">
+<code class="descname">rad2deg</code><em class="property"> = 57.29577951308232</em><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.rad2deg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.resonance_model">
+<code class="descname">resonance_model</code><span class="sig-paren">(</span><em>p</em>, <em>B</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.resonance_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.resonance_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function used for fitting with leastsq.
+Unpacks parameters and passes them to total_lor</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.resonance_residual">
+<code class="descname">resonance_residual</code><span class="sig-paren">(</span><em>p</em>, <em>B</em>, <em>data</em>, <em>error</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.resonance_residual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.resonance_residual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function calculating residulals from STFMR resonances, for use with
+leastsq.</p>
+<p>Harsh penalty for Delta parameter being negative or the constant offset
+being much larger than the mean.</p>
+<p>p = [B0, Delta, S, A, offset]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.separate_field_data">
+<code class="descname">separate_field_data</code><span class="sig-paren">(</span><em>phi_offset=270.0</em>, <em>reverse=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.separate_field_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.separate_field_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separates the positive and negative field data and assigns the negative
+field data to an angle 180 deg from the corresponding positive field
+data. Shifts the angle coordinates as well if requested.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>phi_offset</strong> (<em>float</em>) – Angle to offset the angles by. If <code class="docutils literal"><span class="pre">reverse</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, we do
+phi_offset - phi, otherwise phi - phi_offset</li>
+<li><strong>reverse</strong> (<em>bool</em>) – Whether to reverse the angular coordinates as well, i.e. go from
+increasing phi meaning clockwise to counter-clockwise</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Modifies sweep_ds in place</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.sym_lor">
+<code class="descname">sym_lor</code><span class="sig-paren">(</span><em>B</em>, <em>B0</em>, <em>Delta</em>, <em>S</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.sym_lor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.sym_lor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric lorentzian</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.total_lor">
+<code class="descname">total_lor</code><span class="sig-paren">(</span><em>B</em>, <em>B0</em>, <em>Delta</em>, <em>S</em>, <em>A</em>, <em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.total_lor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.total_lor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric + Asymmetric lorentzian with offset</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-analysis.hallHarm2Analysis">
+<span id="analysis-hallharm2analysis-module"></span><h2>analysis.hallHarm2Analysis module<a class="headerlink" href="#module-analysis.hallHarm2Analysis" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis">
+<em class="property">class </em><code class="descclassname">analysis.hallHarm2Analysis.</code><code class="descname">Hall2HarmAnalysis</code><span class="sig-paren">(</span><em>scan_type='angle'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/hallHarm2Analysis.html#Hall2HarmAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#analysis.baseAnalysis.baseAnalysis" title="analysis.baseAnalysis.baseAnalysis"><code class="xref py py-class docutils literal"><span class="pre">analysis.baseAnalysis.baseAnalysis</span></code></a></p>
+<dl class="attribute">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis.ANGLE_DIM">
+<code class="descname">ANGLE_DIM</code><em class="property"> = 'field_azimuth'</em><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis.ANGLE_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis.BFIELD_DIM">
+<code class="descname">BFIELD_DIM</code><em class="property"> = 'field_strength'</em><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis.BFIELD_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis.X1_DATA_VAR">
+<code class="descname">X1_DATA_VAR</code><em class="property"> = 'X1'</em><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis.X1_DATA_VAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis.X2_DATA_VAR">
+<code class="descname">X2_DATA_VAR</code><em class="property"> = 'X2'</em><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis.X2_DATA_VAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_angle_dependence">
+<code class="descname">plot_1harm_angle_dependence</code><span class="sig-paren">(</span><em>field_sel=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/hallHarm2Analysis.html#Hall2HarmAnalysis.plot_1harm_angle_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_angle_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots first harmonic angle dependence, either at specified fields
+or for all fields</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_field_dependence">
+<code class="descname">plot_1harm_field_dependence</code><span class="sig-paren">(</span><em>angle_sel=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/hallHarm2Analysis.html#Hall2HarmAnalysis.plot_1harm_field_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_field_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots first harmonic field dependence, either at a specified angle
+or for all angles</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_angle_dependence">
+<code class="descname">plot_2harm_angle_dependence</code><span class="sig-paren">(</span><em>field_sel=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/hallHarm2Analysis.html#Hall2HarmAnalysis.plot_2harm_angle_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_angle_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots second harmonic angle dependence, either at a specified field
+or for all fields</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_field_dependence">
+<code class="descname">plot_2harm_field_dependence</code><span class="sig-paren">(</span><em>angle_sel=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/hallHarm2Analysis.html#Hall2HarmAnalysis.plot_2harm_field_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_field_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots second harmonic field dependence, either at a specified angle
+or for all angles</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.hallHarm2Analysis.Hall2HarmAnalysis.signal_FL_x">
+<code class="descname">signal_FL_x</code><span class="sig-paren">(</span><em>H</em>, <em>Hk</em>, <em>Ha</em>, <em>theta</em>, <em>phi</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/hallHarm2Analysis.html#Hall2HarmAnalysis.signal_FL_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.hallHarm2Analysis.Hall2HarmAnalysis.signal_FL_x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-analysis.kavli_STFMRAnalysis">
+<span id="analysis-kavli-stfmranalysis-module"></span><h2>analysis.kavli_STFMRAnalysis module<a class="headerlink" href="#module-analysis.kavli_STFMRAnalysis" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis">
+<em class="property">class </em><code class="descclassname">analysis.kavli_STFMRAnalysis.</code><code class="descname">kavli_STFMRAnalysis</code><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#analysis.baseAnalysis.baseAnalysis" title="analysis.baseAnalysis.baseAnalysis"><code class="xref py py-class docutils literal"><span class="pre">analysis.baseAnalysis.baseAnalysis</span></code></a></p>
+<p>Class to contain all STFMR related functions, and acts as a convenient
+container for importing and storing datasets etc.
+Note that:</p>
+<blockquote>
+<div>1. this is fairly general, so if you end up sweeping over more stuff
+than before, it should be able to handle that transparently.
+2. this is written so that if names of parameters or data columns
+change, we just need to modify some class variables and all of the
+analysis should still work.</div></blockquote>
+<dl class="docutils">
+<dt>sweep_ds <span class="classifier-delimiter">:</span> <span class="classifier">xarray.Dataset</span></dt>
+<dd>Dataset containing the data</dd>
+<dt>resonance_fits <span class="classifier-delimiter">:</span> <span class="classifier">baseAnalysis.analyzedFit</span></dt>
+<dd>fit object</dd>
+<dt>procedure_swept_col <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>column swept in the procedure</dd>
+<dt>series_swept_params <span class="classifier-delimiter">:</span> <span class="classifier">list of str</span></dt>
+<dd>parameters swept in the series</dd>
+<dt>gamma <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Gyromagnetic Ratio in GHz/T</dd>
+<dt>mu0 <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Permeability of Free Space</dd>
+<dt>hbar <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Planck’s Reduced Constant</dd>
+<dt>echarge <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>magnitude of electron charnge</dd>
+<dt>muB <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Bohr Magneton</dd>
+</dl>
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.ANGLE_DIM">
+<code class="descname">ANGLE_DIM</code><em class="property"> = 'field_azimuth'</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.ANGLE_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.B0">
+<code class="descname">B0</code><span class="sig-paren">(</span><em>f</em>, <em>Meff</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.B0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.B0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resonant field</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.BFIELD_DIM">
+<code class="descname">BFIELD_DIM</code><em class="property"> = 'field_strength'</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.BFIELD_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.Delta_formula">
+<code class="descname">Delta_formula</code><span class="sig-paren">(</span><em>alpha</em>, <em>offset</em>, <em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.Delta_formula"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.Delta_formula" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expected formula for the Delta parameter in lorentzians</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.FREQUENCY_DIM">
+<code class="descname">FREQUENCY_DIM</code><em class="property"> = 'rf_freq'</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.FREQUENCY_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.TEMPERATURE_DIM">
+<code class="descname">TEMPERATURE_DIM</code><em class="property"> = 'temperature'</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.TEMPERATURE_DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.X_DATA_VAR">
+<code class="descname">X_DATA_VAR</code><em class="property"> = 'X'</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.X_DATA_VAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.asym_lor">
+<code class="descname">asym_lor</code><span class="sig-paren">(</span><em>B</em>, <em>B0</em>, <em>Delta</em>, <em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.asym_lor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.asym_lor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asymmetric lorentzian</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.deg2rad">
+<code class="descname">deg2rad</code><em class="property"> = 0.017453292519943295</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.deg2rad" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.echarge">
+<code class="descname">echarge</code><em class="property"> = 1.602e-19</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.echarge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.fit_param_ang_dep">
+<code class="descname">fit_param_ang_dep</code><span class="sig-paren">(</span><em>fit_func</em>, <em>guess_func</em>, <em>yname</em>, <em>param_names</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.fit_param_ang_dep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.fit_param_ang_dep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits angular dependence of some previously fit parameters. Thin wrapper
+around fit_dataset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fit_func</strong> (<em>function</em>) – Function to fit</li>
+<li><strong>guess_func</strong> (<em>function</em>) – function to generate guesses of parameters. Arguments must be:
+- 1D numpy array of y data
+- numpy array of x data
+- keyword arguments, with the keywords being all dims of ds besides
+xname. Values passed will be individual floats of coordinate values
+corresponding to those dims.
+All arguments must be accepted, not all must be used.
+Must return a list of guesses to the parameters, in the order given in
+param_names</li>
+<li><strong>yname</strong> (<em>str</em>) – Name of parameter (data_var) which we will fit over</li>
+<li><strong>param_names</strong> (<em>list of str</em>) – Names of parameters of fit_func, in order.</li>
+<li><strong>**kwargs</strong> – can be:
+- names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+are fit to . If no selections given, everything is fit to.
+- kwargs of curve_fit</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves resulting analyzedFit object to a new attribute, named
+(yname)_azimuth_fit</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.fit_resonances">
+<code class="descname">fit_resonances</code><span class="sig-paren">(</span><em>Meff_guess</em>, <em>alpha_guess</em>, <em>S45_guess</em>, <em>A45_guess</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.fit_resonances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.fit_resonances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits resonances after separate_pnfield_data is ran. Saves it to
+resonance_fits attribute as an analyzedFit object. This just uses curve_fit,
+none of the fancy harsh penalties given before. Thin wrapper around
+baseAnalysis.fit_dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Meff_guess</strong> (<em>float</em>) – guess of Meff</li>
+<li><strong>alpha_guess</strong> (<em>float</em>) – guess of magnet damping</li>
+<li><strong>S45_guess</strong> (<em>float</em>) – Guess of symmetric amplitude of the lorentzian with ang(B, I)=45</li>
+<li><strong>A45_guess</strong> (<em>float</em>) – Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</li>
+<li><strong>kwargs</strong> – can be:
+- names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+are fit to . If no selections given, everything is fit to.
+- kwargs of curve_fit</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves the results into resonance_fits as an analyzedFit object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.gamma">
+<code class="descname">gamma</code><em class="property"> = 176.07998504840074</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.gamma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.guess_resonance_params">
+<code class="descname">guess_resonance_params</code><span class="sig-paren">(</span><em>X</em>, <em>field</em>, <em>field_azimuth</em>, <em>rf_freq</em>, <em>temperature</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.guess_resonance_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.guess_resonance_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guesses resonance parameters. For use in fit_separated_resonances.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – Voltage data to guess parameters of</li>
+<li><strong>field</strong> (<em>np.ndarray</em>) – Field strengths of data points to fit</li>
+<li><strong>field_azimuth</strong> (<em>float</em>) – Azimuthal angle of field with respect to device angle</li>
+<li><strong>rf_freq</strong> (<em>float</em>) – RF frequency of applied current</li>
+<li><strong>temperature</strong> (<em>float</em>) – Temperature measurements were made at</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of guesses of the resonance parameters. Format:
+[B0, Delta, S, A, offset]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.hbar">
+<code class="descname">hbar</code><em class="property"> = 1.0545606529268985e-34</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.hbar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.load_old_procedures">
+<code class="descname">load_old_procedures</code><span class="sig-paren">(</span><em>direc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.load_old_procedures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.load_old_procedures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads procedures from Neal’s code and makes them work with the rest
+of the stuff in here.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>direc</strong> (<em>str</em>) – Directory containing a bunch of the data files.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.load_sweeps">
+<code class="descname">load_sweeps</code><span class="sig-paren">(</span><em>direc</em>, <em>sweep_files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.load_sweeps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.load_sweeps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads data from a set of sweep files, each at a different temperature</p>
+<p>Puts all of the filenames together and runs regular load_sweeps
+on it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sweep_files</strong> (<em>list of str</em>) – a list of sweep files</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.mu0">
+<code class="descname">mu0</code><em class="property"> = 1.2566370614359173e-06</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.mu0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.muB">
+<code class="descname">muB</code><em class="property"> = 9.27400968e-24</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.muB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.omega0">
+<code class="descname">omega0</code><span class="sig-paren">(</span><em>B</em>, <em>Meff</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.omega0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.omega0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resonant frequency</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.rad2deg">
+<code class="descname">rad2deg</code><em class="property"> = 57.29577951308232</em><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.rad2deg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.separate_field_data">
+<code class="descname">separate_field_data</code><span class="sig-paren">(</span><em>phi_offset=0.0</em>, <em>reverse=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.separate_field_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.separate_field_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separates the positive and negative field data and assigns the negative
+field data to an angle 180 deg from the corresponding positive field
+data. Shifts the angle coordinates as well if requested.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>phi_offset</strong> (<em>float</em>) – Angle to offset the angles by. If <code class="docutils literal"><span class="pre">reverse</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, we do
+phi_offset - phi, otherwise phi - phi_offset</li>
+<li><strong>reverse</strong> (<em>bool</em>) – Whether to reverse the angular coordinates as well, i.e. go from
+increasing phi meaning clockwise to counter-clockwise</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Modifies sweep_ds in place</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.sym_lor">
+<code class="descname">sym_lor</code><span class="sig-paren">(</span><em>B</em>, <em>B0</em>, <em>Delta</em>, <em>S</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.sym_lor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.sym_lor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric lorentzian</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.total_lor">
+<code class="descname">total_lor</code><span class="sig-paren">(</span><em>B</em>, <em>B0</em>, <em>Delta</em>, <em>S</em>, <em>A</em>, <em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/kavli_STFMRAnalysis.html#kavli_STFMRAnalysis.total_lor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.total_lor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric + Asymmetric lorentzian with offset</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-analysis">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-analysis" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="readme.html" class="btn btn-neutral float-right" title="README" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral" title="analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Joseph Mittelstaedt, Saba Karimeddiny.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

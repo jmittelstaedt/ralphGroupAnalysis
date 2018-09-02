@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>analysis.hallHarm2Analysis &mdash; Ralph Group Analysis 0.1alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Ralph Group Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../baseAnalysis.html">Base Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kavliSTFMRAnalysis.html">Kavli STFMR Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../daedalusSTFMRAnalysis.html">Daedalus STFMR Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Hall2HarmAnalysis.html">Second Harmonic Hall Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../AMRAnalysis.html">AMR Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">README</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Ralph Group Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>analysis.hallHarm2Analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for analysis.hallHarm2Analysis</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">product</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">leastsq</span><span class="p">,</span> <span class="n">curve_fit</span>
+
+<span class="kn">from</span> <span class="nn">pymeasure.experiment</span> <span class="k">import</span> <span class="n">Results</span>
+<span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">baseAnalysis</span>
+
+<span class="c1"># TODO: use new import/fitting/plotting functions.</span>
+<span class="c1"># TODO: pretty up docstrings</span>
+
+<div class="viewcode-block" id="Hall2HarmAnalysis"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis">[docs]</a><span class="k">class</span> <span class="nc">Hall2HarmAnalysis</span><span class="p">(</span><span class="n">baseAnalysis</span><span class="p">):</span>
+
+    <span class="n">BFIELD_DIM</span> <span class="o">=</span> <span class="s1">&#39;field_strength&#39;</span>
+    <span class="n">ANGLE_DIM</span> <span class="o">=</span> <span class="s1">&#39;field_azimuth&#39;</span>
+    <span class="n">X2_DATA_VAR</span> <span class="o">=</span> <span class="s1">&#39;X2&#39;</span>
+    <span class="n">X1_DATA_VAR</span> <span class="o">=</span> <span class="s1">&#39;X1&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan_type</span><span class="o">=</span><span class="s1">&#39;angle&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instantiates the analysis object with a nonsensical empty dataset.</span>
+<span class="sd">        Must load data with a separate method.</span>
+<span class="sd">        Sets swept procedure column and series swept params, depending on</span>
+<span class="sd">        what scan_type is. Should be angle for angle sweep procedure, or field</span>
+<span class="sd">        for field sweep procedure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">scan_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">procedure_swept_col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">series_swept_params</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">scan_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;field&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">procedure_swept_col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">series_swept_params</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;scan_type must be &#39;field&#39; or &#39;angle&#39;&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Hall2HarmAnalysis.plot_2harm_field_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_field_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_2harm_field_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots second harmonic field dependence, either at a specified angle</span>
+<span class="sd">        or for all angles &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">angle_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">:</span> <span class="n">angle_sel</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Hall2HarmAnalysis.plot_2harm_angle_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_angle_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_2harm_angle_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots second harmonic angle dependence, either at a specified field</span>
+<span class="sd">        or for all fields &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">field_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">:</span> <span class="n">field_sel</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Hall2HarmAnalysis.plot_1harm_field_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_field_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_1harm_field_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots first harmonic field dependence, either at a specified angle</span>
+<span class="sd">        or for all angles &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">angle_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">:</span> <span class="n">angle_sel</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Hall2HarmAnalysis.plot_1harm_angle_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_angle_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_1harm_angle_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots first harmonic angle dependence, either at specified fields</span>
+<span class="sd">        or for all fields &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">field_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">:</span> <span class="n">field_sel</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Hall2HarmAnalysis.signal_FL_x"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.signal_FL_x">[docs]</a>    <span class="k">def</span> <span class="nf">signal_FL_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">Hk</span><span class="p">,</span> <span class="n">Ha</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span> <span class="c1"># TODO: implement this, should it be fully general or only</span></div></div>
+        <span class="c1"># for in-plane magnetized samples?...</span>
+
+    <span class="c1"># TODO: figure out what kind of fitting is needed</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Joseph Mittelstaedt, Saba Karimeddiny.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

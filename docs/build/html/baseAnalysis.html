@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Base Analysis &mdash; Ralph Group Analysis 0.1alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Kavli STFMR Analysis" href="kavliSTFMRAnalysis.html" />
+    <link rel="prev" title="Welcome to Ralph Group Analysis’s documentation!" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ralph Group Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Base Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-analysis.baseAnalysis">analysis.baseAnalysis module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kavliSTFMRAnalysis.html">Kavli STFMR Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="daedalusSTFMRAnalysis.html">Daedalus STFMR Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Hall2HarmAnalysis.html">Second Harmonic Hall Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AMRAnalysis.html">AMR Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ralph Group Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Base Analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/baseAnalysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="base-analysis">
+<h1>Base Analysis<a class="headerlink" href="#base-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-analysis.baseAnalysis">
+<span id="analysis-baseanalysis-module"></span><h2>analysis.baseAnalysis module<a class="headerlink" href="#module-analysis.baseAnalysis" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="analysis.baseAnalysis.parse_series_file">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">parse_series_file</code><span class="sig-paren">(</span><em>direc</em>, <em>series_fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#parse_series_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.parse_series_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the swept parameter column, all swept series parameters and all
+procedure data files associated with a given series file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – The directory of the series filename.</li>
+<li><strong>series_fname</strong> (<em>str</em>) – the filename of the series file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>series_filenames</strong> (<em>list of str</em>) – filenames (names only) of all procedure data files</li>
+<li><strong>procedure_swept_col</strong> (<em>str</em>) – name of procedure column swept</li>
+<li><strong>series_swept_params</strong> (<em>list of str</em>) – all procedure parameters swept in the series</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.load_procedure_files">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">load_procedure_files</code><span class="sig-paren">(</span><em>direc</em>, <em>series_filenames</em>, <em>procedure_swept_col</em>, <em>series_swept_params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#load_procedure_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.load_procedure_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads data from all procedure datafiles, and returns a Dataset containing
+it all. The output of parse_series_file can be passed (almost) directly
+to this function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – directory containing all of the procedure data files</li>
+<li><strong>series_filenames</strong> (<em>list of str</em>) – filenames of all of the procedures</li>
+<li><strong>procedure_swept_col</strong> (<em>str</em>) – the data column swept in each procedure</li>
+<li><strong>series_swept_params</strong> (<em>list of str</em>) – The procedure parameters swept in the series</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Dataset with a data_var for each procedure data_column (besides the swept
+one), and a coordinate for the swept data column and the swept series
+parameters.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">xarray.Dataset</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.get_coord_selection">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">get_coord_selection</code><span class="sig-paren">(</span><em>ds</em>, <em>drop_dim</em>, <em>gen_empty_ds=True</em>, <em>new_dvar_names=[]</em>, <em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#get_coord_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.get_coord_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a selection of coordinates from a dataset, dropping one dimension.
+Can also generate a new dataset having as coordinates the selected
+coordinates and specified data_vars, which are all empty (nonsensical
+entries)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ds</strong> (<em>xarray.Dataset</em>) – base Dataset to generate selection from</li>
+<li><strong>drop_dim</strong> (<em>str</em>) – name of the dimension of ds which should be dropped</li>
+<li><strong>gen_empty_ds</strong> (<em>bool</em>) – whether to generate an empty dataset with the selected coordinates</li>
+<li><strong>new_dvar_names</strong> (<em>list of str</em>) – list of data variable names to put in the empty dataset</li>
+<li><strong>**selections</strong> – keywords should be names of dims of ds, values should either
+be single coordinate values or lists of coordinate values of those dims</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>remaining_dims</strong> (<em>list of str</em>) – the names of the dimensions which remain</li>
+<li><strong>coord_combos</strong> (<em>generator of tuple</em>) – a generator object of all possible combinations of the
+selected coordinates. Each coordinate combination is a tuple</li>
+<li><strong>empty_ds</strong> (<em>xarray.Dataset</em>) – empty dataset created if requested, else None</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.make_fit_dataset_guesses">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">make_fit_dataset_guesses</code><span class="sig-paren">(</span><em>ds</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#make_fit_dataset_guesses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.make_fit_dataset_guesses" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a dataset of guesses of param_names given guess_func. To be used
+in fit_dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ds</strong> (<em>xarray.Dataset</em>) – dataset containing data to fit to</li>
+<li><strong>guess_func</strong> (<em>function</em>) – function to generate guesses of parameters. Arguments must be:
+- 1D numpy array of y data
+- numpy array of x data
+- keyword arguments, with the keywords being all dims of ds besides
+xname. Values passed will be individual floats of coordinate values
+corresponding to those dims.
+All arguments must be accepted, not all must be used.
+Must return a list of guesses to the parameters, in the order given in
+param_names</li>
+<li><strong>param_names</strong> (<em>list of str</em>) – list of fit parameter names, in the order they are returned
+by guess_func</li>
+<li><strong>xname</strong> (<em>str</em>) – the name of the ds dim to be fit along</li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the ds data_var containing data to be fit to</li>
+<li><strong>**selections</strong> – keywords should be names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+have parameter guesses generated. If no selections given, guesses are
+generated for everything</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Dataset with param_names as data_vars containing all guesses, and all
+dims of ds besides xname with the same coordinates, unless otherwise
+specified in <a href="#id1"><span class="problematic" id="id2">**</span></a>selections.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">xarray.Dataset</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.fit_dataset">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">fit_dataset</code><span class="sig-paren">(</span><em>ds</em>, <em>fit_func</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#fit_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.fit_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits values in a dataset to a function. Returns an instance of analyzedFit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ds</strong> (<em>xarray.Dataset</em>) – Dataset containing data to be fit.</li>
+<li><strong>fit_func</strong> (<em>function</em>) – function to fit data to</li>
+<li><strong>guess_func</strong> (<em>function</em>) – function to generate guesses of parameters. Arguments must be:
+- 1D numpy array of y data
+- numpy array of x data
+- keyword arguments, with the keywords being all dims of ds besides
+xname. Values passed will be individual floats of coordinate values
+corresponding to those dims.
+All arguments must be accepted, not all must be used.
+Must return a list of guesses to the parameters, in the order given in
+param_names</li>
+<li><strong>param_names</strong> (<em>list of str</em>) – list of fit parameter names, in the order they are returned
+by guess_func</li>
+<li><strong>xname</strong> (<em>str</em>) – the name of the ds dim to be fit along</li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the ds data_var containing data to be fit to</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – Optional. the name of the ds data_var containing errors in data
+to be fit.</li>
+<li><strong>**kwargs</strong> – can be:
+- names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+are fit to . If no selections given, everything is fit to.
+- kwargs of curve_fit</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Object containing all results of fitting and some convenience methods.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#analysis.baseAnalysis.analyzedFit" title="analysis.baseAnalysis.analyzedFit">analyzedFit</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis.baseAnalysis.plot_dataset">
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">plot_dataset</code><span class="sig-paren">(</span><em>ds</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em>, <em>hide_large_errors=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#plot_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.plot_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots some data in ds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ds</strong> (<em>xarray.Dataset</em>) – Dataset containing data to plot</li>
+<li><strong>xname</strong> (<em>str</em>) – name of ds dim to plot along</li>
+<li><strong>yname</strong> (<em>str</em>) – name of ds data_var containing data to plot</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – optional. If specified, should be the name of some ds data_var
+containing errors in y data.</li>
+<li><strong>hide_large_errors</strong> (<em>bool</em>) – If True, errorbars which are large compared to the mean
+of the data will be rendered smaller with arrows to denote these errors
+are only “bounds” on the actual error.</li>
+<li><strong>**kwargs</strong> – Can either be:
+- names of dims of ds (cannot include xname)
+values should eitherbe single coordinate values or lists of coordinate
+values of those dims. Only data with coordinates given by selections
+are plotted. If no selections given, everything is plotted.
+- kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Just plots the requested plots.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="analysis.baseAnalysis.analyzedFit">
+<em class="property">class </em><code class="descclassname">analysis.baseAnalysis.</code><code class="descname">analyzedFit</code><span class="sig-paren">(</span><em>fit_ds</em>, <em>main_ds</em>, <em>fit_func</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#analyzedFit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.analyzedFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class containing the results of fit_dataset. Given for convenience to give
+to plotting functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fit_ds</strong> (<em>xarray.Dataset</em>) – the dataset containing all of the found fit parameters and errors</li>
+<li><strong>main_ds</strong> (<em>xarray.Dataset</em>) – dataset which was fit over</li>
+<li><strong>coords</strong> (<em>xarray.coords</em>) – coords of fit_ds</li>
+<li><strong>dims</strong> (<em>xarray.dims</em>) – dims of fit_ds</li>
+<li><strong>data_vars</strong> (<em>xarray.data_vars</em>) – data_vars of fit_ds</li>
+<li><strong>fit_func</strong> (<em>function</em>) – function which was fit</li>
+<li><strong>guess_func</strong> (<em>function</em>) – function used for generating guesses</li>
+<li><strong>param_names</strong> (<em>list of str</em>) – Names of parametrs fit to</li>
+<li><strong>xname</strong> (<em>str</em>) – name of main_ds dim which was fit over</li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the main_ds data_var which was fit over</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – Optional. the name of the main_ds data_var used as errors
+on y data.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="analysis.baseAnalysis.analyzedFit.plot_fits">
+<code class="descname">plot_fits</code><span class="sig-paren">(</span><em>overlay_data=False</em>, <em>hide_large_errors=True</em>, <em>pts_per_plot=200</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#analyzedFit.plot_fits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.analyzedFit.plot_fits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the results from fitting of the internal fit_ds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>overlay_data</strong> (<em>bool</em>) – whether to overlay the actual data on top of the
+corresponding fit. Error bars applied if available.</li>
+<li><strong>pts_per_plot</strong> (<em>int</em>) – How many points to use for the fit_func domain.</li>
+<li><strong>**kwargs</strong> – Can either be:
+- names of dims of fit_ds. values should eitherbe single coordinate
+values or lists of coordinate values of those dims. Only data with
+coordinates given by selections are plotted. If no selections given,
+everything is plotted.
+- kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Just plots the requested fits.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.baseAnalysis.analyzedFit.plot_params">
+<code class="descname">plot_params</code><span class="sig-paren">(</span><em>xname</em>, <em>yname</em>, <em>yerr_name=None</em>, <em>hide_large_errors=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#analyzedFit.plot_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.analyzedFit.plot_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the fit parameters and their errors vs some dimension. Thin
+wrapper around plot_dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xname</strong> (<em>str</em>) – name of some fit_ds dim</li>
+<li><strong>yname</strong> (<em>str</em>) – name of some fit_ds data_var</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – name of some fit_ds data_var representing error in yname.
+If none, defaults to yname + ‘_err’</li>
+<li><strong>hide_large_errors</strong> (<em>bool</em>) – whether to hide larger errors obstructing the plot.</li>
+<li><strong>**kwargs</strong> – can be:
+- any selections of coordinates of fit_ds, besides xname.
+Keywords should be names of dims, values either single
+coordinate valuesor lists of coordinate values.
+- kwargs passed to matplotlib.pyplot.errorbar</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Just plots the requested parameters.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="analysis.baseAnalysis.baseAnalysis">
+<em class="property">class </em><code class="descclassname">analysis.baseAnalysis.</code><code class="descname">baseAnalysis</code><a class="reference internal" href="_modules/analysis/baseAnalysis.html#baseAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.baseAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class which all other analysis classes should inherit from. Implements
+functions which allow fitting data using arbitrary functions and
+saving/loading of entire datasets to/from netcdf files to avoid overhead.</p>
+<dl class="method">
+<dt id="analysis.baseAnalysis.baseAnalysis.load_sweep">
+<code class="descname">load_sweep</code><span class="sig-paren">(</span><em>direc</em>, <em>series_file=None</em>, <em>procedure_files=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#baseAnalysis.load_sweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.baseAnalysis.load_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads all of the data from procedure data files into a dataset
+object.</p>
+<p>This general import method depends on procedure_swept_col and
+series_swept_params being defined in __init__ of the child <a href="#id3"><span class="problematic" id="id4">*</span></a>Analysis
+classes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – The directory the sweep file is in</li>
+<li><strong>series_file</strong> (<em>str</em>) – The name of the series file</li>
+<li><strong>procedure_files</strong> (<em>list of str</em>) – Any additional procedure files to include.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ImportError</span></code> – if it could not find files to import</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.baseAnalysis.baseAnalysis.load_previous">
+<code class="descname">load_previous</code><span class="sig-paren">(</span><em>direc</em>, <em>fname</em>, <em>is_sweep_ds=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#baseAnalysis.load_previous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.baseAnalysis.load_previous" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads netCDF containing Datasets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – Directory the netCDF file is in</li>
+<li><strong>fname</strong> (<em>str</em>) – Name of the netCDF file</li>
+<li><strong>is_sweep_ds</strong> (<em>bool</em>) – If <code class="code docutils literal"><span class="pre">True</span></code>, puts this dataset into sweep_ds.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dataset contained in the file.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">xarray.Dataset</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.baseAnalysis.baseAnalysis.save_dataset">
+<code class="descname">save_dataset</code><span class="sig-paren">(</span><em>direc</em>, <em>fname</em>, <em>ext='nc'</em>, <em>ds=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#baseAnalysis.save_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.baseAnalysis.save_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a dataset as a netCDF file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direc</strong> (<em>str</em>) – Directory to save the netCDF file to</li>
+<li><strong>fname</strong> (<em>str</em>) – filename of the netCDF file</li>
+<li><strong>ext</strong> (<em>str</em>) – desired extension of the filename, default “nc”</li>
+<li><strong>ds</strong> (<em>xarray.Dataset</em><em> or </em><em>None</em>) – Dataset to save. If <code class="code docutils literal"><span class="pre">None</span></code>, saves sweep_ds</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kavliSTFMRAnalysis.html" class="btn btn-neutral float-right" title="Kavli STFMR Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to Ralph Group Analysis’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Joseph Mittelstaedt, Saba Karimeddiny.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
