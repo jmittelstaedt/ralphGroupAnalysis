@@ -1,0 +1,6 @@
+analysis
+pymeasure
+xarray
+numpy
+matplotlib
+scipy
