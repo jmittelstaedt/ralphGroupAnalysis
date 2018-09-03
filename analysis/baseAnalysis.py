@@ -263,7 +263,7 @@ def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
         the name of the ds dim to be fit along
     yname : str
         the name of the ds data_var containing data to be fit to
-    **selections 
+    **selections
         keywords should be names of dims of ds (cannot include xname)
         values should eitherbe single coordinate values or lists of coordinate
         values of those dims. Only data with coordinates given by selections
@@ -273,8 +273,8 @@ def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
     Returns
     -------
     xarray.Dataset
-        A Dataset with param_names as data_vars containing all guesses, and all 
-        dims of ds besides xname with the same coordinates, unless otherwise 
+        A Dataset with param_names as data_vars containing all guesses, and all
+        dims of ds besides xname with the same coordinates, unless otherwise
         specified in **selections.
     """
 
@@ -364,7 +364,9 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
 
     # Determine which kwargs can be passed to curve_fit
     cf_argspec = getfullargspec(curve_fit)
-    cf_kwargs = {k: v for k, v in kwargs.items() if k in cf_argspec.args}
+    lsq_argspec = getfullargspec(leastsq)
+    good_args = cf_argspec.args + lsq_argspec.args
+    cf_kwargs = {k: v for k, v in kwargs.items() if k in good_args}
 
     full_param_names = param_names + [pname+'_err' for pname in param_names]
 
@@ -444,7 +446,7 @@ def plot_dataset(ds, xname, yname, yerr_name=None, hide_large_errors = False,
         values of those dims. Only data with coordinates given by selections
         are plotted. If no selections given, everything is plotted.
         - kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate
-        
+
     Returns
     -------
     None
@@ -590,12 +592,12 @@ class analyzedFit():
             How many points to use for the fit_func domain.
         **kwargs
             Can either be:
-            - names of dims of fit_ds. values should eitherbe single coordinate 
-            values or lists of coordinate values of those dims. Only data with 
+            - names of dims of fit_ds. values should eitherbe single coordinate
+            values or lists of coordinate values of those dims. Only data with
             coordinates given by selections are plotted. If no selections given,
             everything is plotted.
             - kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate
-        
+
         Returns
         -------
         None
@@ -690,7 +692,7 @@ class analyzedFit():
             Keywords should be names of dims, values either single
             coordinate valuesor lists of coordinate values.
             - kwargs passed to matplotlib.pyplot.errorbar
-            
+
         Returns
         -------
         None
@@ -723,7 +725,7 @@ class baseAnalysis():
         """
         Loads all of the data from procedure data files into a dataset
         object.
-        
+
         This general import method depends on procedure_swept_col and
         series_swept_params being defined in __init__ of the child *Analysis
         classes.
@@ -736,7 +738,7 @@ class baseAnalysis():
             The name of the series file
         procedure_files : list of str
             Any additional procedure files to include.
-            
+
         Raises
         ------
         ImportError
@@ -774,7 +776,7 @@ class baseAnalysis():
     def load_previous(self, direc, fname, is_sweep_ds = True):
         """
         Loads netCDF containing Datasets.
-        
+
         Parameters
         ----------
         direc : str
@@ -783,11 +785,11 @@ class baseAnalysis():
             Name of the netCDF file
         is_sweep_ds : bool
             If :code:`True`, puts this dataset into sweep_ds.
-        
+
         Returns
         -------
         xarray.Dataset
-            Dataset contained in the file. 
+            Dataset contained in the file.
         """
 
         ds = xr.open_dataset(os.path.join(direc, fname))
@@ -802,8 +804,8 @@ class baseAnalysis():
 
     def save_dataset(self, direc, fname, ext = 'nc', ds = None):
         """
-        Saves a dataset as a netCDF file. 
-        
+        Saves a dataset as a netCDF file.
+
         Parameters
         ----------
         direc : str
@@ -814,7 +816,7 @@ class baseAnalysis():
             desired extension of the filename, default "nc"
         ds : xarray.Dataset or None
             Dataset to save. If :code:`None`, saves sweep_ds
-            
+
         Returns
         -------
         None
