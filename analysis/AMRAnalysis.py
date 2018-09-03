@@ -8,13 +8,28 @@ from scipy.optimize import leastsq, curve_fit
 
 from pymeasure.experiment import Results
 from .baseAnalysis import baseAnalysis, parse_series_file, plot_dataset
-from .baseAnalysis import get_coord_selection, fit_dataset
-
-
-# TODO: use new import/fitting/plotting functions.
-# TODO: pretty up docstrings
+from .baseAnalysis import fit_dataset
 
 class AMRAnalysis(baseAnalysis):
+    """
+    Class to contain all AMR related functions, and acts as a convenient
+    container for importing and storing datasets etc.
+
+    Parameters
+    ----------
+    scan_type : str
+        Should be 'angle' or 'field', representing what was swept within each
+        procedure. Defaults to angle
+
+    Attributes
+    ----------
+    sweep_ds : xarray.Dataset
+        Dataset containing the data
+    procedure_swept_col : str
+        column swept in the procedure
+    series_swept_params : list of str
+        parameters swept in the series
+    """
 
     BFIELD_DIM = 'field_strength'
     ANGLE_DIM = 'field_azimuth'
@@ -47,8 +62,17 @@ class AMRAnalysis(baseAnalysis):
 
     def load_sweep(self, direc, series_filename = None, procedure_files = []):
         """
-        Is a wrapper around general load sweep so that we can still extract
-        wheatstone resistances and add them as attributes
+        This is a wrapper around the general load_sweep function to allow for
+        saving wheatstone resistances as attributes of sweep_ds
+
+        Parameters
+        ----------
+        direc : str
+            The directory the sweep file is in
+        series_file : str
+            The name of the series file
+        procedure_files : list of str
+            Any additional procedure files to include.
         """
 
         # TODO: check if this actually works
@@ -71,14 +95,26 @@ class AMRAnalysis(baseAnalysis):
         """
         Computes the resistance in a wheatsone bridge.
 
-        Vm: measured voltage of the magnet/sample
-        Vs: voltage driving current in circuit
-        R3: Fixed resisor in-line with Rx
-        R2: Variable resistor, across from Rx
-        R1: Fixed resistor in-line with R2
-
         Formula was derived by hand and checked with Wikipedia (also we use
         Wikipedia's naming convention)
+
+        Parameters
+        ----------
+        Vm : numpy.ndarray
+            Measured voltage across the wheatsone bridge
+        R1 : float
+            Wheatstone R1 resistance, Fixed resistor in-line with R2
+        R2 : float
+            Variable resistor, across from Rx
+        R3 : float
+            Wheatstone R3 resistance, in-line with Rx
+        Vs : float
+            The voltage driving current in the circuit
+
+        Returns
+        -------
+        numpy.ndarray
+            Values of the resistance which was to be measured.
         """
         A = R2/(R1+R2) - Vm/Vs
         return A*R3/(1-A)
@@ -86,7 +122,7 @@ class AMRAnalysis(baseAnalysis):
     def calculate_AMR_resistance(self):
         """
         Calculates the resistance of the sample given the voltage across
-        the wheatstone bridge. Saves it as a new data_var in the sweep_ds
+        the wheatstone bridge. Saves it as a new data_var in the sweep_ds.
         """
 
         if 'resistance' in self.data_vars:
@@ -113,36 +149,72 @@ class AMRAnalysis(baseAnalysis):
                 "R3": R3,
                 "Vs": Vs
             }
-            
-    def plot_AMR_angle_dependence(self, field_sel = None):
-        """ Plots AMR angle dependence, either at a specified field
-        or for all fields """
+
+    def plot_AMR_angle_dependence(self, **kwargs):
+        """
+        Plots the calculated AMR as a function of angle. Is a thin wrapper around
+        plot_dataset.
+
+        Parameters
+        ----------
+        **kwargs
+            Can either be:
+            - names of dims of sweep_dataset, besides the angle dimension.
+            values should eitherbe single coordinate values or lists of coordinate
+            values of those dims. Only data with coordinates given by selections
+            are plotted. If no selections given, everything is plotted.
+            - kwargs passed to matplotlib.pyplot.plot
+
+        Returns
+        -------
+        None
+            Just creates the requested plots
+
+        Raises
+        ------
+        AttributeError
+            If calculate_AMR_resistance has not been run.
+        """
 
         if 'resistance' not in self.data_vars:
             raise AttributeError(
                 'resistance data must be computed with calculate_AMR_resistance.')
 
-        if field_sel is not None:
-            selection = {self.BFIELD_DIM: field_sel}
-            plot_dataset(self.sweep_ds, self.ANGLE_DIM, 'resistance',
-                              **selection)
-        else:
-            plot_dataset(self.sweep_ds, self.ANGLE_DIM, 'resistance')
+        plot_dataset(self.sweep_ds, self.ANGLE_DIM, 'resistance',
+                     **kwargs)
 
-    def plot_AMR_field_dependence(self, angle_sel = None):
-        """ Plots AMR field dependence, either at a specified angle
-        or for all angles """
+    def plot_AMR_field_dependence(self, **kwargs):
+        """
+        Plots the calculated AMR as a function of field strength. Is a thin
+        wrapper around plot_dataset.
+
+        Parameters
+        ----------
+        **kwargs
+            Can either be:
+            - names of dims of sweep_dataset, besides the field dimension.
+            values should eitherbe single coordinate values or lists of coordinate
+            values of those dims. Only data with coordinates given by selections
+            are plotted. If no selections given, everything is plotted.
+            - kwargs passed to matplotlib.pyplot.plot
+
+        Returns
+        -------
+        None
+            Just creates the requested plots
+
+        Raises
+        ------
+        AttributeError
+            If calculate_AMR_resistance has not been run.
+        """
 
         if 'resistance' not in self.data_vars:
             raise AttributeError(
                 'resistance data must be computed with calculate_AMR_resistance.')
 
-        if angle_sel is not None:
-            selection = {self.ANGLE_DIM: angle_sel}
-            plot_dataset(self.sweep_ds, self.BFIELD_DIM, 'resistance',
-                              **selection)
-        else:
-            plot_dataset(self.sweep_ds, self.BFIELD_DIM, 'resistance')
+        plot_dataset(self.sweep_ds, self.BFIELD_DIM, 'resistance',
+                     **kwargs)
 
     def fit_AMR_polycrystalline(self):
         """
@@ -172,7 +244,6 @@ class AMRAnalysis(baseAnalysis):
         # to be passed in the wrapper guessing function
         return [0.001, self.sweep_ds.attrs['R2']/1000., 20., 0.00001,
                 self.sweep_ds.attrs['R2']]
-        
     def fit_AMR_uniaxial(self):
         """
         Fits the AMR to a uniaxial anisotropy model

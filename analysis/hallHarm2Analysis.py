@@ -7,12 +7,28 @@ import xarray as xr
 from scipy.optimize import leastsq, curve_fit
 
 from pymeasure.experiment import Results
-from .baseAnalysis import baseAnalysis
-
-# TODO: use new import/fitting/plotting functions.
-# TODO: pretty up docstrings
+from .baseAnalysis import baseAnalysis, plot_dataset, fit_dataset
 
 class Hall2HarmAnalysis(baseAnalysis):
+    """
+    Class to contain all second harmonic Hall related functions, and acts as a
+    convenient container for importing and storing datasets etc.
+
+    Parameters
+    ----------
+    scan_type : str
+        Should be 'angle' or 'field', representing what was swept within each
+        procedure. Defaults to angle
+
+    Attributes
+    ----------
+    sweep_ds : xarray.Dataset
+        Dataset containing the data
+    procedure_swept_col : str
+        column swept in the procedure
+    series_swept_params : list of str
+        parameters swept in the series
+    """
 
     BFIELD_DIM = 'field_strength'
     ANGLE_DIM = 'field_azimuth'
@@ -37,53 +53,101 @@ class Hall2HarmAnalysis(baseAnalysis):
         else:
             raise ValueError("scan_type must be 'field' or 'angle'")
 
-    def plot_2harm_field_dependence(self, angle_sel = None):
-        """ Plots second harmonic field dependence, either at a specified angle
-        or for all angles """
+    def plot_2harm_angle_dependence(self, **kwargs):
+        """
+        Plots the second harmonic voltage as a function of field angle.
+        Is a thin wrapper around plot_dataset.
 
-        if angle_sel is not None:
-            selection = {self.ANGLE_DIM: angle_sel}
-            self.plot_dataset(self.sweep_ds, self.BFIELD_DIM,
-                              self.X2_DATA_VAR, **selection)
-        else:
-            self.plot_dataset(self.sweep_ds, self.BFIELD_DIM,
-                              self.X2_DATA_VAR)
+        Parameters
+        ----------
+        **kwargs
+            Can either be:
+            - names of dims of sweep_dataset, besides the angle dimension.
+            values should eitherbe single coordinate values or lists of coordinate
+            values of those dims. Only data with coordinates given by selections
+            are plotted. If no selections given, everything is plotted.
+            - kwargs passed to matplotlib.pyplot.plot
 
-    def plot_2harm_angle_dependence(self, field_sel = None):
-        """ Plots second harmonic angle dependence, either at a specified field
-        or for all fields """
+        Returns
+        -------
+        None
+            Just creates the requested plots
+        """
 
-        if field_sel is not None:
-            selection = {self.BFIELD_DIM: field_sel}
-            self.plot_dataset(self.sweep_ds, self.ANGLE_DIM,
-                              self.X2_DATA_VAR, **selection)
-        else:
-            self.plot_dataset(self.sweep_ds, self.ANGLE_DIM,
-                              self.X2_DATA_VAR)
+        plot_dataset(self.sweep_ds, self.ANGLE_DIM,
+                     self.X2_DATA_VAR, **kwargs)
 
-    def plot_1harm_field_dependence(self, angle_sel = None):
-        """ Plots first harmonic field dependence, either at a specified angle
-        or for all angles """
+    def plot_2harm_field_dependence(self, **kwargs):
+        """
+        Plots the second harmonic voltage as a function of field strength. Is a
+        thin wrapper around plot_dataset.
 
-        if angle_sel is not None:
-            selection = {self.ANGLE_DIM: angle_sel}
-            self.plot_dataset(self.sweep_ds, self.BFIELD_DIM,
-                              self.X1_DATA_VAR, **selection)
-        else:
-            self.plot_dataset(self.sweep_ds, self.BFIELD_DIM,
-                              self.X1_DATA_VAR)
+        Parameters
+        ----------
+        **kwargs
+            Can either be:
+            - names of dims of sweep_dataset, besides the field dimension.
+            values should eitherbe single coordinate values or lists of coordinate
+            values of those dims. Only data with coordinates given by selections
+            are plotted. If no selections given, everything is plotted.
+            - kwargs passed to matplotlib.pyplot.plot
 
-    def plot_1harm_angle_dependence(self, field_sel = None):
-        """ Plots first harmonic angle dependence, either at specified fields
-        or for all fields """
+        Returns
+        -------
+        None
+            Just creates the requested plots
+        """
 
-        if field_sel is not None:
-            selection = {self.BFIELD_DIM: field_sel}
-            self.plot_dataset(self.sweep_ds, self.ANGLE_DIM,
-                              self.X1_DATA_VAR, **selection)
-        else:
-            self.plot_dataset(self.sweep_ds, self.ANGLE_DIM,
-                              self.X1_DATA_VAR)
+        plot_dataset(self.sweep_ds, self.BFIELD_DIM,
+                          self.X2_DATA_VAR, **kwargs)
+
+    def plot_1harm_field_dependence(self, **kwargs):
+        """
+        Plots the first harmonic voltage as a function of field strength. Is a
+        thin wrapper around plot_dataset.
+
+        Parameters
+        ----------
+        **kwargs
+            Can either be:
+            - names of dims of sweep_dataset, besides the field dimension.
+            values should eitherbe single coordinate values or lists of coordinate
+            values of those dims. Only data with coordinates given by selections
+            are plotted. If no selections given, everything is plotted.
+            - kwargs passed to matplotlib.pyplot.plot
+
+        Returns
+        -------
+        None
+            Just creates the requested plots
+        """
+
+        plot_dataset(self.sweep_ds, self.BFIELD_DIM,
+                          self.X1_DATA_VAR, **kwargs)
+
+    def plot_1harm_angle_dependence(self, **kwargs):
+        """
+        Plots the first harmonic voltage as a function of field angle. Is a
+        thin wrapper around plot_dataset.
+
+        Parameters
+        ----------
+        **kwargs
+            Can either be:
+            - names of dims of sweep_dataset, besides the angle dimension.
+            values should eitherbe single coordinate values or lists of coordinate
+            values of those dims. Only data with coordinates given by selections
+            are plotted. If no selections given, everything is plotted.
+            - kwargs passed to matplotlib.pyplot.plot
+
+        Returns
+        -------
+        None
+            Just creates the requested plots
+        """
+
+        plot_dataset(self.sweep_ds, self.ANGLE_DIM,
+                     self.X1_DATA_VAR, **kwargs)
 
     def signal_FL_x(self, H, Hk, Ha, theta, phi):
         return 0 # TODO: implement this, should it be fully general or only
