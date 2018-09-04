@@ -61,12 +61,7 @@ class Hall2HarmAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Can either be:
-            - names of dims of sweep_dataset, besides the angle dimension.
-            values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
-            are plotted. If no selections given, everything is plotted.
-            - kwargs passed to matplotlib.pyplot.plot
+            Passed along directly to baseAnalysis.plot_dataset
 
         Returns
         -------
@@ -85,12 +80,7 @@ class Hall2HarmAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Can either be:
-            - names of dims of sweep_dataset, besides the field dimension.
-            values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
-            are plotted. If no selections given, everything is plotted.
-            - kwargs passed to matplotlib.pyplot.plot
+            Passed along directly to baseAnalysis.plot_dataset
 
         Returns
         -------
@@ -109,12 +99,7 @@ class Hall2HarmAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Can either be:
-            - names of dims of sweep_dataset, besides the field dimension.
-            values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
-            are plotted. If no selections given, everything is plotted.
-            - kwargs passed to matplotlib.pyplot.plot
+            Passed along directly to baseAnalysis.plot_dataset
 
         Returns
         -------
@@ -133,12 +118,7 @@ class Hall2HarmAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Can either be:
-            - names of dims of sweep_dataset, besides the angle dimension.
-            values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
-            are plotted. If no selections given, everything is plotted.
-            - kwargs passed to matplotlib.pyplot.plot
+            Passed along directly to baseAnalysis.plot_dataset
 
         Returns
         -------

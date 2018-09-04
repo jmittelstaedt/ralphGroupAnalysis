@@ -14,7 +14,7 @@ from .baseAnalysis import get_coord_selection, fit_dataset
 
 # TODO: pretty up docstrings
 
-class daedalus_STFMRAnalysis(baseAnalysis):
+class STFMRAnalysis(baseAnalysis):
     """
     Class to contain all STFMR related functions, and acts as a convenient
     container for importing and storing datasets etc.
@@ -24,8 +24,8 @@ class daedalus_STFMRAnalysis(baseAnalysis):
     2. this is written so that if names of parameters or data columns
     change, we just need to modify some class variables and all of the
     analysis should still work.
-        
-            
+
+
     Attributes
     ----------
     sweep_ds : xarray.Dataset
@@ -45,7 +45,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
     echarge : float
         magnitude of electron charnge
     muB : float
-        Bohr Magneton    
+        Bohr Magneton
     """
 
     # PyMeasure procedure names of parameters, for accessing things from
@@ -85,7 +85,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         """
         Loads utilsweep. If fnames is not specified, assumes only utilsweep
         files are in the directory and loads them all.
-        
+
         Parameters
         ----------
         direc : str
@@ -280,12 +280,12 @@ class daedalus_STFMRAnalysis(baseAnalysis):
                        **selections):
         """
         Fits all of the resonances.
-        
+
         Fits resonances across the different coordinates scanned in
         the sweep (frequency, angle...) and record the results in a new dataset
         which shares all dims and coordinates except field (since we are fitting
         over that). Separates positive and negative field resonances.
-        
+
         Parameters
         ----------
         Meff_guess : float
@@ -302,7 +302,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             values of those dims. Only data with coordinates given by selections
             have parameter guesses generated. If no selections given, guesses are
             generated for everything
-        
+
         Returns
         -------
         None
@@ -397,7 +397,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
     def plot_resonances(self, overlay_fits =  False, **selections):
         """
         Plots all resonances subject to the given coordinate constraints.
-        
+
         Parameters
         ----------
         overlay_fits : bool
@@ -408,7 +408,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             values of those dims. Only data with coordinates given by selections
             have parameter guesses generated. If no selections given, guesses are
             generated for everything
-        
+
         Returns
         -------
         None
@@ -469,7 +469,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
     def plot_fit_resonances(self, **selections):
         """
         Plot just the fits to the resonances.
-        
+
         Parameters
         ----------
         selections
@@ -478,7 +478,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             values of those dims. Only data with coordinates given by selections
             have parameter guesses generated. If no selections given, guesses are
             generated for everything
-        
+
         Returns
         -------
         None
@@ -540,16 +540,16 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         Separates the positive and negative field data and assigns the negative
         field data to an angle 180 deg from the corresponding positive field
         data. Shifts the angle coordinates as well if requested.
-        
+
         Parameters
         ----------
         phi_offset : float
             Angle to offset the angles by. If ``reverse`` is ``True``, we do
             phi_offset - phi, otherwise phi - phi_offset
         reverse : bool
-            Whether to reverse the angular coordinates as well, i.e. go from 
+            Whether to reverse the angular coordinates as well, i.e. go from
             increasing phi meaning clockwise to counter-clockwise
-            
+
         Returns
         -------
         None
@@ -577,7 +577,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
     def guess_separated_resonance_params(self, X, field, field_azimuth, rf_freq):
         """
         Guesses resonance parameters. For use in fit_separated_resonances.
-        
+
         Parameters
         ----------
         X : np.ndarray
@@ -590,7 +590,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             RF frequency of applied current
         temperature : float
             Temperature measurements were made at
-            
+
         Returns
         -------
         list
@@ -631,7 +631,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             values of those dims. Only data with coordinates given by selections
             are fit to . If no selections given, everything is fit to.
             - kwargs of curve_fit
-            
+
         Returns
         -------
         None
@@ -645,7 +645,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         self.alpha_guess = alpha_guess
         self.S45_guess = S45_guess
         self.A45_guess = A45_guess
-        
+
         # Bound parameters so that linewidth is always nonnegative.
         lobounds = [-np.inf, 0, -np.inf, -np.inf, -np.inf]
         upbounds = np.inf
@@ -656,20 +656,32 @@ class daedalus_STFMRAnalysis(baseAnalysis):
                                    self.BFIELD_DIM, self.X_DATA_VAR,
                                    bounds = (lobounds, upbounds), **kwargs)
 
+    def plot_separated_resonances(self, **kwargs):
+        """
+        Plots just the resonances.
+
+        Parameters
+        ----------
+        **kwargs
+            Passed along directly to baseAnalysis.plot_dataset
+        """
+
+        plot_dataset(self.sweep_ds, self.BFIELD_DIM, self.X_DATA_VAR, **kwargs)
+
     def combine_fit_params_inplane(self, phi0 = 270):
         """
         Combines fit parameters if measurements had inplane fields
-        
+
         Since positive and negative fields, when the field is in-plane,
         correspond to phi and phi+180, we should combine them together into
-        a single dataset which goes over a full period in phi. We also negate 
+        a single dataset which goes over a full period in phi. We also negate
         phi since daedalus rotate's clockwise.
-        
+
         Parameters
         ----------
         phi0 : float
             the offset angle to shift things by.
-            
+
         Returns
         -------
         None
@@ -707,7 +719,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         """
         Fits angular dependence of some previously fit parameters. Thin wrapper
         around fit_dataset
-        
+
         Parameters
         ----------
         fit_func : function
@@ -733,11 +745,11 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             values of those dims. Only data with coordinates given by selections
             are fit to . If no selections given, everything is fit to.
             - kwargs of curve_fit
-            
+
         Returns
         -------
         None
-            Saves resulting analyzedFit object to a new attribute, named 
+            Saves resulting analyzedFit object to a new attribute, named
             (yname)_azimuth_fit
         """
         if self.combined_angle_fit_params is None:

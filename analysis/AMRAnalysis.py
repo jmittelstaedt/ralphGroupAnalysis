@@ -158,12 +158,7 @@ class AMRAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Can either be:
-            - names of dims of sweep_dataset, besides the angle dimension.
-            values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
-            are plotted. If no selections given, everything is plotted.
-            - kwargs passed to matplotlib.pyplot.plot
+            Passed along directly to baseAnalysis.plot_dataset
 
         Returns
         -------
@@ -191,12 +186,7 @@ class AMRAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Can either be:
-            - names of dims of sweep_dataset, besides the field dimension.
-            values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
-            are plotted. If no selections given, everything is plotted.
-            - kwargs passed to matplotlib.pyplot.plot
+            Passed along directly to baseAnalysis.plot_dataset
 
         Returns
         -------
@@ -244,6 +234,7 @@ class AMRAnalysis(baseAnalysis):
         # to be passed in the wrapper guessing function
         return [0.001, self.sweep_ds.attrs['R2']/1000., 20., 0.00001,
                 self.sweep_ds.attrs['R2']]
+
     def fit_AMR_uniaxial(self):
         """
         Fits the AMR to a uniaxial anisotropy model

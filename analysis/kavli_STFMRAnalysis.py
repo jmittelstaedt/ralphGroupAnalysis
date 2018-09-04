@@ -8,7 +8,7 @@ from scipy.signal import savgol_filter
 import pandas as pd
 
 from pymeasure.experiment import Results
-from .baseAnalysis import baseAnalysis, analyzedFit, parse_series_file
+from .baseAnalysis import baseAnalysis, analyzedFit, parse_series_file, plot_dataset
 from .baseAnalysis import get_coord_selection, fit_dataset, load_procedure_files
 
 
@@ -83,7 +83,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
         """
         Loads procedures from Neal's code and makes them work with the rest
         of the stuff in here.
-        
+
         Parameters
         ----------
         direc : str
@@ -152,16 +152,16 @@ class kavli_STFMRAnalysis(baseAnalysis):
         Separates the positive and negative field data and assigns the negative
         field data to an angle 180 deg from the corresponding positive field
         data. Shifts the angle coordinates as well if requested.
-        
+
         Parameters
         ----------
         phi_offset : float
             Angle to offset the angles by. If ``reverse`` is ``True``, we do
             phi_offset - phi, otherwise phi - phi_offset
         reverse : bool
-            Whether to reverse the angular coordinates as well, i.e. go from 
+            Whether to reverse the angular coordinates as well, i.e. go from
             increasing phi meaning clockwise to counter-clockwise
-            
+
         Returns
         -------
         None
@@ -211,11 +211,23 @@ class kavli_STFMRAnalysis(baseAnalysis):
         """Symmetric + Asymmetric lorentzian with offset"""
         return self.sym_lor(B,B0,Delta,S) + self.asym_lor(B,B0,Delta,A) + offset
 
+    def plot_resonances(self, **kwargs):
+        """
+        Plots just the resonances.
+
+        Parameters
+        ----------
+        **kwargs
+            Passed along directly to baseAnalysis.plot_dataset
+        """
+
+        plot_dataset(self.sweep_ds, self.BFIELD_DIM, self.X_DATA_VAR, **kwargs)
+
     def guess_resonance_params(self, X, field, field_azimuth, rf_freq,
                                temperature):
         """
         Guesses resonance parameters. For use in fit_separated_resonances.
-        
+
         Parameters
         ----------
         X : np.ndarray
@@ -228,7 +240,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
             RF frequency of applied current
         temperature : float
             Temperature measurements were made at
-            
+
         Returns
         -------
         list
@@ -269,7 +281,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
             values of those dims. Only data with coordinates given by selections
             are fit to . If no selections given, everything is fit to.
             - kwargs of curve_fit
-            
+
         Returns
         -------
         None
@@ -283,7 +295,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
         self.alpha_guess = alpha_guess
         self.S45_guess = S45_guess
         self.A45_guess = A45_guess
-        
+
         # Bound parameters so that linewidth is always nonnegative.
         lobounds = [-np.inf, 0, -np.inf, -np.inf, -np.inf]
         upbounds = np.inf
@@ -293,13 +305,13 @@ class kavli_STFMRAnalysis(baseAnalysis):
                                    ['B0', 'Delta', 'S', 'A', 'offset'],
                                    self.BFIELD_DIM, self.X_DATA_VAR,
                                    bounds = (lobounds, upbounds), **kwargs)
-        
+
     def fit_param_ang_dep(self, fit_func, guess_func, yname,
                                          param_names,  **kwargs):
         """
         Fits angular dependence of some previously fit parameters. Thin wrapper
         around fit_dataset
-        
+
         Parameters
         ----------
         fit_func : function
@@ -325,11 +337,11 @@ class kavli_STFMRAnalysis(baseAnalysis):
             values of those dims. Only data with coordinates given by selections
             are fit to . If no selections given, everything is fit to.
             - kwargs of curve_fit
-            
+
         Returns
         -------
         None
-            Saves resulting analyzedFit object to a new attribute, named 
+            Saves resulting analyzedFit object to a new attribute, named
             (yname)_azimuth_fit
         """
         if self.resonance_fits is None:

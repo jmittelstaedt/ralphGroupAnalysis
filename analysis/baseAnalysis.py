@@ -419,8 +419,8 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
         yerr_name
     )
 
-def plot_dataset(ds, xname, yname, yerr_name=None, hide_large_errors = False,
-                 **kwargs):
+def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None,
+                 hide_large_errors = False, **kwargs):
     """
     Plots some data in ds.
 
@@ -432,6 +432,9 @@ def plot_dataset(ds, xname, yname, yerr_name=None, hide_large_errors = False,
         name of ds dim to plot along
     yname : str
         name of ds data_var containing data to plot
+    overlay : bool
+        Whether all plots should be overlayed on top of one another on a
+        single plot, or if each thing should have its own plot.
     yerr_name : str
         optional. If specified, should be the name of some ds data_var
         containing errors in y data.
@@ -477,8 +480,9 @@ def plot_dataset(ds, xname, yname, yerr_name=None, hide_large_errors = False,
     for combo in coord_combos:
         selection_dict = dict(zip(remaining_dims, combo))
         ydata = ds[yname].sel(selection_dict).values
+        label = len(selection_dict.values())*'%g,'%tuple(selection_dict.values())
         if yerr_name is None:
-            plt.plot(xdata, ydata, **plot_kwargs)
+            plt.plot(xdata, ydata, label=label, **plot_kwargs)
         else:
             yerr = ds[yerr_name].sel(selection_dict).values
             num_pts = yerr.size
@@ -495,13 +499,21 @@ def plot_dataset(ds, xname, yname, yerr_name=None, hide_large_errors = False,
                         ydata[i] = data_avg
                         yerr[i] = data_std*0.5
                         errlims[i] = True
-            plt.errorbar(xdata, ydata, yerr, lolims=errlims, uplims=errlims, **plot_kwargs)
+            plt.errorbar(xdata, ydata, yerr, lolims=errlims, uplims=errlims,
+                         label=label, **plot_kwargs)
         plt.xlabel(xname)
         plt.ylabel(yname)
         title_str = ''
         for item in selection_dict.items():
             title_str += '%s: %g, '%item
         plt.title(title_str[:-2]) # get rid of trailing comma and space
+        if not overlay:
+            plt.show()
+    if overlay:
+        plt.title('Legend: ('
+                  +len(selection_dict.keys())*'%s,'%tuple(selection_dict.keys())
+                  +')')
+        plt.legend()
         plt.show()
 
 class analyzedFit():
