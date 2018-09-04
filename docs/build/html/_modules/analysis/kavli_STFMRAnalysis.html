@@ -161,7 +161,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">pymeasure.experiment</span> <span class="k">import</span> <span class="n">Results</span>
-<span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">baseAnalysis</span><span class="p">,</span> <span class="n">analyzedFit</span><span class="p">,</span> <span class="n">parse_series_file</span>
+<span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">baseAnalysis</span><span class="p">,</span> <span class="n">analyzedFit</span><span class="p">,</span> <span class="n">parse_series_file</span><span class="p">,</span> <span class="n">plot_dataset</span>
 <span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">get_coord_selection</span><span class="p">,</span> <span class="n">fit_dataset</span><span class="p">,</span> <span class="n">load_procedure_files</span>
 
 
@@ -236,7 +236,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads procedures from Neal&#39;s code and makes them work with the rest</span>
 <span class="sd">        of the stuff in here.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        direc : str</span>
@@ -305,16 +305,16 @@
 <span class="sd">        Separates the positive and negative field data and assigns the negative</span>
 <span class="sd">        field data to an angle 180 deg from the corresponding positive field</span>
 <span class="sd">        data. Shifts the angle coordinates as well if requested.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        phi_offset : float</span>
 <span class="sd">            Angle to offset the angles by. If ``reverse`` is ``True``, we do</span>
 <span class="sd">            phi_offset - phi, otherwise phi - phi_offset</span>
 <span class="sd">        reverse : bool</span>
-<span class="sd">            Whether to reverse the angular coordinates as well, i.e. go from </span>
+<span class="sd">            Whether to reverse the angular coordinates as well, i.e. go from</span>
 <span class="sd">            increasing phi meaning clockwise to counter-clockwise</span>
-<span class="sd">            </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
@@ -364,11 +364,23 @@
         <span class="sd">&quot;&quot;&quot;Symmetric + Asymmetric lorentzian with offset&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sym_lor</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">B0</span><span class="p">,</span><span class="n">Delta</span><span class="p">,</span><span class="n">S</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">asym_lor</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">B0</span><span class="p">,</span><span class="n">Delta</span><span class="p">,</span><span class="n">A</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span>
 
+<div class="viewcode-block" id="kavli_STFMRAnalysis.plot_resonances"><a class="viewcode-back" href="../../kavliSTFMRAnalysis.html#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.plot_resonances">[docs]</a>    <span class="k">def</span> <span class="nf">plot_resonances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots just the resonances.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">guess_resonance_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">field_azimuth</span><span class="p">,</span> <span class="n">rf_freq</span><span class="p">,</span>
                                <span class="n">temperature</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Guesses resonance parameters. For use in fit_separated_resonances.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        X : np.ndarray</span>
@@ -381,7 +393,7 @@
 <span class="sd">            RF frequency of applied current</span>
 <span class="sd">        temperature : float</span>
 <span class="sd">            Temperature measurements were made at</span>
-<span class="sd">            </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
@@ -422,7 +434,7 @@
 <span class="sd">            values of those dims. Only data with coordinates given by selections</span>
 <span class="sd">            are fit to . If no selections given, everything is fit to.</span>
 <span class="sd">            - kwargs of curve_fit</span>
-<span class="sd">            </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
@@ -436,7 +448,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_guess</span> <span class="o">=</span> <span class="n">alpha_guess</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">S45_guess</span> <span class="o">=</span> <span class="n">S45_guess</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">A45_guess</span> <span class="o">=</span> <span class="n">A45_guess</span>
-        
+
         <span class="c1"># Bound parameters so that linewidth is always nonnegative.</span>
         <span class="n">lobounds</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
         <span class="n">upbounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
@@ -446,13 +458,13 @@
                                    <span class="p">[</span><span class="s1">&#39;B0&#39;</span><span class="p">,</span> <span class="s1">&#39;Delta&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">],</span>
                                    <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_DATA_VAR</span><span class="p">,</span>
                                    <span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="n">lobounds</span><span class="p">,</span> <span class="n">upbounds</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-        
+
 <div class="viewcode-block" id="kavli_STFMRAnalysis.fit_param_ang_dep"><a class="viewcode-back" href="../../kavliSTFMRAnalysis.html#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.fit_param_ang_dep">[docs]</a>    <span class="k">def</span> <span class="nf">fit_param_ang_dep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit_func</span><span class="p">,</span> <span class="n">guess_func</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span>
                                          <span class="n">param_names</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fits angular dependence of some previously fit parameters. Thin wrapper</span>
 <span class="sd">        around fit_dataset</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fit_func : function</span>
@@ -478,11 +490,11 @@
 <span class="sd">            values of those dims. Only data with coordinates given by selections</span>
 <span class="sd">            are fit to . If no selections given, everything is fit to.</span>
 <span class="sd">            - kwargs of curve_fit</span>
-<span class="sd">            </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">            Saves resulting analyzedFit object to a new attribute, named </span>
+<span class="sd">            Saves resulting analyzedFit object to a new attribute, named</span>
 <span class="sd">            (yname)_azimuth_fit</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resonance_fits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

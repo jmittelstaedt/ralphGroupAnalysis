@@ -161,13 +161,28 @@
 
 <span class="kn">from</span> <span class="nn">pymeasure.experiment</span> <span class="k">import</span> <span class="n">Results</span>
 <span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">baseAnalysis</span><span class="p">,</span> <span class="n">parse_series_file</span><span class="p">,</span> <span class="n">plot_dataset</span>
-<span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">get_coord_selection</span><span class="p">,</span> <span class="n">fit_dataset</span>
-
-
-<span class="c1"># TODO: use new import/fitting/plotting functions.</span>
-<span class="c1"># TODO: pretty up docstrings</span>
+<span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">fit_dataset</span>
 
 <div class="viewcode-block" id="AMRAnalysis"><a class="viewcode-back" href="../../AMRAnalysis.html#analysis.AMRAnalysis.AMRAnalysis">[docs]</a><span class="k">class</span> <span class="nc">AMRAnalysis</span><span class="p">(</span><span class="n">baseAnalysis</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to contain all AMR related functions, and acts as a convenient</span>
+<span class="sd">    container for importing and storing datasets etc.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scan_type : str</span>
+<span class="sd">        Should be &#39;angle&#39; or &#39;field&#39;, representing what was swept within each</span>
+<span class="sd">        procedure. Defaults to angle</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sweep_ds : xarray.Dataset</span>
+<span class="sd">        Dataset containing the data</span>
+<span class="sd">    procedure_swept_col : str</span>
+<span class="sd">        column swept in the procedure</span>
+<span class="sd">    series_swept_params : list of str</span>
+<span class="sd">        parameters swept in the series</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">BFIELD_DIM</span> <span class="o">=</span> <span class="s1">&#39;field_strength&#39;</span>
     <span class="n">ANGLE_DIM</span> <span class="o">=</span> <span class="s1">&#39;field_azimuth&#39;</span>
@@ -200,8 +215,17 @@
 
 <div class="viewcode-block" id="AMRAnalysis.load_sweep"><a class="viewcode-back" href="../../AMRAnalysis.html#analysis.AMRAnalysis.AMRAnalysis.load_sweep">[docs]</a>    <span class="k">def</span> <span class="nf">load_sweep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direc</span><span class="p">,</span> <span class="n">series_filename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">procedure_files</span> <span class="o">=</span> <span class="p">[]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Is a wrapper around general load sweep so that we can still extract</span>
-<span class="sd">        wheatstone resistances and add them as attributes</span>
+<span class="sd">        This is a wrapper around the general load_sweep function to allow for</span>
+<span class="sd">        saving wheatstone resistances as attributes of sweep_ds</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        direc : str</span>
+<span class="sd">            The directory the sweep file is in</span>
+<span class="sd">        series_file : str</span>
+<span class="sd">            The name of the series file</span>
+<span class="sd">        procedure_files : list of str</span>
+<span class="sd">            Any additional procedure files to include.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># TODO: check if this actually works</span>
@@ -224,14 +248,26 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the resistance in a wheatsone bridge.</span>
 
-<span class="sd">        Vm: measured voltage of the magnet/sample</span>
-<span class="sd">        Vs: voltage driving current in circuit</span>
-<span class="sd">        R3: Fixed resisor in-line with Rx</span>
-<span class="sd">        R2: Variable resistor, across from Rx</span>
-<span class="sd">        R1: Fixed resistor in-line with R2</span>
-
 <span class="sd">        Formula was derived by hand and checked with Wikipedia (also we use</span>
 <span class="sd">        Wikipedia&#39;s naming convention)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vm : numpy.ndarray</span>
+<span class="sd">            Measured voltage across the wheatsone bridge</span>
+<span class="sd">        R1 : float</span>
+<span class="sd">            Wheatstone R1 resistance, Fixed resistor in-line with R2</span>
+<span class="sd">        R2 : float</span>
+<span class="sd">            Variable resistor, across from Rx</span>
+<span class="sd">        R3 : float</span>
+<span class="sd">            Wheatstone R3 resistance, in-line with Rx</span>
+<span class="sd">        Vs : float</span>
+<span class="sd">            The voltage driving current in the circuit</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            Values of the resistance which was to be measured.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">A</span> <span class="o">=</span> <span class="n">R2</span><span class="o">/</span><span class="p">(</span><span class="n">R1</span><span class="o">+</span><span class="n">R2</span><span class="p">)</span> <span class="o">-</span> <span class="n">Vm</span><span class="o">/</span><span class="n">Vs</span>
         <span class="k">return</span> <span class="n">A</span><span class="o">*</span><span class="n">R3</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">A</span><span class="p">)</span>
@@ -239,7 +275,7 @@
 <div class="viewcode-block" id="AMRAnalysis.calculate_AMR_resistance"><a class="viewcode-back" href="../../AMRAnalysis.html#analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_AMR_resistance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates the resistance of the sample given the voltage across</span>
-<span class="sd">        the wheatstone bridge. Saves it as a new data_var in the sweep_ds</span>
+<span class="sd">        the wheatstone bridge. Saves it as a new data_var in the sweep_ds.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="s1">&#39;resistance&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
@@ -266,36 +302,62 @@
                 <span class="s2">&quot;R3&quot;</span><span class="p">:</span> <span class="n">R3</span><span class="p">,</span>
                 <span class="s2">&quot;Vs&quot;</span><span class="p">:</span> <span class="n">Vs</span>
             <span class="p">}</span></div>
-            
-<div class="viewcode-block" id="AMRAnalysis.plot_AMR_angle_dependence"><a class="viewcode-back" href="../../AMRAnalysis.html#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_AMR_angle_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Plots AMR angle dependence, either at a specified field</span>
-<span class="sd">        or for all fields &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AMRAnalysis.plot_AMR_angle_dependence"><a class="viewcode-back" href="../../AMRAnalysis.html#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_AMR_angle_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the calculated AMR as a function of angle. Is a thin wrapper around</span>
+<span class="sd">        plot_dataset.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Just creates the requested plots</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        AttributeError</span>
+<span class="sd">            If calculate_AMR_resistance has not been run.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="s1">&#39;resistance&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
                 <span class="s1">&#39;resistance data must be computed with calculate_AMR_resistance.&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">field_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">:</span> <span class="n">field_sel</span><span class="p">}</span>
-            <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span> <span class="s1">&#39;resistance&#39;</span><span class="p">,</span>
-                              <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span> <span class="s1">&#39;resistance&#39;</span><span class="p">)</span></div>
+        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span> <span class="s1">&#39;resistance&#39;</span><span class="p">,</span>
+                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AMRAnalysis.plot_AMR_field_dependence"><a class="viewcode-back" href="../../AMRAnalysis.html#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_AMR_field_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Plots AMR field dependence, either at a specified angle</span>
-<span class="sd">        or for all angles &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AMRAnalysis.plot_AMR_field_dependence"><a class="viewcode-back" href="../../AMRAnalysis.html#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_AMR_field_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the calculated AMR as a function of field strength. Is a thin</span>
+<span class="sd">        wrapper around plot_dataset.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Just creates the requested plots</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        AttributeError</span>
+<span class="sd">            If calculate_AMR_resistance has not been run.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="s1">&#39;resistance&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
                 <span class="s1">&#39;resistance data must be computed with calculate_AMR_resistance.&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">angle_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">:</span> <span class="n">angle_sel</span><span class="p">}</span>
-            <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span> <span class="s1">&#39;resistance&#39;</span><span class="p">,</span>
-                              <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span> <span class="s1">&#39;resistance&#39;</span><span class="p">)</span></div>
+        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span> <span class="s1">&#39;resistance&#39;</span><span class="p">,</span>
+                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AMRAnalysis.fit_AMR_polycrystalline"><a class="viewcode-back" href="../../AMRAnalysis.html#analysis.AMRAnalysis.AMRAnalysis.fit_AMR_polycrystalline">[docs]</a>    <span class="k">def</span> <span class="nf">fit_AMR_polycrystalline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -325,7 +387,7 @@
         <span class="c1"># to be passed in the wrapper guessing function</span>
         <span class="k">return</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="o">/</span><span class="mf">1000.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]]</span>
-        
+
 <div class="viewcode-block" id="AMRAnalysis.fit_AMR_uniaxial"><a class="viewcode-back" href="../../AMRAnalysis.html#analysis.AMRAnalysis.AMRAnalysis.fit_AMR_uniaxial">[docs]</a>    <span class="k">def</span> <span class="nf">fit_AMR_uniaxial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fits the AMR to a uniaxial anisotropy model</span>

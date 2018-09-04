@@ -343,7 +343,7 @@ are fit to . If no selections given, everything is fit to.
 
 <dl class="function">
 <dt id="analysis.baseAnalysis.plot_dataset">
-<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">plot_dataset</code><span class="sig-paren">(</span><em>ds</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em>, <em>hide_large_errors=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#plot_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.plot_dataset" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">analysis.baseAnalysis.</code><code class="descname">plot_dataset</code><span class="sig-paren">(</span><em>ds</em>, <em>xname</em>, <em>yname</em>, <em>overlay=False</em>, <em>yerr_name=None</em>, <em>hide_large_errors=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#plot_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.plot_dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots some data in ds.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -353,6 +353,8 @@ are fit to . If no selections given, everything is fit to.
 <li><strong>ds</strong> (<em>xarray.Dataset</em>) – Dataset containing data to plot</li>
 <li><strong>xname</strong> (<em>str</em>) – name of ds dim to plot along</li>
 <li><strong>yname</strong> (<em>str</em>) – name of ds data_var containing data to plot</li>
+<li><strong>overlay</strong> (<em>bool</em>) – Whether all plots should be overlayed on top of one another on a
+single plot, or if each thing should have its own plot.</li>
 <li><strong>yerr_name</strong> (<em>str</em>) – optional. If specified, should be the name of some ds data_var
 containing errors in y data.</li>
 <li><strong>hide_large_errors</strong> (<em>bool</em>) – If True, errorbars which are large compared to the mean

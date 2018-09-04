@@ -158,7 +158,7 @@ class AMRAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Passed along directly to baseAnalysis.plot_dataset
+            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
 
         Returns
         -------
@@ -186,7 +186,7 @@ class AMRAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Passed along directly to baseAnalysis.plot_dataset
+            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
 
         Returns
         -------

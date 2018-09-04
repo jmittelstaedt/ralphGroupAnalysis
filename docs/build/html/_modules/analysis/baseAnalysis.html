@@ -416,7 +416,7 @@
 <span class="sd">        the name of the ds dim to be fit along</span>
 <span class="sd">    yname : str</span>
 <span class="sd">        the name of the ds data_var containing data to be fit to</span>
-<span class="sd">    **selections </span>
+<span class="sd">    **selections</span>
 <span class="sd">        keywords should be names of dims of ds (cannot include xname)</span>
 <span class="sd">        values should eitherbe single coordinate values or lists of coordinate</span>
 <span class="sd">        values of those dims. Only data with coordinates given by selections</span>
@@ -426,8 +426,8 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    xarray.Dataset</span>
-<span class="sd">        A Dataset with param_names as data_vars containing all guesses, and all </span>
-<span class="sd">        dims of ds besides xname with the same coordinates, unless otherwise </span>
+<span class="sd">        A Dataset with param_names as data_vars containing all guesses, and all</span>
+<span class="sd">        dims of ds besides xname with the same coordinates, unless otherwise</span>
 <span class="sd">        specified in **selections.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -517,7 +517,9 @@
 
     <span class="c1"># Determine which kwargs can be passed to curve_fit</span>
     <span class="n">cf_argspec</span> <span class="o">=</span> <span class="n">getfullargspec</span><span class="p">(</span><span class="n">curve_fit</span><span class="p">)</span>
-    <span class="n">cf_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cf_argspec</span><span class="o">.</span><span class="n">args</span><span class="p">}</span>
+    <span class="n">lsq_argspec</span> <span class="o">=</span> <span class="n">getfullargspec</span><span class="p">(</span><span class="n">leastsq</span><span class="p">)</span>
+    <span class="n">good_args</span> <span class="o">=</span> <span class="n">cf_argspec</span><span class="o">.</span><span class="n">args</span> <span class="o">+</span> <span class="n">lsq_argspec</span><span class="o">.</span><span class="n">args</span>
+    <span class="n">cf_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">good_args</span><span class="p">}</span>
 
     <span class="n">full_param_names</span> <span class="o">=</span> <span class="n">param_names</span> <span class="o">+</span> <span class="p">[</span><span class="n">pname</span><span class="o">+</span><span class="s1">&#39;_err&#39;</span> <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">param_names</span><span class="p">]</span>
 
@@ -570,8 +572,8 @@
         <span class="n">yerr_name</span>
     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../baseAnalysis.html#analysis.baseAnalysis.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">yerr_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hide_large_errors</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../baseAnalysis.html#analysis.baseAnalysis.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">yerr_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">hide_large_errors</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots some data in ds.</span>
 
@@ -583,6 +585,9 @@
 <span class="sd">        name of ds dim to plot along</span>
 <span class="sd">    yname : str</span>
 <span class="sd">        name of ds data_var containing data to plot</span>
+<span class="sd">    overlay : bool</span>
+<span class="sd">        Whether all plots should be overlayed on top of one another on a</span>
+<span class="sd">        single plot, or if each thing should have its own plot.</span>
 <span class="sd">    yerr_name : str</span>
 <span class="sd">        optional. If specified, should be the name of some ds data_var</span>
 <span class="sd">        containing errors in y data.</span>
@@ -597,7 +602,7 @@
 <span class="sd">        values of those dims. Only data with coordinates given by selections</span>
 <span class="sd">        are plotted. If no selections given, everything is plotted.</span>
 <span class="sd">        - kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate</span>
-<span class="sd">        </span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
@@ -628,8 +633,9 @@
     <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">coord_combos</span><span class="p">:</span>
         <span class="n">selection_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">remaining_dims</span><span class="p">,</span> <span class="n">combo</span><span class="p">))</span>
         <span class="n">ydata</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">yname</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">selection_dict</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="o">*</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">,&#39;</span><span class="o">%</span><span class="nb">tuple</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">yerr_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kwargs</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">yerr</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">yerr_name</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">selection_dict</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
             <span class="n">num_pts</span> <span class="o">=</span> <span class="n">yerr</span><span class="o">.</span><span class="n">size</span>
@@ -646,13 +652,21 @@
                         <span class="n">ydata</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_avg</span>
                         <span class="n">yerr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_std</span><span class="o">*</span><span class="mf">0.5</span>
                         <span class="n">errlims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">lolims</span><span class="o">=</span><span class="n">errlims</span><span class="p">,</span> <span class="n">uplims</span><span class="o">=</span><span class="n">errlims</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kwargs</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">lolims</span><span class="o">=</span><span class="n">errlims</span><span class="p">,</span> <span class="n">uplims</span><span class="o">=</span><span class="n">errlims</span><span class="p">,</span>
+                         <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kwargs</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xname</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">yname</span><span class="p">)</span>
         <span class="n">title_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selection_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">title_str</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%g</span><span class="s1">, &#39;</span><span class="o">%</span><span class="n">item</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># get rid of trailing comma and space</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">overlay</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">overlay</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Legend: (&#39;</span>
+                  <span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">*</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">,&#39;</span><span class="o">%</span><span class="nb">tuple</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                  <span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="analyzedFit"><a class="viewcode-back" href="../../baseAnalysis.html#analysis.baseAnalysis.analyzedFit">[docs]</a><span class="k">class</span> <span class="nc">analyzedFit</span><span class="p">():</span>
@@ -743,12 +757,12 @@
 <span class="sd">            How many points to use for the fit_func domain.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            Can either be:</span>
-<span class="sd">            - names of dims of fit_ds. values should eitherbe single coordinate </span>
-<span class="sd">            values or lists of coordinate values of those dims. Only data with </span>
+<span class="sd">            - names of dims of fit_ds. values should eitherbe single coordinate</span>
+<span class="sd">            values or lists of coordinate values of those dims. Only data with</span>
 <span class="sd">            coordinates given by selections are plotted. If no selections given,</span>
 <span class="sd">            everything is plotted.</span>
 <span class="sd">            - kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
@@ -843,7 +857,7 @@
 <span class="sd">            Keywords should be names of dims, values either single</span>
 <span class="sd">            coordinate valuesor lists of coordinate values.</span>
 <span class="sd">            - kwargs passed to matplotlib.pyplot.errorbar</span>
-<span class="sd">            </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
@@ -876,7 +890,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads all of the data from procedure data files into a dataset</span>
 <span class="sd">        object.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This general import method depends on procedure_swept_col and</span>
 <span class="sd">        series_swept_params being defined in __init__ of the child *Analysis</span>
 <span class="sd">        classes.</span>
@@ -889,7 +903,7 @@
 <span class="sd">            The name of the series file</span>
 <span class="sd">        procedure_files : list of str</span>
 <span class="sd">            Any additional procedure files to include.</span>
-<span class="sd">            </span>
+
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ImportError</span>
@@ -927,7 +941,7 @@
 <div class="viewcode-block" id="baseAnalysis.load_previous"><a class="viewcode-back" href="../../baseAnalysis.html#analysis.baseAnalysis.baseAnalysis.load_previous">[docs]</a>    <span class="k">def</span> <span class="nf">load_previous</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direc</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">is_sweep_ds</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads netCDF containing Datasets.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        direc : str</span>
@@ -936,11 +950,11 @@
 <span class="sd">            Name of the netCDF file</span>
 <span class="sd">        is_sweep_ds : bool</span>
 <span class="sd">            If :code:`True`, puts this dataset into sweep_ds.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        xarray.Dataset</span>
-<span class="sd">            Dataset contained in the file. </span>
+<span class="sd">            Dataset contained in the file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
@@ -955,8 +969,8 @@
 
 <div class="viewcode-block" id="baseAnalysis.save_dataset"><a class="viewcode-back" href="../../baseAnalysis.html#analysis.baseAnalysis.baseAnalysis.save_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">save_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direc</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;nc&#39;</span><span class="p">,</span> <span class="n">ds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Saves a dataset as a netCDF file. </span>
-<span class="sd">        </span>
+<span class="sd">        Saves a dataset as a netCDF file.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        direc : str</span>
@@ -967,7 +981,7 @@
 <span class="sd">            desired extension of the filename, default &quot;nc&quot;</span>
 <span class="sd">        ds : xarray.Dataset or None</span>
 <span class="sd">            Dataset to save. If :code:`None`, saves sweep_ds</span>
-<span class="sd">            </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>

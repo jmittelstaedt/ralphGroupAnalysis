@@ -218,7 +218,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Passed along directly to baseAnalysis.plot_dataset
+            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
         """
 
         plot_dataset(self.sweep_ds, self.BFIELD_DIM, self.X_DATA_VAR, **kwargs)

@@ -14,7 +14,7 @@ from .baseAnalysis import get_coord_selection, fit_dataset
 
 # TODO: pretty up docstrings
 
-class STFMRAnalysis(baseAnalysis):
+class daedalus_STFMRAnalysis(baseAnalysis):
     """
     Class to contain all STFMR related functions, and acts as a convenient
     container for importing and storing datasets etc.
@@ -663,7 +663,7 @@ class STFMRAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Passed along directly to baseAnalysis.plot_dataset
+            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
         """
 
         plot_dataset(self.sweep_ds, self.BFIELD_DIM, self.X_DATA_VAR, **kwargs)

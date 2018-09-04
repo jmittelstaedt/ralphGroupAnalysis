@@ -165,32 +165,92 @@
 <dt id="analysis.AMRAnalysis.AMRAnalysis">
 <em class="property">class </em><code class="descclassname">analysis.AMRAnalysis.</code><code class="descname">AMRAnalysis</code><span class="sig-paren">(</span><em>scan_type='angle'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.baseAnalysis" title="analysis.baseAnalysis.baseAnalysis"><code class="xref py py-class docutils literal"><span class="pre">analysis.baseAnalysis.baseAnalysis</span></code></a></p>
+<p>Class to contain all AMR related functions, and acts as a convenient
+container for importing and storing datasets etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>scan_type</strong> (<em>str</em>) – Should be ‘angle’ or ‘field’, representing what was swept within each
+procedure. Defaults to angle</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sweep_ds</strong> (<em>xarray.Dataset</em>) – Dataset containing the data</li>
+<li><strong>procedure_swept_col</strong> (<em>str</em>) – column swept in the procedure</li>
+<li><strong>series_swept_params</strong> (<em>list of str</em>) – parameters swept in the series</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="analysis.AMRAnalysis.AMRAnalysis.load_sweep">
 <code class="descname">load_sweep</code><span class="sig-paren">(</span><em>direc</em>, <em>series_filename=None</em>, <em>procedure_files=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.load_sweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.load_sweep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Is a wrapper around general load sweep so that we can still extract
-wheatstone resistances and add them as attributes</p>
+<dd><p>This is a wrapper around the general load_sweep function to allow for
+saving wheatstone resistances as attributes of sweep_ds</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>direc</strong> (<em>str</em>) – The directory the sweep file is in</li>
+<li><strong>series_file</strong> (<em>str</em>) – The name of the series file</li>
+<li><strong>procedure_files</strong> (<em>list of str</em>) – Any additional procedure files to include.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance">
 <code class="descname">calculate_AMR_resistance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.calculate_AMR_resistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the resistance of the sample given the voltage across
-the wheatstone bridge. Saves it as a new data_var in the sweep_ds</p>
+the wheatstone bridge. Saves it as a new data_var in the sweep_ds.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence">
-<code class="descname">plot_AMR_angle_dependence</code><span class="sig-paren">(</span><em>field_sel=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_angle_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots AMR angle dependence, either at a specified field
-or for all fields</p>
+<code class="descname">plot_AMR_angle_dependence</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_angle_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the calculated AMR as a function of angle. Is a thin wrapper around
+plot_dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Passed along directly to <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.plot_dataset" title="analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">analysis.baseAnalysis.plot_dataset()</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Just creates the requested plots</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If calculate_AMR_resistance has not been run.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence">
-<code class="descname">plot_AMR_field_dependence</code><span class="sig-paren">(</span><em>angle_sel=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_field_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots AMR field dependence, either at a specified angle
-or for all angles</p>
+<code class="descname">plot_AMR_field_dependence</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_field_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the calculated AMR as a function of field strength. Is a thin
+wrapper around plot_dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Passed along directly to <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.plot_dataset" title="analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">analysis.baseAnalysis.plot_dataset()</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Just creates the requested plots</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If calculate_AMR_resistance has not been run.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">

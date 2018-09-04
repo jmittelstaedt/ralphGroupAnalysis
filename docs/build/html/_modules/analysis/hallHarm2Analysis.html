@@ -160,12 +160,28 @@
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">leastsq</span><span class="p">,</span> <span class="n">curve_fit</span>
 
 <span class="kn">from</span> <span class="nn">pymeasure.experiment</span> <span class="k">import</span> <span class="n">Results</span>
-<span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">baseAnalysis</span>
-
-<span class="c1"># TODO: use new import/fitting/plotting functions.</span>
-<span class="c1"># TODO: pretty up docstrings</span>
+<span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">baseAnalysis</span><span class="p">,</span> <span class="n">plot_dataset</span><span class="p">,</span> <span class="n">fit_dataset</span>
 
 <div class="viewcode-block" id="Hall2HarmAnalysis"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis">[docs]</a><span class="k">class</span> <span class="nc">Hall2HarmAnalysis</span><span class="p">(</span><span class="n">baseAnalysis</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to contain all second harmonic Hall related functions, and acts as a</span>
+<span class="sd">    convenient container for importing and storing datasets etc.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scan_type : str</span>
+<span class="sd">        Should be &#39;angle&#39; or &#39;field&#39;, representing what was swept within each</span>
+<span class="sd">        procedure. Defaults to angle</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sweep_ds : xarray.Dataset</span>
+<span class="sd">        Dataset containing the data</span>
+<span class="sd">    procedure_swept_col : str</span>
+<span class="sd">        column swept in the procedure</span>
+<span class="sd">    series_swept_params : list of str</span>
+<span class="sd">        parameters swept in the series</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">BFIELD_DIM</span> <span class="o">=</span> <span class="s1">&#39;field_strength&#39;</span>
     <span class="n">ANGLE_DIM</span> <span class="o">=</span> <span class="s1">&#39;field_azimuth&#39;</span>
@@ -190,56 +206,84 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;scan_type must be &#39;field&#39; or &#39;angle&#39;&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Hall2HarmAnalysis.plot_2harm_field_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_field_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_2harm_field_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Plots second harmonic field dependence, either at a specified angle</span>
-<span class="sd">        or for all angles &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Hall2HarmAnalysis.plot_2harm_angle_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_angle_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_2harm_angle_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the second harmonic voltage as a function of field angle.</span>
+<span class="sd">        Is a thin wrapper around plot_dataset.</span>
 
-        <span class="k">if</span> <span class="n">angle_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">:</span> <span class="n">angle_sel</span><span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">)</span></div>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`</span>
 
-<div class="viewcode-block" id="Hall2HarmAnalysis.plot_2harm_angle_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_angle_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_2harm_angle_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Plots second harmonic angle dependence, either at a specified field</span>
-<span class="sd">        or for all fields &quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Just creates the requested plots</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">field_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">:</span> <span class="n">field_sel</span><span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">)</span></div>
+        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Hall2HarmAnalysis.plot_1harm_field_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_field_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_1harm_field_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Plots first harmonic field dependence, either at a specified angle</span>
-<span class="sd">        or for all angles &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Hall2HarmAnalysis.plot_2harm_field_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_2harm_field_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_2harm_field_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the second harmonic voltage as a function of field strength. Is a</span>
+<span class="sd">        thin wrapper around plot_dataset.</span>
 
-        <span class="k">if</span> <span class="n">angle_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">:</span> <span class="n">angle_sel</span><span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">)</span></div>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`</span>
 
-<div class="viewcode-block" id="Hall2HarmAnalysis.plot_1harm_angle_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_angle_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_1harm_angle_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_sel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Plots first harmonic angle dependence, either at specified fields</span>
-<span class="sd">        or for all fields &quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Just creates the requested plots</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">field_sel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">selection</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">:</span> <span class="n">field_sel</span><span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">)</span></div>
+        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">X2_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Hall2HarmAnalysis.signal_FL_x"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.signal_FL_x">[docs]</a>    <span class="k">def</span> <span class="nf">signal_FL_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">Hk</span><span class="p">,</span> <span class="n">Ha</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mi">0</span> <span class="c1"># TODO: implement this, should it be fully general or only</span></div></div>
+<div class="viewcode-block" id="Hall2HarmAnalysis.plot_1harm_field_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_field_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_1harm_field_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the first harmonic voltage as a function of field strength. Is a</span>
+<span class="sd">        thin wrapper around plot_dataset.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Just creates the requested plots</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Hall2HarmAnalysis.plot_1harm_angle_dependence"><a class="viewcode-back" href="../../Hall2HarmAnalysis.html#analysis.hallHarm2Analysis.Hall2HarmAnalysis.plot_1harm_angle_dependence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_1harm_angle_dependence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the first harmonic voltage as a function of field angle. Is a</span>
+<span class="sd">        thin wrapper around plot_dataset.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Just creates the requested plots</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">X1_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">signal_FL_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">Hk</span><span class="p">,</span> <span class="n">Ha</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span> <span class="c1"># TODO: implement this, should it be fully general or only</span></div>
         <span class="c1"># for in-plane magnetized samples?...</span>
 
     <span class="c1"># TODO: figure out what kind of fitting is needed</span>
