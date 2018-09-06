@@ -18,8 +18,8 @@ class AMRAnalysis(baseAnalysis):
     Parameters
     ----------
     scan_type : str
-        Should be 'angle' or 'field', representing what was swept within each
-        procedure. Defaults to angle
+        Should be ``'angle'`` or ``'field'``, representing what was swept within each
+        procedure. Defaults to ``'angle'``
 
     Attributes
     ----------
@@ -62,8 +62,10 @@ class AMRAnalysis(baseAnalysis):
 
     def load_sweep(self, direc, series_filename = None, procedure_files = []):
         """
-        This is a wrapper around the general load_sweep function to allow for
-        saving wheatstone resistances as attributes of sweep_ds
+        This is a wrapper around the general
+        :meth:`~analysis.baseAnalysis.baseAnalysis.load_sweep` function to allow
+        for saving wheatstone resistances as attributes of
+        :attr:`~.AMRAnalysis.sweep_ds`
 
         Parameters
         ----------
@@ -122,7 +124,8 @@ class AMRAnalysis(baseAnalysis):
     def calculate_AMR_resistance(self):
         """
         Calculates the resistance of the sample given the voltage across
-        the wheatstone bridge. Saves it as a new data_var in the sweep_ds.
+        the wheatstone bridge. Saves it as a new ``data_var`` of
+        :attr:~.AMRAnalysis.sweep_ds`.
         """
 
         if 'resistance' in self.data_vars:
@@ -153,12 +156,12 @@ class AMRAnalysis(baseAnalysis):
     def plot_AMR_angle_dependence(self, **kwargs):
         """
         Plots the calculated AMR as a function of angle. Is a thin wrapper around
-        plot_dataset.
+        :func:`~analysis.baseAnalysis.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~analysis.baseAnalysis.plot_dataset`
 
         Returns
         -------
@@ -168,7 +171,8 @@ class AMRAnalysis(baseAnalysis):
         Raises
         ------
         AttributeError
-            If calculate_AMR_resistance has not been run.
+            If :meth:`~.AMRAnalysis.calculate_AMR_resistance`
+            has not been run.
         """
 
         if 'resistance' not in self.data_vars:
@@ -181,12 +185,12 @@ class AMRAnalysis(baseAnalysis):
     def plot_AMR_field_dependence(self, **kwargs):
         """
         Plots the calculated AMR as a function of field strength. Is a thin
-        wrapper around plot_dataset.
+        wrapper around :func:`~analysis.baseAnalysis.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~analysis.baseAnalysis.plot_dataset`
 
         Returns
         -------
@@ -196,7 +200,8 @@ class AMRAnalysis(baseAnalysis):
         Raises
         ------
         AttributeError
-            If calculate_AMR_resistance has not been run.
+            If :meth:`~.AMRAnalysis.calculate_AMR_resistance`
+            has not been run.
         """
 
         if 'resistance' not in self.data_vars:

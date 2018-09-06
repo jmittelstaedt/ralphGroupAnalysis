@@ -56,12 +56,12 @@ class Hall2HarmAnalysis(baseAnalysis):
     def plot_2harm_angle_dependence(self, **kwargs):
         """
         Plots the second harmonic voltage as a function of field angle.
-        Is a thin wrapper around plot_dataset.
+        Is a thin wrapper around :func:`~analysis.baseAnalysis.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~analysis.baseAnalysis.plot_dataset`
 
         Returns
         -------
@@ -75,12 +75,12 @@ class Hall2HarmAnalysis(baseAnalysis):
     def plot_2harm_field_dependence(self, **kwargs):
         """
         Plots the second harmonic voltage as a function of field strength. Is a
-        thin wrapper around plot_dataset.
+        thin wrapper around :func:`~analysis.baseAnalysis.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~analysis.baseAnalysis.plot_dataset`
 
         Returns
         -------
@@ -94,12 +94,12 @@ class Hall2HarmAnalysis(baseAnalysis):
     def plot_1harm_field_dependence(self, **kwargs):
         """
         Plots the first harmonic voltage as a function of field strength. Is a
-        thin wrapper around plot_dataset.
+        thin wrapper around :func:`~analysis.baseAnalysis.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~analysis.baseAnalysis.plot_dataset`
 
         Returns
         -------
@@ -113,12 +113,12 @@ class Hall2HarmAnalysis(baseAnalysis):
     def plot_1harm_angle_dependence(self, **kwargs):
         """
         Plots the first harmonic voltage as a function of field angle. Is a
-        thin wrapper around plot_dataset.
+        thin wrapper around :func:`~analysis.baseAnalysis.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~analysis.baseAnalysis.plot_dataset`
 
         Returns
         -------

@@ -184,7 +184,7 @@
 <span class="sd">    sweep_ds : xarray.Dataset</span>
 <span class="sd">        Dataset containing the data</span>
 <span class="sd">    fit_ds : xarray.Dataset or None</span>
-<span class="sd">        dataset containing fit parameters. None if fitting has not been done.</span>
+<span class="sd">        dataset containing fit parameters. ``None`` if fitting has not been done.</span>
 <span class="sd">    procedure_swept_col : str</span>
 <span class="sd">        column swept in the procedure</span>
 <span class="sd">    series_swept_params : list of str</span>
@@ -388,7 +388,7 @@
 <span class="sd">            dimension and containing lockin X as values.</span>
 <span class="sd">        pguess : list</span>
 <span class="sd">            initial guess for the fit parameters. Structure:</span>
-<span class="sd">            p = [B0, Delta, S, A, offset]</span>
+<span class="sd">            ``p = [B0, Delta, S, A, offset]``</span>
 <span class="sd">        error : np.array or None</span>
 <span class="sd">            array of errors to use. If not given, uses 1 for every point.</span>
 
@@ -449,17 +449,18 @@
 <span class="sd">            Guess of symmetric amplitude of the lorentzian with ang(B, I)=45</span>
 <span class="sd">        A45_guess : float</span>
 <span class="sd">            Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</span>
-<span class="sd">        selections</span>
-<span class="sd">            keywords should be names of dims besides the field dim.</span>
+<span class="sd">        **selections</span>
+<span class="sd">            keywords should be names of ``dims`` besides the field dim.</span>
 <span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
-<span class="sd">            values of those dims. Only data with coordinates given by selections</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
 <span class="sd">            have parameter guesses generated. If no selections given, guesses are</span>
 <span class="sd">            generated for everything</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">            Saves everything to fit_ds</span>
+<span class="sd">            Saves everything to</span>
+<span class="sd">            :attr:`~analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_ds`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># fit parameters to save in new dataset</span>
         <span class="n">fit_dvars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;B0_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;Delta_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;S_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;A_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;offset_pos&#39;</span><span class="p">,</span>
@@ -556,9 +557,9 @@
 <span class="sd">        overlay_fits : bool</span>
 <span class="sd">            whether to overlay fits on the data</span>
 <span class="sd">        selections</span>
-<span class="sd">            keywords should be names of dims besides the field dim.</span>
+<span class="sd">            keywords should be names of ``dims`` besides the ``field`` dim.</span>
 <span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
-<span class="sd">            values of those dims. Only data with coordinates given by selections</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
 <span class="sd">            have parameter guesses generated. If no selections given, guesses are</span>
 <span class="sd">            generated for everything</span>
 
@@ -625,10 +626,10 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        selections</span>
-<span class="sd">            keywords should be names of dims besides the field dim.</span>
+<span class="sd">        **selections</span>
+<span class="sd">            keywords should be names of ``dims`` besides the field dim.</span>
 <span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
-<span class="sd">            values of those dims. Only data with coordinates given by selections</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
 <span class="sd">            have parameter guesses generated. If no selections given, guesses are</span>
 <span class="sd">            generated for everything</span>
 
@@ -698,7 +699,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        phi_offset : float</span>
 <span class="sd">            Angle to offset the angles by. If ``reverse`` is ``True``, we do</span>
-<span class="sd">            phi_offset - phi, otherwise phi - phi_offset</span>
+<span class="sd">            ``phi_offset - phi``, otherwise ``phi - phi_offset``</span>
 <span class="sd">        reverse : bool</span>
 <span class="sd">            Whether to reverse the angular coordinates as well, i.e. go from</span>
 <span class="sd">            increasing phi meaning clockwise to counter-clockwise</span>
@@ -706,7 +707,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">            Modifies sweep_ds in place</span>
+<span class="sd">            Modifies :attr:`~.daedalus_STFMRAnalysis.sweep_ds` in place</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">nfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -729,7 +730,8 @@
 
 <div class="viewcode-block" id="daedalus_STFMRAnalysis.guess_separated_resonance_params"><a class="viewcode-back" href="../../daedalusSTFMRAnalysis.html#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.guess_separated_resonance_params">[docs]</a>    <span class="k">def</span> <span class="nf">guess_separated_resonance_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">field_azimuth</span><span class="p">,</span> <span class="n">rf_freq</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Guesses resonance parameters. For use in fit_separated_resonances.</span>
+<span class="sd">        Guesses resonance parameters. For use in</span>
+<span class="sd">        :meth:`~.daedalus_STFMRAnalysis.fit_separated_resonances`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -748,7 +750,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
 <span class="sd">            List of guesses of the resonance parameters. Format:</span>
-<span class="sd">            [B0, Delta, S, A, offset]</span>
+<span class="sd">            ``[B0, Delta, S, A, offset]``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">offset</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -762,10 +764,12 @@
 <div class="viewcode-block" id="daedalus_STFMRAnalysis.fit_separated_resonances"><a class="viewcode-back" href="../../daedalusSTFMRAnalysis.html#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_separated_resonances">[docs]</a>    <span class="k">def</span> <span class="nf">fit_separated_resonances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Meff_guess</span><span class="p">,</span> <span class="n">alpha_guess</span><span class="p">,</span> <span class="n">S45_guess</span><span class="p">,</span>
                                  <span class="n">A45_guess</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fits resonances after separate_pnfield_data is ran. Saves it to</span>
-<span class="sd">        res_fit attribute as an analyzedFit object. This just uses curve_fit,</span>
-<span class="sd">        none of the fancy harsh penalties given before. Thin wrapper around</span>
-<span class="sd">        baseAnalysis.fit_dataset.</span>
+<span class="sd">        Fits resonances after</span>
+<span class="sd">        :meth:`~.daedalus_STFMRAnalysis.separate_field_data`</span>
+<span class="sd">        is ran.</span>
+
+<span class="sd">        This just uses ``curve_fit`` and is a thin wrapper around</span>
+<span class="sd">        :func:`~analysis.baseAnalysis.fit_dataset`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -779,16 +783,19 @@
 <span class="sd">            Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</span>
 <span class="sd">        kwargs</span>
 <span class="sd">            can be:</span>
-<span class="sd">            - names of dims of ds (cannot include xname)</span>
+<span class="sd">            - names of ``dims`` of</span>
+<span class="sd">            :attr:`~.daedalus_STFMRAnalysis.sweep_ds`</span>
 <span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
 <span class="sd">            values of those dims. Only data with coordinates given by selections</span>
 <span class="sd">            are fit to . If no selections given, everything is fit to.</span>
-<span class="sd">            - kwargs of curve_fit</span>
+<span class="sd">            - kwargs of ``curve_fit``</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">            Saves the results into res_fit as an analyzedFit object</span>
+<span class="sd">            Saves the results into</span>
+<span class="sd">            :attr:`~analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.res_fit`</span>
+<span class="sd">            as an :class:`~analysis.baseAnalysis.analyzedFit` object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># TODO: check that separate_pnfield_data was ran.</span>
@@ -826,9 +833,9 @@
 <span class="sd">        Combines fit parameters if measurements had inplane fields</span>
 
 <span class="sd">        Since positive and negative fields, when the field is in-plane,</span>
-<span class="sd">        correspond to phi and phi+180, we should combine them together into</span>
+<span class="sd">        correspond to phi and ``phi+180``, we should combine them together into</span>
 <span class="sd">        a single dataset which goes over a full period in phi. We also negate</span>
-<span class="sd">        phi since daedalus rotate&#39;s clockwise.</span>
+<span class="sd">        ``phi`` since daedalus rotate&#39;s clockwise.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -838,7 +845,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">            Saves shifted dataset to combined_angle_fit_params</span>
+<span class="sd">            Saves shifted dataset to ``combined_angle_fit_params``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># make lists of data variable names to extract</span>
@@ -871,7 +878,7 @@
                                          <span class="n">param_names</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fits angular dependence of some previously fit parameters. Thin wrapper</span>
-<span class="sd">        around fit_dataset</span>
+<span class="sd">        around :func:`~analysis.baseAnalysis.fit_dataset`</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -881,29 +888,29 @@
 <span class="sd">            function to generate guesses of parameters. Arguments must be:</span>
 <span class="sd">            - 1D numpy array of y data</span>
 <span class="sd">            - numpy array of x data</span>
-<span class="sd">            - keyword arguments, with the keywords being all dims of ds besides</span>
-<span class="sd">            xname. Values passed will be individual floats of coordinate values</span>
-<span class="sd">            corresponding to those dims.</span>
+<span class="sd">            - keyword arguments, with the keywords being all dims of</span>
+<span class="sd">            :attr:`~.daedalus_STFMRAnalysis.fit_ds`. Values passed will be</span>
+<span class="sd">            individual floats of coordinate values corresponding to those ``dims``.</span>
 <span class="sd">            All arguments must be accepted, not all must be used.</span>
 <span class="sd">            Must return a list of guesses to the parameters, in the order given in</span>
 <span class="sd">            param_names</span>
 <span class="sd">        yname : str</span>
-<span class="sd">            Name of parameter (data_var) which we will fit over</span>
+<span class="sd">            Name of parameter (``data_var``) which we will fit over</span>
 <span class="sd">        param_names : list of str</span>
-<span class="sd">            Names of parameters of fit_func, in order.</span>
+<span class="sd">            Names of parameters of ``fit_func``, in order.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            can be:</span>
-<span class="sd">            - names of dims of ds (cannot include xname)</span>
+<span class="sd">            - names of ``dims`` of :attr:`~.daedalus_STFMRAnalysis.fit_ds`</span>
 <span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
-<span class="sd">            values of those dims. Only data with coordinates given by selections</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
 <span class="sd">            are fit to . If no selections given, everything is fit to.</span>
-<span class="sd">            - kwargs of curve_fit</span>
+<span class="sd">            - kwargs of ``curve_fit``</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">            Saves resulting analyzedFit object to a new attribute, named</span>
-<span class="sd">            (yname)_azimuth_fit</span>
+<span class="sd">            Saves resulting :class:`~analysis.baseAnalysis.analyzedFit` object</span>
+<span class="sd">            to a new attribute, named ``(yname)_azimuth_fit``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_angle_fit_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Need to run combine_fit_params_inplane first&quot;</span><span class="p">)</span>

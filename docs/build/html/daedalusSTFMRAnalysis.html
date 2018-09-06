@@ -179,7 +179,7 @@ analysis should still work.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
 <li><strong>sweep_ds</strong> (<em>xarray.Dataset</em>) – Dataset containing the data</li>
-<li><strong>fit_ds</strong> (<em>xarray.Dataset</em><em> or </em><em>None</em>) – dataset containing fit parameters. None if fitting has not been done.</li>
+<li><strong>fit_ds</strong> (<em>xarray.Dataset</em><em> or </em><em>None</em>) – dataset containing fit parameters. <code class="docutils literal"><span class="pre">None</span></code> if fitting has not been done.</li>
 <li><strong>procedure_swept_col</strong> (<em>str</em>) – column swept in the procedure</li>
 <li><strong>series_swept_params</strong> (<em>list of str</em>) – parameters swept in the series</li>
 <li><strong>gamma</strong> (<em>float</em>) – Gyromagnetic Ratio in GHz/T</li>
@@ -229,15 +229,16 @@ over that). Separates positive and negative field resonances.</p>
 <li><strong>Delta_guess</strong> (<em>float</em>) – guess of lorentzian linewidth</li>
 <li><strong>S45_guess</strong> (<em>float</em>) – Guess of symmetric amplitude of the lorentzian with ang(B, I)=45</li>
 <li><strong>A45_guess</strong> (<em>float</em>) – Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</li>
-<li><strong>selections</strong> – keywords should be names of dims besides the field dim.
+<li><strong>**selections</strong> – keywords should be names of <code class="docutils literal"><span class="pre">dims</span></code> besides the field dim.
 values should eitherbe single coordinate values or lists of coordinate
-values of those dims. Only data with coordinates given by selections
+values of those <code class="docutils literal"><span class="pre">dims</span></code>. Only data with coordinates given by selections
 have parameter guesses generated. If no selections given, guesses are
 generated for everything</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves everything to fit_ds</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves everything to
+<code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
@@ -257,9 +258,9 @@ generated for everything</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>overlay_fits</strong> (<em>bool</em>) – whether to overlay fits on the data</li>
-<li><strong>selections</strong> – keywords should be names of dims besides the field dim.
+<li><strong>selections</strong> – keywords should be names of <code class="docutils literal"><span class="pre">dims</span></code> besides the <code class="docutils literal"><span class="pre">field</span></code> dim.
 values should eitherbe single coordinate values or lists of coordinate
-values of those dims. Only data with coordinates given by selections
+values of those <code class="docutils literal"><span class="pre">dims</span></code>. Only data with coordinates given by selections
 have parameter guesses generated. If no selections given, guesses are
 generated for everything</li>
 </ul>
@@ -283,9 +284,9 @@ generated for everything</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selections</strong> – keywords should be names of dims besides the field dim.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**selections</strong> – keywords should be names of <code class="docutils literal"><span class="pre">dims</span></code> besides the field dim.
 values should eitherbe single coordinate values or lists of coordinate
-values of those dims. Only data with coordinates given by selections
+values of those <code class="docutils literal"><span class="pre">dims</span></code>. Only data with coordinates given by selections
 have parameter guesses generated. If no selections given, guesses are
 generated for everything</td>
 </tr>
@@ -309,13 +310,13 @@ data. Shifts the angle coordinates as well if requested.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>phi_offset</strong> (<em>float</em>) – Angle to offset the angles by. If <code class="docutils literal"><span class="pre">reverse</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, we do
-phi_offset - phi, otherwise phi - phi_offset</li>
+<code class="docutils literal"><span class="pre">phi_offset</span> <span class="pre">-</span> <span class="pre">phi</span></code>, otherwise <code class="docutils literal"><span class="pre">phi</span> <span class="pre">-</span> <span class="pre">phi_offset</span></code></li>
 <li><strong>reverse</strong> (<em>bool</em>) – Whether to reverse the angular coordinates as well, i.e. go from
 increasing phi meaning clockwise to counter-clockwise</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Modifies sweep_ds in place</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Modifies <code class="xref py py-attr docutils literal"><span class="pre">sweep_ds</span></code> in place</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
@@ -328,7 +329,8 @@ increasing phi meaning clockwise to counter-clockwise</li>
 <dl class="method">
 <dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.guess_separated_resonance_params">
 <code class="descname">guess_separated_resonance_params</code><span class="sig-paren">(</span><em>X</em>, <em>field</em>, <em>field_azimuth</em>, <em>rf_freq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.guess_separated_resonance_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.guess_separated_resonance_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Guesses resonance parameters. For use in fit_separated_resonances.</p>
+<dd><p>Guesses resonance parameters. For use in
+<a class="reference internal" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_separated_resonances" title="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_separated_resonances"><code class="xref py py-meth docutils literal"><span class="pre">fit_separated_resonances()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -343,7 +345,7 @@ increasing phi meaning clockwise to counter-clockwise</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of guesses of the resonance parameters. Format:
-[B0, Delta, S, A, offset]</p>
+<code class="docutils literal"><span class="pre">[B0,</span> <span class="pre">Delta,</span> <span class="pre">S,</span> <span class="pre">A,</span> <span class="pre">offset]</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
@@ -356,10 +358,11 @@ increasing phi meaning clockwise to counter-clockwise</li>
 <dl class="method">
 <dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_separated_resonances">
 <code class="descname">fit_separated_resonances</code><span class="sig-paren">(</span><em>Meff_guess</em>, <em>alpha_guess</em>, <em>S45_guess</em>, <em>A45_guess</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.fit_separated_resonances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_separated_resonances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fits resonances after separate_pnfield_data is ran. Saves it to
-res_fit attribute as an analyzedFit object. This just uses curve_fit,
-none of the fancy harsh penalties given before. Thin wrapper around
-baseAnalysis.fit_dataset.</p>
+<dd><p>Fits resonances after
+<a class="reference internal" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.separate_field_data" title="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.separate_field_data"><code class="xref py py-meth docutils literal"><span class="pre">separate_field_data()</span></code></a>
+is ran.</p>
+<p>This just uses <code class="docutils literal"><span class="pre">curve_fit</span></code> and is a thin wrapper around
+<a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.fit_dataset" title="analysis.baseAnalysis.fit_dataset"><code class="xref py py-func docutils literal"><span class="pre">fit_dataset()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -370,15 +373,18 @@ baseAnalysis.fit_dataset.</p>
 <li><strong>S45_guess</strong> (<em>float</em>) – Guess of symmetric amplitude of the lorentzian with ang(B, I)=45</li>
 <li><strong>A45_guess</strong> (<em>float</em>) – Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</li>
 <li><strong>kwargs</strong> – can be:
-- names of dims of ds (cannot include xname)
+- names of <code class="docutils literal"><span class="pre">dims</span></code> of
+<code class="xref py py-attr docutils literal"><span class="pre">sweep_ds</span></code>
 values should eitherbe single coordinate values or lists of coordinate
 values of those dims. Only data with coordinates given by selections
 are fit to . If no selections given, everything is fit to.
-- kwargs of curve_fit</li>
+- kwargs of <code class="docutils literal"><span class="pre">curve_fit</span></code></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves the results into res_fit as an analyzedFit object</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves the results into
+<code class="xref py py-attr docutils literal"><span class="pre">res_fit</span></code>
+as an <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.analyzedFit" title="analysis.baseAnalysis.analyzedFit"><code class="xref py py-class docutils literal"><span class="pre">analyzedFit</span></code></a> object</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
@@ -407,16 +413,16 @@ are fit to . If no selections given, everything is fit to.
 <code class="descname">combine_fit_params_inplane</code><span class="sig-paren">(</span><em>phi0=270</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.combine_fit_params_inplane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.combine_fit_params_inplane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combines fit parameters if measurements had inplane fields</p>
 <p>Since positive and negative fields, when the field is in-plane,
-correspond to phi and phi+180, we should combine them together into
+correspond to phi and <code class="docutils literal"><span class="pre">phi+180</span></code>, we should combine them together into
 a single dataset which goes over a full period in phi. We also negate
-phi since daedalus rotate’s clockwise.</p>
+<code class="docutils literal"><span class="pre">phi</span></code> since daedalus rotate’s clockwise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>phi0</strong> (<em>float</em>) – the offset angle to shift things by.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Saves shifted dataset to combined_angle_fit_params</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Saves shifted dataset to <code class="docutils literal"><span class="pre">combined_angle_fit_params</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
 </tr>
@@ -428,7 +434,7 @@ phi since daedalus rotate’s clockwise.</p>
 <dt id="analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_azimuthal_dependence_inplane">
 <code class="descname">fit_azimuthal_dependence_inplane</code><span class="sig-paren">(</span><em>fit_func</em>, <em>guess_func</em>, <em>yname</em>, <em>param_names</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/daedalus_STFMRAnalysis.html#daedalus_STFMRAnalysis.fit_azimuthal_dependence_inplane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_azimuthal_dependence_inplane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fits angular dependence of some previously fit parameters. Thin wrapper
-around fit_dataset</p>
+around <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.fit_dataset" title="analysis.baseAnalysis.fit_dataset"><code class="xref py py-func docutils literal"><span class="pre">fit_dataset()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -438,25 +444,25 @@ around fit_dataset</p>
 <li><strong>guess_func</strong> (<em>function</em>) – function to generate guesses of parameters. Arguments must be:
 - 1D numpy array of y data
 - numpy array of x data
-- keyword arguments, with the keywords being all dims of ds besides
-xname. Values passed will be individual floats of coordinate values
-corresponding to those dims.
+- keyword arguments, with the keywords being all dims of
+<code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code>. Values passed will be
+individual floats of coordinate values corresponding to those <code class="docutils literal"><span class="pre">dims</span></code>.
 All arguments must be accepted, not all must be used.
 Must return a list of guesses to the parameters, in the order given in
 param_names</li>
-<li><strong>yname</strong> (<em>str</em>) – Name of parameter (data_var) which we will fit over</li>
-<li><strong>param_names</strong> (<em>list of str</em>) – Names of parameters of fit_func, in order.</li>
+<li><strong>yname</strong> (<em>str</em>) – Name of parameter (<code class="docutils literal"><span class="pre">data_var</span></code>) which we will fit over</li>
+<li><strong>param_names</strong> (<em>list of str</em>) – Names of parameters of <code class="docutils literal"><span class="pre">fit_func</span></code>, in order.</li>
 <li><strong>**kwargs</strong> – can be:
-- names of dims of ds (cannot include xname)
+- names of <code class="docutils literal"><span class="pre">dims</span></code> of <code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code>
 values should eitherbe single coordinate values or lists of coordinate
-values of those dims. Only data with coordinates given by selections
+values of those <code class="docutils literal"><span class="pre">dims</span></code>. Only data with coordinates given by selections
 are fit to . If no selections given, everything is fit to.
-- kwargs of curve_fit</li>
+- kwargs of <code class="docutils literal"><span class="pre">curve_fit</span></code></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves resulting analyzedFit object to a new attribute, named
-(yname)_azimuth_fit</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Saves resulting <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.analyzedFit" title="analysis.baseAnalysis.analyzedFit"><code class="xref py py-class docutils literal"><span class="pre">analyzedFit</span></code></a> object
+to a new attribute, named <code class="docutils literal"><span class="pre">(yname)_azimuth_fit</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>

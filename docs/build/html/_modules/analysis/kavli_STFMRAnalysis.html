@@ -265,8 +265,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads data from a set of sweep files, each at a different temperature</span>
 
-<span class="sd">        Puts all of the filenames together and runs regular load_sweeps</span>
-<span class="sd">        on it.</span>
+<span class="sd">        Combines the data filenames from all of the sweep files and runs</span>
+<span class="sd">        :func:`~analysis.baseAnalysis.load_procedure_files` on them.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -310,7 +310,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        phi_offset : float</span>
 <span class="sd">            Angle to offset the angles by. If ``reverse`` is ``True``, we do</span>
-<span class="sd">            phi_offset - phi, otherwise phi - phi_offset</span>
+<span class="sd">            ``phi_offset - phi``, otherwise ``phi - phi_offset``</span>
 <span class="sd">        reverse : bool</span>
 <span class="sd">            Whether to reverse the angular coordinates as well, i.e. go from</span>
 <span class="sd">            increasing phi meaning clockwise to counter-clockwise</span>
@@ -318,21 +318,42 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">            Modifies sweep_ds in place</span>
+<span class="sd">            Modifies :attr:`~.kavli_STFMRAnalysis.sweep_ds` in-place</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If there is no negative field data. This could either mean none was</span>
+<span class="sd">            taken or that this method has already been used.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">nfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">nfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">X_DATA_VAR</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;No negative field data! This method was probably</span>
+<span class="s1">                             already ran&#39;&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Ensuring that the positive and negative fields have the same length,</span>
+        <span class="c1"># dropping low-field data if they do not.</span>
+        <span class="n">plen</span> <span class="o">=</span> <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">nlen</span> <span class="o">=</span> <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">final_len</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">plen</span><span class="p">,</span> <span class="n">nlen</span><span class="p">)</span>
+        <span class="c1"># slicing is different since pfield is 0...max_field and nfield is</span>
+        <span class="c1"># -max_field...0</span>
+        <span class="n">pfield</span> <span class="o">=</span> <span class="n">pfield</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">==</span> <span class="n">pfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">][</span><span class="o">-</span><span class="n">final_len</span><span class="p">:])</span>
+        <span class="n">nfield</span> <span class="o">=</span> <span class="n">nfield</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">==</span> <span class="n">nfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">][:</span><span class="n">final_len</span><span class="p">])</span>
+
         <span class="c1"># Assume positive and negative field points are (nominally) the same.</span>
-        <span class="c1"># this is not too great, but w/e. Better for new procedures since</span>
-        <span class="c1"># calibrations were inverted</span>
+        <span class="c1"># This is not actually true since e.g. +-.05 mA current to magnet does</span>
+        <span class="c1"># *not* give the same magnitude of field, but it is pretty close.</span>
         <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">=</span> <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">=</span> <span class="mi">180</span> <span class="o">+</span> <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="c1"># QUESTION: is this how we want to handle offsets?</span>
-        <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">-=</span> <span class="n">phi_offset</span>
-        <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">-=</span> <span class="n">phi_offset</span>
+        <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">-=</span> <span class="n">phi_offset</span>
+        <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">-=</span> <span class="n">phi_offset</span>
         <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
-            <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pfield</span><span class="p">,</span><span class="n">nfield</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;field_azimuth&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">coords</span>
@@ -371,7 +392,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        **kwargs</span>
-<span class="sd">            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`</span>
+<span class="sd">            Passed along directly to :func:`~analysis.baseAnalysis.plot_dataset`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -379,12 +400,13 @@
     <span class="k">def</span> <span class="nf">guess_resonance_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">field_azimuth</span><span class="p">,</span> <span class="n">rf_freq</span><span class="p">,</span>
                                <span class="n">temperature</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Guesses resonance parameters. For use in fit_separated_resonances.</span>
+<span class="sd">        Guesses resonance parameters. For use in</span>
+<span class="sd">        :meth:`~.kavli_STFMRAnalysis.fit_resonances`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        X : np.ndarray</span>
-<span class="sd">            Voltage data to guess parameters of</span>
+<span class="sd">            Mixing voltage data to guess parameters of</span>
 <span class="sd">        field : np.ndarray</span>
 <span class="sd">            Field strengths of data points to fit</span>
 <span class="sd">        field_azimuth : float</span>
@@ -412,10 +434,12 @@
 <div class="viewcode-block" id="kavli_STFMRAnalysis.fit_resonances"><a class="viewcode-back" href="../../kavliSTFMRAnalysis.html#analysis.kavli_STFMRAnalysis.kavli_STFMRAnalysis.fit_resonances">[docs]</a>    <span class="k">def</span> <span class="nf">fit_resonances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Meff_guess</span><span class="p">,</span> <span class="n">alpha_guess</span><span class="p">,</span> <span class="n">S45_guess</span><span class="p">,</span>
                                  <span class="n">A45_guess</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fits resonances after separate_pnfield_data is ran. Saves it to</span>
-<span class="sd">        resonance_fits attribute as an analyzedFit object. This just uses curve_fit,</span>
-<span class="sd">        none of the fancy harsh penalties given before. Thin wrapper around</span>
-<span class="sd">        baseAnalysis.fit_dataset.</span>
+<span class="sd">        Fits resonances after</span>
+<span class="sd">        :meth:`~.kavli_STFMRAnalysis.separate_field_data`</span>
+<span class="sd">        is ran.</span>
+
+<span class="sd">        This uses ``curve_fit`` and is a thin wrapper around</span>
+<span class="sd">        :func:`~analysis.baseAnalysis.fit_dataset`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -427,18 +451,19 @@
 <span class="sd">            Guess of symmetric amplitude of the lorentzian with ang(B, I)=45</span>
 <span class="sd">        A45_guess : float</span>
 <span class="sd">            Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</span>
-<span class="sd">        kwargs</span>
+<span class="sd">        **kwargs</span>
 <span class="sd">            can be:</span>
-<span class="sd">            - names of dims of ds (cannot include xname)</span>
+<span class="sd">            - names of ``dims`` of ``ds``</span>
 <span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
-<span class="sd">            values of those dims. Only data with coordinates given by selections</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
 <span class="sd">            are fit to . If no selections given, everything is fit to.</span>
-<span class="sd">            - kwargs of curve_fit</span>
+<span class="sd">            - kwargs of ``curve_fit``</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">            Saves the results into resonance_fits as an analyzedFit object</span>
+<span class="sd">            Saves the results into :attr:`~.kavli_STFMRAnalysis.resonance_fits`</span>
+<span class="sd">            as an :class:`~analysis.baseAnalysis.analyzedFit` object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># TODO: check that separate_pnfield_data was ran.</span>
@@ -463,7 +488,7 @@
                                          <span class="n">param_names</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fits angular dependence of some previously fit parameters. Thin wrapper</span>
-<span class="sd">        around fit_dataset</span>
+<span class="sd">        around :func:`~analysis.baseAnalysis.fit_dataset`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -473,29 +498,29 @@
 <span class="sd">            function to generate guesses of parameters. Arguments must be:</span>
 <span class="sd">            - 1D numpy array of y data</span>
 <span class="sd">            - numpy array of x data</span>
-<span class="sd">            - keyword arguments, with the keywords being all dims of ds besides</span>
-<span class="sd">            xname. Values passed will be individual floats of coordinate values</span>
-<span class="sd">            corresponding to those dims.</span>
+<span class="sd">            - keyword arguments, with the keywords being all ``dims`` of ``ds`` besides</span>
+<span class="sd">            ``xname``. Values passed will be individual floats of coordinate values</span>
+<span class="sd">            corresponding to those ``dims``.</span>
 <span class="sd">            All arguments must be accepted, not all must be used.</span>
 <span class="sd">            Must return a list of guesses to the parameters, in the order given in</span>
 <span class="sd">            param_names</span>
 <span class="sd">        yname : str</span>
-<span class="sd">            Name of parameter (data_var) which we will fit over</span>
+<span class="sd">            Name of parameter (``data_var``) which we will fit over</span>
 <span class="sd">        param_names : list of str</span>
-<span class="sd">            Names of parameters of fit_func, in order.</span>
+<span class="sd">            Names of parameters of ``fit_func``, in order.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            can be:</span>
-<span class="sd">            - names of dims of ds (cannot include xname)</span>
+<span class="sd">            - names of ``dims`` of ``ds``</span>
 <span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
-<span class="sd">            values of those dims. Only data with coordinates given by selections</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
 <span class="sd">            are fit to . If no selections given, everything is fit to.</span>
-<span class="sd">            - kwargs of curve_fit</span>
+<span class="sd">            - kwargs of ``curve_fit``</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">            Saves resulting analyzedFit object to a new attribute, named</span>
-<span class="sd">            (yname)_azimuth_fit</span>
+<span class="sd">            Saves resulting :class:`~analysis.baseAnalysis.analyzedFit` object</span>
+<span class="sd">            to a new attribute, named ``(yname)_azimuth_fit``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resonance_fits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Need to run fit_resonances first&quot;</span><span class="p">)</span>

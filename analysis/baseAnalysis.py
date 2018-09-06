@@ -13,7 +13,15 @@ from pymeasure.experiment import Results, unique_filename
 def parse_series_file(direc, series_fname):
     """
     Finds the swept parameter column, all swept series parameters and all
-    procedure data files associated with a given series file
+    procedure data files associated with a given series file.
+
+    Assumes that the series file has a particular format:
+    - all lines except those with the filenames must begin with ``#``
+    - The first line must be of the form ``"# procedure swept column: (value)"``
+    - The next lines must be of the form ``"# swept series parameter: (value)"``
+    and one must exist for each swept series parameter.
+    - All other lines beginning with ``#`` are ignored.
+
 
     Parameters
     ----------
@@ -57,8 +65,8 @@ def load_procedure_files(direc, series_filenames, procedure_swept_col,
                          series_swept_params):
     """
     Loads data from all procedure datafiles, and returns a Dataset containing
-    it all. The output of parse_series_file can be passed (almost) directly
-    to this function.
+    it all. The output of :func:`~.parse_series_file` can be passed (almost)
+    directly to this function.
 
     Parameters
     ----------
@@ -74,9 +82,9 @@ def load_procedure_files(direc, series_filenames, procedure_swept_col,
     Returns
     -------
     xarray.Dataset
-        A Dataset with a data_var for each procedure data_column (besides the swept
-        one), and a coordinate for the swept data column and the swept series
-        parameters.
+        A Dataset with a data variable for each procedure data column (besides
+        the swept one), and dimensions and coordinates corresponding to the
+        swept data column and the swept series parameters.
     """
 
     # load example result
@@ -159,7 +167,7 @@ def get_coord_selection(ds, drop_dim, gen_empty_ds = True,
     """
     Generates a selection of coordinates from a dataset, dropping one dimension.
     Can also generate a new dataset having as coordinates the selected
-    coordinates and specified data_vars, which are all empty (nonsensical
+    ``coords`` and specified ``data_vars``, which are all empty (nonsensical
     entries)
 
     Parameters
@@ -182,9 +190,11 @@ def get_coord_selection(ds, drop_dim, gen_empty_ds = True,
         the names of the dimensions which remain
     coord_combos : generator of tuple
         a generator object of all possible combinations of the
-        selected coordinates. Each coordinate combination is a tuple
+        selected coordinates. Each coordinate combination is a tuple.
+    remaining_ds : xarray.Dataset
+        The dataset with all selections made, including ones to ``drop_dim``
     empty_ds : xarray.Dataset
-        empty dataset created if requested, else None
+        Empty dataset. If one was not requested, is a completely empty dataset.
     """
     # Check everything is valid
     if drop_dim not in ds.dims:
@@ -208,9 +218,13 @@ def get_coord_selection(ds, drop_dim, gen_empty_ds = True,
             raise AttributeError('%s is not a dim!'%key)
 
     # find coords which should remain
-    remaining_coords = ds.drop(drop_dim).sel(selections).coords
+    remaining_selections = {k: v for k, v in selections.items() if k != drop_dim}
+    remaining_coords = ds.drop(drop_dim).sel(remaining_selections).coords
     remaining_dims = tuple(remaining_coords.keys())
 
+    # The whole dataset, but with selections made. Also has the possibility of
+    # selecting over drop_dim
+    remaining_ds = ds.sel(selections)
 
     # Making a cartesian product of all of the coord vals to loop over
     coord_vals = [remaining_coords[dim].values for dim in remaining_dims]
@@ -232,15 +246,15 @@ def get_coord_selection(ds, drop_dim, gen_empty_ds = True,
             data_vars = new_data_vars,
             coords = remaining_coords
         )
-        return remaining_dims, coord_combos, empty_ds
+        return remaining_dims, coord_combos, remaining_ds, empty_ds
     else:
-        return remaining_dims, coord_combos, None
+        return remaining_dims, coord_combos, remaining_ds, xr.Dataset({})
 
 def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
                       yname, **selections):
     """
-    creates a dataset of guesses of param_names given guess_func. To be used
-    in fit_dataset.
+    creates a dataset of guesses of param_names given ``guess_func``. To be used
+    in :func:`~.fit_dataset`.
 
     Parameters
     ----------
@@ -258,15 +272,15 @@ def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
         param_names
     param_names : list of str
         list of fit parameter names, in the order they are returned
-        by guess_func
+        by ``guess_func``
     xname : str
-        the name of the ds dim to be fit along
+        the name of the  ``dim`` of ``ds`` to be fit along
     yname : str
-        the name of the ds data_var containing data to be fit to
+        the name of the ``data_var`` of ``ds`` containing data to be fit to
     **selections
-        keywords should be names of dims of ds (cannot include xname)
+        keywords should be names of ``dims`` of ``ds``
         values should eitherbe single coordinate values or lists of coordinate
-        values of those dims. Only data with coordinates given by selections
+        values of those ``dims``. Only data with coordinates given by selections
         have parameter guesses generated. If no selections given, guesses are
         generated for everything
 
@@ -274,12 +288,12 @@ def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
     -------
     xarray.Dataset
         A Dataset with param_names as data_vars containing all guesses, and all
-        dims of ds besides xname with the same coordinates, unless otherwise
-        specified in **selections.
+        ``dims`` of ``ds`` besides xname with the same coordinates, unless
+        otherwise specified in ``**selections``.
     """
 
     # Generate coordinate combinations from selection and empty dataset
-    remaining_dims, coord_combos, guess_ds = get_coord_selection(
+    remaining_dims, coord_combos, remaining_ds, guess_ds = get_coord_selection(
         ds,
         xname,
         gen_empty_ds = True,
@@ -292,8 +306,8 @@ def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
         selection_dict = dict(zip(remaining_dims, combo))
 
         # load x/y data for this coordinate combination
-        ydata = ds[yname].sel(selection_dict).values
-        xdata = ds[xname].values
+        ydata = remaining_ds[yname].sel(selection_dict).values
+        xdata = remaining_ds[xname].values
 
         # generate guesses
         guesses = guess_func(ydata, xdata, **selection_dict)
@@ -307,7 +321,8 @@ def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
 def fit_dataset(ds, fit_func, guess_func, param_names, xname,
                 yname, yerr_name = None, **kwargs):
     """
-    Fits values in a dataset to a function. Returns an instance of analyzedFit
+    Fits values in a dataset to a function. Returns an
+    :class:`~.analyzedFit` object
 
     Parameters
     ----------
@@ -324,24 +339,24 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
         corresponding to those dims.
         All arguments must be accepted, not all must be used.
         Must return a list of guesses to the parameters, in the order given in
-        param_names
+        ``param_names``
     param_names : list of str
         list of fit parameter names, in the order they are returned
         by guess_func
     xname : str
-        the name of the ds dim to be fit along
+        the name of the ``dim`` of ``ds`` to be fit along
     yname : str
-        the name of the ds data_var containing data to be fit to
+        the name of the  containing data to be fit to
     yerr_name : str
-        Optional. the name of the ds data_var containing errors in data
+        Optional. the name of the ``data_var`` of ``ds`` containing errors in data
         to be fit.
     **kwargs
         can be:
-        - names of dims of ds (cannot include xname)
+        - names of ``dims`` of ``ds``
         values should eitherbe single coordinate values or lists of coordinate
-        values of those dims. Only data with coordinates given by selections
+        values of those ``dims``. Only data with coordinates given by selections
         are fit to . If no selections given, everything is fit to.
-        - kwargs of curve_fit
+        - kwargs of ``curve_fit``
 
     Returns
     -------
@@ -371,7 +386,7 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
     full_param_names = param_names + [pname+'_err' for pname in param_names]
 
     # Get the selection and empty fit dataset
-    remaining_dims, coord_combos, fit_ds = get_coord_selection(
+    remaining_dims, coord_combos, remaining_ds, fit_ds = get_coord_selection(
         ds,
         xname,
         gen_empty_ds = True,
@@ -384,8 +399,8 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
         selection_dict = dict(zip(remaining_dims, combo))
 
         # load x/y data for this coordinate combination
-        ydata = ds[yname].sel(selection_dict).values
-        xdata = ds.coords[xname].values
+        ydata = remaining_ds[yname].sel(selection_dict).values
+        xdata = remaining_ds.coords[xname].values
 
         # load fit parameter guesses for this coordinate combination
         guess = []
@@ -394,7 +409,7 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
 
         # load yerr data if given
         if yerr_name is not None:
-            yerr = ds[yerr_name].sel(selection_dict).values
+            yerr = remaining_ds[yerr_name].sel(selection_dict).values
         else:
             yerr = None
 
@@ -410,7 +425,7 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
     # Create an analyzedFit class to store everything
     return analyzedFit(
         fit_ds,
-        ds,
+        remaining_ds,
         fit_func,
         guess_func,
         param_names,
@@ -422,33 +437,34 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
 def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None,
                  hide_large_errors = False, **kwargs):
     """
-    Plots some data in ds.
+    Plots some data in ``ds``.
 
     Parameters
     ----------
     ds : xarray.Dataset
         Dataset containing data to plot
     xname : str
-        name of ds dim to plot along
+        name of the ``dim`` of ``ds`` to plot along
     yname : str
-        name of ds data_var containing data to plot
+        name of the ``data_var`` of ``ds`` containing data to plot
     overlay : bool
         Whether all plots should be overlayed on top of one another on a
         single plot, or if each thing should have its own plot.
     yerr_name : str
-        optional. If specified, should be the name of some ds data_var
+        optional. If specified, should be the name of some ``data_var`` of ``ds``
         containing errors in y data.
     hide_large_errors : bool
-        If True, errorbars which are large compared to the mean
+        If ``True``, errorbars which are large compared to the mean
         of the data will be rendered smaller with arrows to denote these errors
-        are only "bounds" on the actual error.
+        are only "bounds" on the actual error. Will also move outliers to the
+        mean of the data and give them the same error bars as above.
     **kwargs
         Can either be:
-        - names of dims of ds (cannot include xname)
+        - names of ``dims`` of ``ds``
         values should eitherbe single coordinate values or lists of coordinate
-        values of those dims. Only data with coordinates given by selections
+        values of those ``dims``. Only data with coordinates given by selections
         are plotted. If no selections given, everything is plotted.
-        - kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate
+        - kwargs passed to ``plot`` or ``errorbar``, as appropriate
 
     Returns
     -------
@@ -460,7 +476,7 @@ def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None,
 
     # Get the selections and coordinate combinations
     selections = {dimname: coords for dimname, coords in kwargs.items() if dimname in ds.dims}
-    remaining_dims, coord_combos, _ = get_coord_selection(
+    remaining_dims, coord_combos, remaining_ds, _ = get_coord_selection(
         ds,
         xname,
         gen_empty_ds = False,
@@ -476,15 +492,15 @@ def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None,
         plot_kwargs = {k: v for k, v in kwargs.items() if k in ebar_argspec.args}
 
     # Plot for all coordinate combinations
-    xdata = ds.coords[xname].values
+    xdata = remaining_ds.coords[xname].values
     for combo in coord_combos:
         selection_dict = dict(zip(remaining_dims, combo))
-        ydata = ds[yname].sel(selection_dict).values
+        ydata = remaining_ds[yname].sel(selection_dict).values
         label = len(selection_dict.values())*'%g,'%tuple(selection_dict.values())
         if yerr_name is None:
             plt.plot(xdata, ydata, label=label, **plot_kwargs)
         else:
-            yerr = ds[yerr_name].sel(selection_dict).values
+            yerr = remaining_ds[yerr_name].sel(selection_dict).values
             num_pts = yerr.size
             errlims = np.zeros(num_pts).astype(bool)
             if hide_large_errors: # hide outliers if requested
@@ -518,8 +534,30 @@ def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None,
 
 class analyzedFit():
     """
-    Class containing the results of fit_dataset. Given for convenience to give
-    to plotting functions.
+    Class containing the results of :func:`~.fit_dataset`.
+    Given for convenience to give to plotting functions.
+
+    Parameters
+    ----------
+    fit_ds : xarray.Dataset
+        the dataset which resulted from fitting
+    main_ds : xarray.Dataset
+        the dataset which was fit over
+    fit_func : function
+        the function which was used to fit the data
+    guess_func : function
+        the function which was used to generate initial parameter
+        guesses
+    param_names : list of str
+        names of the parameters of ``fit_func``, in the order it
+        accepts them
+    xname : str
+        the name of the``dim`` of ``main_ds`` which was fit over
+    yname : str
+        the name of the``data_var`` of ``main_ds`` which was fit over
+    yerr_name : str
+        Optional. Name of the ``data_var`` of ``main_ds`` used as errors
+        on y data.
 
     Attributes
     ----------
@@ -528,11 +566,11 @@ class analyzedFit():
     main_ds : xarray.Dataset
         dataset which was fit over
     coords : xarray.coords
-        coords of fit_ds
+        ``coords`` of :attr:`~.analyzedFit.fit_ds`
     dims : xarray.dims
-        dims of fit_ds
+        ``dims`` of :attr:`~.analyzedFit.fit_ds`
     data_vars : xarray.data_vars
-        data_vars of fit_ds
+        ``data_vars`` of :attr:`~.analyzedFit.fit_ds`
     fit_func : function
         function which was fit
     guess_func : function
@@ -540,18 +578,20 @@ class analyzedFit():
     param_names : list of str
         Names of parametrs fit to
     xname : str
-        name of main_ds dim which was fit over
+        name of :attr:`~.analyzedFit.main_ds` ``dim``
+        which was fit over
     yname : str
-        the name of the main_ds data_var which was fit over
+        the name of the :attr:`~.analyzedFit.main_ds`
+        ``data_var`` which was fit over
     yerr_name : str
-        Optional. the name of the main_ds data_var used as errors
-        on y data.
+        Optional. the name of the :attr:`~.analyzedFit.main_ds`
+        ``data_var`` used as errors on y data.
     """
 
     def __init__(self, fit_ds, main_ds, fit_func, guess_func, param_names,
                  xname, yname, yerr_name = None):
         """
-        Saves variables and extracts coordinates and dims for more convenient
+        Saves variables and extracts ``coords`` and ``dims`` for more convenient
         access.
 
         Parameters
@@ -566,14 +606,14 @@ class analyzedFit():
             the function which was used to generate initial parameter
             guesses
         param_names : list of str
-            names of the parameters of fit_func, in the order it
+            names of the parameters of ``fit_func``, in the order it
             accepts them
         xname : str
-            the name of the main_ds dim which was fit over
+            the name of the``dim`` of ``main_ds`` which was fit over
         yname : str
-            the name of the main_ds data_var which was fit over
+            the name of the``data_var`` of ``main_ds`` which was fit over
         yerr_name : str
-            Optional. the name of the main_ds data_var used as errors
+            Optional. Name of the ``data_var`` of ``main_ds`` used as errors
             on y data.
         """
 
@@ -593,7 +633,8 @@ class analyzedFit():
     def plot_fits(self, overlay_data = False, hide_large_errors = True,
                   pts_per_plot = 200, **kwargs):
         """
-        Plots the results from fitting of the internal fit_ds.
+        Plots the results from fitting of
+        :attr:`~analysis.baseAnalysis.analyzedFit.fit_ds`.
 
         Parameters
         ----------
@@ -601,14 +642,14 @@ class analyzedFit():
             whether to overlay the actual data on top of the
             corresponding fit. Error bars applied if available.
         pts_per_plot : int
-            How many points to use for the fit_func domain.
+            How many points to use for the ``fit_func`` domain.
         **kwargs
             Can either be:
-            - names of dims of fit_ds. values should eitherbe single coordinate
-            values or lists of coordinate values of those dims. Only data with
+            - names of ``dims`` of ``fit_ds``. values should eitherbe single coordinate
+            values or lists of coordinate values of those ``dims``. Only data with
             coordinates given by selections are plotted. If no selections given,
             everything is plotted.
-            - kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate
+            - kwargs passed to ``plot`` or ``errorbar``, as appropriate
 
         Returns
         -------
@@ -661,7 +702,7 @@ class analyzedFit():
                             if err > 5*data_std:
                                 yerr[i] = data_std*.5 # TODO: Find some better way of marking this
                                 errlims[i] = True
-                        for i, val in enumerate(data_avg):
+                        for i, val in enumerate(data_range):
                             if np.abs(val - data_avg) > 5*data_std:
                                 data_range[i] = data_avg
                                 yerr[i] = data_std*0.5
@@ -685,25 +726,30 @@ class analyzedFit():
                     hide_large_errors = False, **kwargs):
         """
         Plots the fit parameters and their errors vs some dimension. Thin
-        wrapper around plot_dataset.
+        wrapper around :func:`~.plot_dataset`.
 
         Parameters
         ----------
         xname : str
-            name of some fit_ds dim
+            name of some ``dim`` of
+            :attr:`~.analyzedFit.fit_ds`
         yname : str
-            name of some fit_ds data_var
+            name of some ``data_var`` of
+            :attr:`~.analyzedFit.fit_ds`
         yerr_name : str
-            name of some fit_ds data_var representing error in yname.
-            If none, defaults to yname + '_err'
+            name of some ``data_var`` of
+            :attr:`~.analyzedFit.fit_ds` representing
+            error in yname.
+            If none, defaults to ``(yname)_err'``
         hide_large_errors : bool
             whether to hide larger errors obstructing the plot.
         **kwargs
             can be:
-            - any selections of coordinates of fit_ds, besides xname.
+            - any selections of coordinates of
+            :attr:`~.analyzedFit.fit_ds`.
             Keywords should be names of dims, values either single
             coordinate valuesor lists of coordinate values.
-            - kwargs passed to matplotlib.pyplot.errorbar
+            - kwargs passed to ``errorbar``
 
         Returns
         -------
@@ -715,14 +761,25 @@ class analyzedFit():
         if yerr_name is None:
             yerr_name = yname + '_err'
 
-        plot_dataset(self.fit_ds, xname, yname, yerr_name, hide_large_errors,
-                         **kwargs)
+        plot_dataset(self.fit_ds, xname, yname, yerr_name=yerr_name, **kwargs)
 
 class baseAnalysis():
     """
     Class which all other analysis classes should inherit from. Implements
     functions which allow fitting data using arbitrary functions and
     saving/loading of entire datasets to/from netcdf files to avoid overhead.
+
+    Attributes
+    ----------
+    sweep_ds : xarray.Dataset
+        Dataset containing the data
+    coords : xarray.coords
+        ``coords`` of :attr:`~analysis.baseAnalysis.baseAnalysis.sweep_ds`
+    dims : xarray.dims
+        ``dims`` of :attr:`~analysis.baseAnalysis.baseAnalysis.sweep_ds`
+    data_vars : xarray.data_vars
+        ``data_vars`` of :attr:`~analysis.baseAnalysis.baseAnalysis.sweep_ds`
+
     """
 
     def __init__(self):
@@ -739,7 +796,7 @@ class baseAnalysis():
         object.
 
         This general import method depends on procedure_swept_col and
-        series_swept_params being defined in __init__ of the child *Analysis
+        series_swept_params being defined in ``__init__`` of the child ``*Analysis``
         classes.
 
         Parameters
@@ -796,7 +853,7 @@ class baseAnalysis():
         fname : str
             Name of the netCDF file
         is_sweep_ds : bool
-            If :code:`True`, puts this dataset into sweep_ds.
+            If ``True``, puts this dataset into ``sweep_ds``.
 
         Returns
         -------

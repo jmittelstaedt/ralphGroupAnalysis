@@ -112,8 +112,8 @@ class kavli_STFMRAnalysis(baseAnalysis):
         """
         Loads data from a set of sweep files, each at a different temperature
 
-        Puts all of the filenames together and runs regular load_sweeps
-        on it.
+        Combines the data filenames from all of the sweep files and runs
+        :func:`~analysis.baseAnalysis.load_procedure_files` on them.
 
         Parameters
         ----------
@@ -157,7 +157,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
         ----------
         phi_offset : float
             Angle to offset the angles by. If ``reverse`` is ``True``, we do
-            phi_offset - phi, otherwise phi - phi_offset
+            ``phi_offset - phi``, otherwise ``phi - phi_offset``
         reverse : bool
             Whether to reverse the angular coordinates as well, i.e. go from
             increasing phi meaning clockwise to counter-clockwise
@@ -165,21 +165,42 @@ class kavli_STFMRAnalysis(baseAnalysis):
         Returns
         -------
         None
-            Modifies sweep_ds in place
+            Modifies :attr:`~.kavli_STFMRAnalysis.sweep_ds` in-place
+
+        Raises
+        ------
+        ValueError
+            If there is no negative field data. This could either mean none was
+            taken or that this method has already been used.
         """
         pfield = self.sweep_ds.where(self.sweep_ds[self.BFIELD_DIM]>0, drop=True)
         nfield = self.sweep_ds.where(self.sweep_ds[self.BFIELD_DIM]<0, drop=True)
+
+        if nfield[self.X_DATA_VAR].size == 0:
+            raise ValueError('''No negative field data! This method was probably
+                             already ran''')
+
+        # Ensuring that the positive and negative fields have the same length,
+        # dropping low-field data if they do not.
+        plen = pfield.coords[self.BFIELD_DIM].values.size
+        nlen = nfield.coords[self.BFIELD_DIM].values.size
+        final_len = min(plen, nlen)
+        # slicing is different since pfield is 0...max_field and nfield is
+        # -max_field...0
+        pfield = pfield.where(pfield[self.BFIELD_DIM] == pfield[self.BFIELD_DIM][-final_len:])
+        nfield = nfield.where(nfield[self.BFIELD_DIM] == nfield[self.BFIELD_DIM][:final_len])
+
         # Assume positive and negative field points are (nominally) the same.
-        # this is not too great, but w/e. Better for new procedures since
-        # calibrations were inverted
+        # This is not actually true since e.g. +-.05 mA current to magnet does
+        # *not* give the same magnitude of field, but it is pretty close.
         nfield.coords[self.BFIELD_DIM] = pfield.coords[self.BFIELD_DIM].values[::-1]
         nfield.coords[self.ANGLE_DIM] = 180 + nfield.coords[self.ANGLE_DIM].values
         # QUESTION: is this how we want to handle offsets?
-        nfield.coords[self.BFIELD_DIM] -= phi_offset
-        pfield.coords[self.BFIELD_DIM] -= phi_offset
+        nfield.coords[self.ANGLE_DIM] -= phi_offset
+        pfield.coords[self.ANGLE_DIM] -= phi_offset
         if reverse:
-            nfield.coords[self.BFIELD_DIM] *= -1
-            pfield.coords[self.BFIELD_DIM] *= -1
+            nfield.coords[self.ANGLE_DIM] *= -1
+            pfield.coords[self.ANGLE_DIM] *= -1
 
         self.sweep_ds = xr.concat([pfield,nfield], dim='field_azimuth')
         self.coords = self.sweep_ds.coords
@@ -218,7 +239,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~analysis.baseAnalysis.plot_dataset`
         """
 
         plot_dataset(self.sweep_ds, self.BFIELD_DIM, self.X_DATA_VAR, **kwargs)
@@ -226,12 +247,13 @@ class kavli_STFMRAnalysis(baseAnalysis):
     def guess_resonance_params(self, X, field, field_azimuth, rf_freq,
                                temperature):
         """
-        Guesses resonance parameters. For use in fit_separated_resonances.
+        Guesses resonance parameters. For use in
+        :meth:`~.kavli_STFMRAnalysis.fit_resonances`.
 
         Parameters
         ----------
         X : np.ndarray
-            Voltage data to guess parameters of
+            Mixing voltage data to guess parameters of
         field : np.ndarray
             Field strengths of data points to fit
         field_azimuth : float
@@ -259,10 +281,12 @@ class kavli_STFMRAnalysis(baseAnalysis):
     def fit_resonances(self, Meff_guess, alpha_guess, S45_guess,
                                  A45_guess, **kwargs):
         """
-        Fits resonances after separate_pnfield_data is ran. Saves it to
-        resonance_fits attribute as an analyzedFit object. This just uses curve_fit,
-        none of the fancy harsh penalties given before. Thin wrapper around
-        baseAnalysis.fit_dataset.
+        Fits resonances after
+        :meth:`~.kavli_STFMRAnalysis.separate_field_data`
+        is ran.
+
+        This uses ``curve_fit`` and is a thin wrapper around
+        :func:`~analysis.baseAnalysis.fit_dataset`.
 
         Parameters
         ----------
@@ -274,18 +298,19 @@ class kavli_STFMRAnalysis(baseAnalysis):
             Guess of symmetric amplitude of the lorentzian with ang(B, I)=45
         A45_guess : float
             Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45
-        kwargs
+        **kwargs
             can be:
-            - names of dims of ds (cannot include xname)
+            - names of ``dims`` of ``ds``
             values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
+            values of those ``dims``. Only data with coordinates given by selections
             are fit to . If no selections given, everything is fit to.
-            - kwargs of curve_fit
+            - kwargs of ``curve_fit``
 
         Returns
         -------
         None
-            Saves the results into resonance_fits as an analyzedFit object
+            Saves the results into :attr:`~.kavli_STFMRAnalysis.resonance_fits`
+            as an :class:`~analysis.baseAnalysis.analyzedFit` object
         """
 
         # TODO: check that separate_pnfield_data was ran.
@@ -310,7 +335,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
                                          param_names,  **kwargs):
         """
         Fits angular dependence of some previously fit parameters. Thin wrapper
-        around fit_dataset
+        around :func:`~analysis.baseAnalysis.fit_dataset`.
 
         Parameters
         ----------
@@ -320,29 +345,29 @@ class kavli_STFMRAnalysis(baseAnalysis):
             function to generate guesses of parameters. Arguments must be:
             - 1D numpy array of y data
             - numpy array of x data
-            - keyword arguments, with the keywords being all dims of ds besides
-            xname. Values passed will be individual floats of coordinate values
-            corresponding to those dims.
+            - keyword arguments, with the keywords being all ``dims`` of ``ds`` besides
+            ``xname``. Values passed will be individual floats of coordinate values
+            corresponding to those ``dims``.
             All arguments must be accepted, not all must be used.
             Must return a list of guesses to the parameters, in the order given in
             param_names
         yname : str
-            Name of parameter (data_var) which we will fit over
+            Name of parameter (``data_var``) which we will fit over
         param_names : list of str
-            Names of parameters of fit_func, in order.
+            Names of parameters of ``fit_func``, in order.
         **kwargs
             can be:
-            - names of dims of ds (cannot include xname)
+            - names of ``dims`` of ``ds``
             values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
+            values of those ``dims``. Only data with coordinates given by selections
             are fit to . If no selections given, everything is fit to.
-            - kwargs of curve_fit
+            - kwargs of ``curve_fit``
 
         Returns
         -------
         None
-            Saves resulting analyzedFit object to a new attribute, named
-            (yname)_azimuth_fit
+            Saves resulting :class:`~analysis.baseAnalysis.analyzedFit` object
+            to a new attribute, named ``(yname)_azimuth_fit``
         """
         if self.resonance_fits is None:
             raise AttributeError("Need to run fit_resonances first")

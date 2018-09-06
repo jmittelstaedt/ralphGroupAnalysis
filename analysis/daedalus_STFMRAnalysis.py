@@ -31,7 +31,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
     sweep_ds : xarray.Dataset
         Dataset containing the data
     fit_ds : xarray.Dataset or None
-        dataset containing fit parameters. None if fitting has not been done.
+        dataset containing fit parameters. ``None`` if fitting has not been done.
     procedure_swept_col : str
         column swept in the procedure
     series_swept_params : list of str
@@ -235,7 +235,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             dimension and containing lockin X as values.
         pguess : list
             initial guess for the fit parameters. Structure:
-            p = [B0, Delta, S, A, offset]
+            ``p = [B0, Delta, S, A, offset]``
         error : np.array or None
             array of errors to use. If not given, uses 1 for every point.
 
@@ -296,17 +296,18 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             Guess of symmetric amplitude of the lorentzian with ang(B, I)=45
         A45_guess : float
             Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45
-        selections
-            keywords should be names of dims besides the field dim.
+        **selections
+            keywords should be names of ``dims`` besides the field dim.
             values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
+            values of those ``dims``. Only data with coordinates given by selections
             have parameter guesses generated. If no selections given, guesses are
             generated for everything
 
         Returns
         -------
         None
-            Saves everything to fit_ds
+            Saves everything to
+            :attr:`~analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.fit_ds`
         """
         # fit parameters to save in new dataset
         fit_dvars = ['B0_pos', 'Delta_pos', 'S_pos', 'A_pos', 'offset_pos',
@@ -403,9 +404,9 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         overlay_fits : bool
             whether to overlay fits on the data
         selections
-            keywords should be names of dims besides the field dim.
+            keywords should be names of ``dims`` besides the ``field`` dim.
             values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
+            values of those ``dims``. Only data with coordinates given by selections
             have parameter guesses generated. If no selections given, guesses are
             generated for everything
 
@@ -472,10 +473,10 @@ class daedalus_STFMRAnalysis(baseAnalysis):
 
         Parameters
         ----------
-        selections
-            keywords should be names of dims besides the field dim.
+        **selections
+            keywords should be names of ``dims`` besides the field dim.
             values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
+            values of those ``dims``. Only data with coordinates given by selections
             have parameter guesses generated. If no selections given, guesses are
             generated for everything
 
@@ -545,7 +546,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         ----------
         phi_offset : float
             Angle to offset the angles by. If ``reverse`` is ``True``, we do
-            phi_offset - phi, otherwise phi - phi_offset
+            ``phi_offset - phi``, otherwise ``phi - phi_offset``
         reverse : bool
             Whether to reverse the angular coordinates as well, i.e. go from
             increasing phi meaning clockwise to counter-clockwise
@@ -553,7 +554,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         Returns
         -------
         None
-            Modifies sweep_ds in place
+            Modifies :attr:`~.daedalus_STFMRAnalysis.sweep_ds` in place
         """
         pfield = self.sweep_ds.where(self.sweep_ds[self.BFIELD_DIM]>0, drop=True)
         nfield = self.sweep_ds.where(self.sweep_ds[self.BFIELD_DIM]<0, drop=True)
@@ -576,7 +577,8 @@ class daedalus_STFMRAnalysis(baseAnalysis):
 
     def guess_separated_resonance_params(self, X, field, field_azimuth, rf_freq):
         """
-        Guesses resonance parameters. For use in fit_separated_resonances.
+        Guesses resonance parameters. For use in
+        :meth:`~.daedalus_STFMRAnalysis.fit_separated_resonances`.
 
         Parameters
         ----------
@@ -595,7 +597,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         -------
         list
             List of guesses of the resonance parameters. Format:
-            [B0, Delta, S, A, offset]
+            ``[B0, Delta, S, A, offset]``
         """
 
         offset = X.mean()
@@ -609,10 +611,12 @@ class daedalus_STFMRAnalysis(baseAnalysis):
     def fit_separated_resonances(self, Meff_guess, alpha_guess, S45_guess,
                                  A45_guess, **kwargs):
         """
-        Fits resonances after separate_pnfield_data is ran. Saves it to
-        res_fit attribute as an analyzedFit object. This just uses curve_fit,
-        none of the fancy harsh penalties given before. Thin wrapper around
-        baseAnalysis.fit_dataset.
+        Fits resonances after
+        :meth:`~.daedalus_STFMRAnalysis.separate_field_data`
+        is ran.
+
+        This just uses ``curve_fit`` and is a thin wrapper around
+        :func:`~analysis.baseAnalysis.fit_dataset`.
 
         Parameters
         ----------
@@ -626,16 +630,19 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45
         kwargs
             can be:
-            - names of dims of ds (cannot include xname)
+            - names of ``dims`` of
+            :attr:`~.daedalus_STFMRAnalysis.sweep_ds`
             values should eitherbe single coordinate values or lists of coordinate
             values of those dims. Only data with coordinates given by selections
             are fit to . If no selections given, everything is fit to.
-            - kwargs of curve_fit
+            - kwargs of ``curve_fit``
 
         Returns
         -------
         None
-            Saves the results into res_fit as an analyzedFit object
+            Saves the results into
+            :attr:`~analysis.daedalus_STFMRAnalysis.daedalus_STFMRAnalysis.res_fit`
+            as an :class:`~analysis.baseAnalysis.analyzedFit` object
         """
 
         # TODO: check that separate_pnfield_data was ran.
@@ -673,9 +680,9 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         Combines fit parameters if measurements had inplane fields
 
         Since positive and negative fields, when the field is in-plane,
-        correspond to phi and phi+180, we should combine them together into
+        correspond to phi and ``phi+180``, we should combine them together into
         a single dataset which goes over a full period in phi. We also negate
-        phi since daedalus rotate's clockwise.
+        ``phi`` since daedalus rotate's clockwise.
 
         Parameters
         ----------
@@ -685,7 +692,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
         Returns
         -------
         None
-            Saves shifted dataset to combined_angle_fit_params
+            Saves shifted dataset to ``combined_angle_fit_params``
         """
 
         # make lists of data variable names to extract
@@ -718,7 +725,7 @@ class daedalus_STFMRAnalysis(baseAnalysis):
                                          param_names,  **kwargs):
         """
         Fits angular dependence of some previously fit parameters. Thin wrapper
-        around fit_dataset
+        around :func:`~analysis.baseAnalysis.fit_dataset`
 
         Parameters
         ----------
@@ -728,29 +735,29 @@ class daedalus_STFMRAnalysis(baseAnalysis):
             function to generate guesses of parameters. Arguments must be:
             - 1D numpy array of y data
             - numpy array of x data
-            - keyword arguments, with the keywords being all dims of ds besides
-            xname. Values passed will be individual floats of coordinate values
-            corresponding to those dims.
+            - keyword arguments, with the keywords being all dims of
+            :attr:`~.daedalus_STFMRAnalysis.fit_ds`. Values passed will be
+            individual floats of coordinate values corresponding to those ``dims``.
             All arguments must be accepted, not all must be used.
             Must return a list of guesses to the parameters, in the order given in
             param_names
         yname : str
-            Name of parameter (data_var) which we will fit over
+            Name of parameter (``data_var``) which we will fit over
         param_names : list of str
-            Names of parameters of fit_func, in order.
+            Names of parameters of ``fit_func``, in order.
         **kwargs
             can be:
-            - names of dims of ds (cannot include xname)
+            - names of ``dims`` of :attr:`~.daedalus_STFMRAnalysis.fit_ds`
             values should eitherbe single coordinate values or lists of coordinate
-            values of those dims. Only data with coordinates given by selections
+            values of those ``dims``. Only data with coordinates given by selections
             are fit to . If no selections given, everything is fit to.
-            - kwargs of curve_fit
+            - kwargs of ``curve_fit``
 
         Returns
         -------
         None
-            Saves resulting analyzedFit object to a new attribute, named
-            (yname)_azimuth_fit
+            Saves resulting :class:`~analysis.baseAnalysis.analyzedFit` object
+            to a new attribute, named ``(yname)_azimuth_fit``
         """
         if self.combined_angle_fit_params is None:
             raise AttributeError("Need to run combine_fit_params_inplane first")

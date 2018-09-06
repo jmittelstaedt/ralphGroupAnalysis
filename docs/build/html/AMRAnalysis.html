@@ -171,8 +171,8 @@ container for importing and storing datasets etc.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>scan_type</strong> (<em>str</em>) – Should be ‘angle’ or ‘field’, representing what was swept within each
-procedure. Defaults to angle</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>scan_type</strong> (<em>str</em>) – Should be <code class="docutils literal"><span class="pre">'angle'</span></code> or <code class="docutils literal"><span class="pre">'field'</span></code>, representing what was swept within each
+procedure. Defaults to <code class="docutils literal"><span class="pre">'angle'</span></code></p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
@@ -187,8 +187,10 @@ procedure. Defaults to angle</p>
 <dl class="method">
 <dt id="analysis.AMRAnalysis.AMRAnalysis.load_sweep">
 <code class="descname">load_sweep</code><span class="sig-paren">(</span><em>direc</em>, <em>series_filename=None</em>, <em>procedure_files=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.load_sweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.load_sweep" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a wrapper around the general load_sweep function to allow for
-saving wheatstone resistances as attributes of sweep_ds</p>
+<dd><p>This is a wrapper around the general
+<a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.baseAnalysis.load_sweep" title="analysis.baseAnalysis.baseAnalysis.load_sweep"><code class="xref py py-meth docutils literal"><span class="pre">load_sweep()</span></code></a> function to allow
+for saving wheatstone resistances as attributes of
+<code class="xref py py-attr docutils literal"><span class="pre">sweep_ds</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -208,25 +210,27 @@ saving wheatstone resistances as attributes of sweep_ds</p>
 <dt id="analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance">
 <code class="descname">calculate_AMR_resistance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.calculate_AMR_resistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the resistance of the sample given the voltage across
-the wheatstone bridge. Saves it as a new data_var in the sweep_ds.</p>
+the wheatstone bridge. Saves it as a new <code class="docutils literal"><span class="pre">data_var</span></code> of
+:attr:~.AMRAnalysis.sweep_ds`.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence">
 <code class="descname">plot_AMR_angle_dependence</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_angle_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the calculated AMR as a function of angle. Is a thin wrapper around
-plot_dataset.</p>
+<a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.plot_dataset" title="analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">plot_dataset()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Passed along directly to <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.plot_dataset" title="analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">analysis.baseAnalysis.plot_dataset()</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Passed along directly to <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.plot_dataset" title="analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">plot_dataset()</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Just creates the requested plots</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If calculate_AMR_resistance has not been run.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If <a class="reference internal" href="#analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance" title="analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance"><code class="xref py py-meth docutils literal"><span class="pre">calculate_AMR_resistance()</span></code></a>
+has not been run.</td>
 </tr>
 </tbody>
 </table>
@@ -236,18 +240,19 @@ plot_dataset.</p>
 <dt id="analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence">
 <code class="descname">plot_AMR_field_dependence</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_field_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the calculated AMR as a function of field strength. Is a thin
-wrapper around plot_dataset.</p>
+wrapper around <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.plot_dataset" title="analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">plot_dataset()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Passed along directly to <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.plot_dataset" title="analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">analysis.baseAnalysis.plot_dataset()</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Passed along directly to <a class="reference internal" href="baseAnalysis.html#analysis.baseAnalysis.plot_dataset" title="analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">plot_dataset()</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Just creates the requested plots</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If calculate_AMR_resistance has not been run.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If <a class="reference internal" href="#analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance" title="analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance"><code class="xref py py-meth docutils literal"><span class="pre">calculate_AMR_resistance()</span></code></a>
+has not been run.</td>
 </tr>
 </tbody>
 </table>

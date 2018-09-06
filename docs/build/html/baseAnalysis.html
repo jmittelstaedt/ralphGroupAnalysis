@@ -165,7 +165,13 @@
 <dt id="analysis.baseAnalysis.parse_series_file">
 <code class="descclassname">analysis.baseAnalysis.</code><code class="descname">parse_series_file</code><span class="sig-paren">(</span><em>direc</em>, <em>series_fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#parse_series_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.parse_series_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the swept parameter column, all swept series parameters and all
-procedure data files associated with a given series file</p>
+procedure data files associated with a given series file.</p>
+<p>Assumes that the series file has a particular format:
+- all lines except those with the filenames must begin with <code class="docutils literal"><span class="pre">#</span></code>
+- The first line must be of the form <code class="docutils literal"><span class="pre">&quot;#</span> <span class="pre">procedure</span> <span class="pre">swept</span> <span class="pre">column:</span> <span class="pre">(value)&quot;</span></code>
+- The next lines must be of the form <code class="docutils literal"><span class="pre">&quot;#</span> <span class="pre">swept</span> <span class="pre">series</span> <span class="pre">parameter:</span> <span class="pre">(value)&quot;</span></code>
+and one must exist for each swept series parameter.
+- All other lines beginning with <code class="docutils literal"><span class="pre">#</span></code> are ignored.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -192,8 +198,8 @@ procedure data files associated with a given series file</p>
 <dt id="analysis.baseAnalysis.load_procedure_files">
 <code class="descclassname">analysis.baseAnalysis.</code><code class="descname">load_procedure_files</code><span class="sig-paren">(</span><em>direc</em>, <em>series_filenames</em>, <em>procedure_swept_col</em>, <em>series_swept_params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#load_procedure_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.load_procedure_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads data from all procedure datafiles, and returns a Dataset containing
-it all. The output of parse_series_file can be passed (almost) directly
-to this function.</p>
+it all. The output of <a class="reference internal" href="#analysis.baseAnalysis.parse_series_file" title="analysis.baseAnalysis.parse_series_file"><code class="xref py py-func docutils literal"><span class="pre">parse_series_file()</span></code></a> can be passed (almost)
+directly to this function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -206,9 +212,9 @@ to this function.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Dataset with a data_var for each procedure data_column (besides the swept
-one), and a coordinate for the swept data column and the swept series
-parameters.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Dataset with a data variable for each procedure data column (besides
+the swept one), and dimensions and coordinates corresponding to the
+swept data column and the swept series parameters.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">xarray.Dataset</p>
@@ -223,7 +229,7 @@ parameters.</p>
 <code class="descclassname">analysis.baseAnalysis.</code><code class="descname">get_coord_selection</code><span class="sig-paren">(</span><em>ds</em>, <em>drop_dim</em>, <em>gen_empty_ds=True</em>, <em>new_dvar_names=[]</em>, <em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#get_coord_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.get_coord_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a selection of coordinates from a dataset, dropping one dimension.
 Can also generate a new dataset having as coordinates the selected
-coordinates and specified data_vars, which are all empty (nonsensical
+<code class="docutils literal"><span class="pre">coords</span></code> and specified <code class="docutils literal"><span class="pre">data_vars</span></code>, which are all empty (nonsensical
 entries)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -242,8 +248,9 @@ be single coordinate values or lists of coordinate values of those dims</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
 <li><strong>remaining_dims</strong> (<em>list of str</em>) – the names of the dimensions which remain</li>
 <li><strong>coord_combos</strong> (<em>generator of tuple</em>) – a generator object of all possible combinations of the
-selected coordinates. Each coordinate combination is a tuple</li>
-<li><strong>empty_ds</strong> (<em>xarray.Dataset</em>) – empty dataset created if requested, else None</li>
+selected coordinates. Each coordinate combination is a tuple.</li>
+<li><strong>remaining_ds</strong> (<em>xarray.Dataset</em>) – The dataset with all selections made, including ones to <code class="docutils literal"><span class="pre">drop_dim</span></code></li>
+<li><strong>empty_ds</strong> (<em>xarray.Dataset</em>) – Empty dataset. If one was not requested, is a completely empty dataset.</li>
 </ul>
 </p>
 </td>
@@ -255,8 +262,8 @@ selected coordinates. Each coordinate combination is a tuple</li>
 <dl class="function">
 <dt id="analysis.baseAnalysis.make_fit_dataset_guesses">
 <code class="descclassname">analysis.baseAnalysis.</code><code class="descname">make_fit_dataset_guesses</code><span class="sig-paren">(</span><em>ds</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#make_fit_dataset_guesses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.make_fit_dataset_guesses" title="Permalink to this definition">¶</a></dt>
-<dd><p>creates a dataset of guesses of param_names given guess_func. To be used
-in fit_dataset.</p>
+<dd><p>creates a dataset of guesses of param_names given <code class="docutils literal"><span class="pre">guess_func</span></code>. To be used
+in <a class="reference internal" href="#analysis.baseAnalysis.fit_dataset" title="analysis.baseAnalysis.fit_dataset"><code class="xref py py-func docutils literal"><span class="pre">fit_dataset()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -273,20 +280,20 @@ All arguments must be accepted, not all must be used.
 Must return a list of guesses to the parameters, in the order given in
 param_names</li>
 <li><strong>param_names</strong> (<em>list of str</em>) – list of fit parameter names, in the order they are returned
-by guess_func</li>
-<li><strong>xname</strong> (<em>str</em>) – the name of the ds dim to be fit along</li>
-<li><strong>yname</strong> (<em>str</em>) – the name of the ds data_var containing data to be fit to</li>
-<li><strong>**selections</strong> – keywords should be names of dims of ds (cannot include xname)
+by <code class="docutils literal"><span class="pre">guess_func</span></code></li>
+<li><strong>xname</strong> (<em>str</em>) – the name of the  <code class="docutils literal"><span class="pre">dim</span></code> of <code class="docutils literal"><span class="pre">ds</span></code> to be fit along</li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the <code class="docutils literal"><span class="pre">data_var</span></code> of <code class="docutils literal"><span class="pre">ds</span></code> containing data to be fit to</li>
+<li><strong>**selections</strong> – keywords should be names of <code class="docutils literal"><span class="pre">dims</span></code> of <code class="docutils literal"><span class="pre">ds</span></code>
 values should eitherbe single coordinate values or lists of coordinate
-values of those dims. Only data with coordinates given by selections
+values of those <code class="docutils literal"><span class="pre">dims</span></code>. Only data with coordinates given by selections
 have parameter guesses generated. If no selections given, guesses are
 generated for everything</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Dataset with param_names as data_vars containing all guesses, and all
-dims of ds besides xname with the same coordinates, unless otherwise
-specified in <a href="#id1"><span class="problematic" id="id2">**</span></a>selections.</p>
+<code class="docutils literal"><span class="pre">dims</span></code> of <code class="docutils literal"><span class="pre">ds</span></code> besides xname with the same coordinates, unless
+otherwise specified in <code class="docutils literal"><span class="pre">**selections</span></code>.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">xarray.Dataset</p>
@@ -299,7 +306,8 @@ specified in <a href="#id1"><span class="problematic" id="id2">**</span></a>sele
 <dl class="function">
 <dt id="analysis.baseAnalysis.fit_dataset">
 <code class="descclassname">analysis.baseAnalysis.</code><code class="descname">fit_dataset</code><span class="sig-paren">(</span><em>ds</em>, <em>fit_func</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#fit_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.fit_dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fits values in a dataset to a function. Returns an instance of analyzedFit</p>
+<dd><p>Fits values in a dataset to a function. Returns an
+<a class="reference internal" href="#analysis.baseAnalysis.analyzedFit" title="analysis.baseAnalysis.analyzedFit"><code class="xref py py-class docutils literal"><span class="pre">analyzedFit</span></code></a> object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -315,19 +323,19 @@ xname. Values passed will be individual floats of coordinate values
 corresponding to those dims.
 All arguments must be accepted, not all must be used.
 Must return a list of guesses to the parameters, in the order given in
-param_names</li>
+<code class="docutils literal"><span class="pre">param_names</span></code></li>
 <li><strong>param_names</strong> (<em>list of str</em>) – list of fit parameter names, in the order they are returned
 by guess_func</li>
-<li><strong>xname</strong> (<em>str</em>) – the name of the ds dim to be fit along</li>
-<li><strong>yname</strong> (<em>str</em>) – the name of the ds data_var containing data to be fit to</li>
-<li><strong>yerr_name</strong> (<em>str</em>) – Optional. the name of the ds data_var containing errors in data
+<li><strong>xname</strong> (<em>str</em>) – the name of the <code class="docutils literal"><span class="pre">dim</span></code> of <code class="docutils literal"><span class="pre">ds</span></code> to be fit along</li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the  containing data to be fit to</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – Optional. the name of the <code class="docutils literal"><span class="pre">data_var</span></code> of <code class="docutils literal"><span class="pre">ds</span></code> containing errors in data
 to be fit.</li>
 <li><strong>**kwargs</strong> – can be:
-- names of dims of ds (cannot include xname)
+- names of <code class="docutils literal"><span class="pre">dims</span></code> of <code class="docutils literal"><span class="pre">ds</span></code>
 values should eitherbe single coordinate values or lists of coordinate
-values of those dims. Only data with coordinates given by selections
+values of those <code class="docutils literal"><span class="pre">dims</span></code>. Only data with coordinates given by selections
 are fit to . If no selections given, everything is fit to.
-- kwargs of curve_fit</li>
+- kwargs of <code class="docutils literal"><span class="pre">curve_fit</span></code></li>
 </ul>
 </td>
 </tr>
@@ -344,28 +352,29 @@ are fit to . If no selections given, everything is fit to.
 <dl class="function">
 <dt id="analysis.baseAnalysis.plot_dataset">
 <code class="descclassname">analysis.baseAnalysis.</code><code class="descname">plot_dataset</code><span class="sig-paren">(</span><em>ds</em>, <em>xname</em>, <em>yname</em>, <em>overlay=False</em>, <em>yerr_name=None</em>, <em>hide_large_errors=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#plot_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.plot_dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots some data in ds.</p>
+<dd><p>Plots some data in <code class="docutils literal"><span class="pre">ds</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>ds</strong> (<em>xarray.Dataset</em>) – Dataset containing data to plot</li>
-<li><strong>xname</strong> (<em>str</em>) – name of ds dim to plot along</li>
-<li><strong>yname</strong> (<em>str</em>) – name of ds data_var containing data to plot</li>
+<li><strong>xname</strong> (<em>str</em>) – name of the <code class="docutils literal"><span class="pre">dim</span></code> of <code class="docutils literal"><span class="pre">ds</span></code> to plot along</li>
+<li><strong>yname</strong> (<em>str</em>) – name of the <code class="docutils literal"><span class="pre">data_var</span></code> of <code class="docutils literal"><span class="pre">ds</span></code> containing data to plot</li>
 <li><strong>overlay</strong> (<em>bool</em>) – Whether all plots should be overlayed on top of one another on a
 single plot, or if each thing should have its own plot.</li>
-<li><strong>yerr_name</strong> (<em>str</em>) – optional. If specified, should be the name of some ds data_var
+<li><strong>yerr_name</strong> (<em>str</em>) – optional. If specified, should be the name of some <code class="docutils literal"><span class="pre">data_var</span></code> of <code class="docutils literal"><span class="pre">ds</span></code>
 containing errors in y data.</li>
-<li><strong>hide_large_errors</strong> (<em>bool</em>) – If True, errorbars which are large compared to the mean
+<li><strong>hide_large_errors</strong> (<em>bool</em>) – If <code class="docutils literal"><span class="pre">True</span></code>, errorbars which are large compared to the mean
 of the data will be rendered smaller with arrows to denote these errors
-are only “bounds” on the actual error.</li>
+are only “bounds” on the actual error. Will also move outliers to the
+mean of the data and give them the same error bars as above.</li>
 <li><strong>**kwargs</strong> – Can either be:
-- names of dims of ds (cannot include xname)
+- names of <code class="docutils literal"><span class="pre">dims</span></code> of <code class="docutils literal"><span class="pre">ds</span></code>
 values should eitherbe single coordinate values or lists of coordinate
-values of those dims. Only data with coordinates given by selections
+values of those <code class="docutils literal"><span class="pre">dims</span></code>. Only data with coordinates given by selections
 are plotted. If no selections given, everything is plotted.
-- kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate</li>
+- kwargs passed to <code class="docutils literal"><span class="pre">plot</span></code> or <code class="docutils literal"><span class="pre">errorbar</span></code>, as appropriate</li>
 </ul>
 </td>
 </tr>
@@ -383,25 +392,42 @@ are plotted. If no selections given, everything is plotted.
 <dt id="analysis.baseAnalysis.analyzedFit">
 <em class="property">class </em><code class="descclassname">analysis.baseAnalysis.</code><code class="descname">analyzedFit</code><span class="sig-paren">(</span><em>fit_ds</em>, <em>main_ds</em>, <em>fit_func</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#analyzedFit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.analyzedFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Class containing the results of fit_dataset. Given for convenience to give
-to plotting functions.</p>
+<p>Class containing the results of <a class="reference internal" href="#analysis.baseAnalysis.fit_dataset" title="analysis.baseAnalysis.fit_dataset"><code class="xref py py-func docutils literal"><span class="pre">fit_dataset()</span></code></a>.
+Given for convenience to give to plotting functions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fit_ds</strong> (<em>xarray.Dataset</em>) – the dataset which resulted from fitting</li>
+<li><strong>main_ds</strong> (<em>xarray.Dataset</em>) – the dataset which was fit over</li>
+<li><strong>fit_func</strong> (<em>function</em>) – the function which was used to fit the data</li>
+<li><strong>guess_func</strong> (<em>function</em>) – the function which was used to generate initial parameter
+guesses</li>
+<li><strong>param_names</strong> (<em>list of str</em>) – names of the parameters of <code class="docutils literal"><span class="pre">fit_func</span></code>, in the order it
+accepts them</li>
+<li><strong>xname</strong> (<em>str</em>) – the name of the``dim`` of <code class="docutils literal"><span class="pre">main_ds</span></code> which was fit over</li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the``data_var`` of <code class="docutils literal"><span class="pre">main_ds</span></code> which was fit over</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – Optional. Name of the <code class="docutils literal"><span class="pre">data_var</span></code> of <code class="docutils literal"><span class="pre">main_ds</span></code> used as errors
+on y data.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
 <li><strong>fit_ds</strong> (<em>xarray.Dataset</em>) – the dataset containing all of the found fit parameters and errors</li>
 <li><strong>main_ds</strong> (<em>xarray.Dataset</em>) – dataset which was fit over</li>
-<li><strong>coords</strong> (<em>xarray.coords</em>) – coords of fit_ds</li>
-<li><strong>dims</strong> (<em>xarray.dims</em>) – dims of fit_ds</li>
-<li><strong>data_vars</strong> (<em>xarray.data_vars</em>) – data_vars of fit_ds</li>
+<li><strong>coords</strong> (<em>xarray.coords</em>) – <code class="docutils literal"><span class="pre">coords</span></code> of <code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code></li>
+<li><strong>dims</strong> (<em>xarray.dims</em>) – <code class="docutils literal"><span class="pre">dims</span></code> of <code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code></li>
+<li><strong>data_vars</strong> (<em>xarray.data_vars</em>) – <code class="docutils literal"><span class="pre">data_vars</span></code> of <code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code></li>
 <li><strong>fit_func</strong> (<em>function</em>) – function which was fit</li>
 <li><strong>guess_func</strong> (<em>function</em>) – function used for generating guesses</li>
 <li><strong>param_names</strong> (<em>list of str</em>) – Names of parametrs fit to</li>
-<li><strong>xname</strong> (<em>str</em>) – name of main_ds dim which was fit over</li>
-<li><strong>yname</strong> (<em>str</em>) – the name of the main_ds data_var which was fit over</li>
-<li><strong>yerr_name</strong> (<em>str</em>) – Optional. the name of the main_ds data_var used as errors
-on y data.</li>
+<li><strong>xname</strong> (<em>str</em>) – name of <code class="xref py py-attr docutils literal"><span class="pre">main_ds</span></code> <code class="docutils literal"><span class="pre">dim</span></code>
+which was fit over</li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the <code class="xref py py-attr docutils literal"><span class="pre">main_ds</span></code>
+<code class="docutils literal"><span class="pre">data_var</span></code> which was fit over</li>
+<li><strong>yerr_name</strong> (<em>str</em>) – Optional. the name of the <code class="xref py py-attr docutils literal"><span class="pre">main_ds</span></code>
+<code class="docutils literal"><span class="pre">data_var</span></code> used as errors on y data.</li>
 </ul>
 </td>
 </tr>
@@ -410,7 +436,8 @@ on y data.</li>
 <dl class="method">
 <dt id="analysis.baseAnalysis.analyzedFit.plot_fits">
 <code class="descname">plot_fits</code><span class="sig-paren">(</span><em>overlay_data=False</em>, <em>hide_large_errors=True</em>, <em>pts_per_plot=200</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#analyzedFit.plot_fits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.analyzedFit.plot_fits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots the results from fitting of the internal fit_ds.</p>
+<dd><p>Plots the results from fitting of
+<code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -418,13 +445,13 @@ on y data.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>overlay_data</strong> (<em>bool</em>) – whether to overlay the actual data on top of the
 corresponding fit. Error bars applied if available.</li>
-<li><strong>pts_per_plot</strong> (<em>int</em>) – How many points to use for the fit_func domain.</li>
+<li><strong>pts_per_plot</strong> (<em>int</em>) – How many points to use for the <code class="docutils literal"><span class="pre">fit_func</span></code> domain.</li>
 <li><strong>**kwargs</strong> – Can either be:
-- names of dims of fit_ds. values should eitherbe single coordinate
-values or lists of coordinate values of those dims. Only data with
+- names of <code class="docutils literal"><span class="pre">dims</span></code> of <code class="docutils literal"><span class="pre">fit_ds</span></code>. values should eitherbe single coordinate
+values or lists of coordinate values of those <code class="docutils literal"><span class="pre">dims</span></code>. Only data with
 coordinates given by selections are plotted. If no selections given,
 everything is plotted.
-- kwargs passed to matplotlib.pyplot.plot or errorbar, as appropriate</li>
+- kwargs passed to <code class="docutils literal"><span class="pre">plot</span></code> or <code class="docutils literal"><span class="pre">errorbar</span></code>, as appropriate</li>
 </ul>
 </td>
 </tr>
@@ -442,22 +469,27 @@ everything is plotted.
 <dt id="analysis.baseAnalysis.analyzedFit.plot_params">
 <code class="descname">plot_params</code><span class="sig-paren">(</span><em>xname</em>, <em>yname</em>, <em>yerr_name=None</em>, <em>hide_large_errors=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#analyzedFit.plot_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.analyzedFit.plot_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the fit parameters and their errors vs some dimension. Thin
-wrapper around plot_dataset.</p>
+wrapper around <a class="reference internal" href="#analysis.baseAnalysis.plot_dataset" title="analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">plot_dataset()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>xname</strong> (<em>str</em>) – name of some fit_ds dim</li>
-<li><strong>yname</strong> (<em>str</em>) – name of some fit_ds data_var</li>
-<li><strong>yerr_name</strong> (<em>str</em>) – name of some fit_ds data_var representing error in yname.
-If none, defaults to yname + ‘_err’</li>
+<li><strong>xname</strong> (<em>str</em>) – name of some <code class="docutils literal"><span class="pre">dim</span></code> of
+<code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code></li>
+<li><strong>yname</strong> (<em>str</em>) – name of some <code class="docutils literal"><span class="pre">data_var</span></code> of
+<code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code></li>
+<li><strong>yerr_name</strong> (<em>str</em>) – name of some <code class="docutils literal"><span class="pre">data_var</span></code> of
+<code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code> representing
+error in yname.
+If none, defaults to <code class="docutils literal"><span class="pre">(yname)_err'</span></code></li>
 <li><strong>hide_large_errors</strong> (<em>bool</em>) – whether to hide larger errors obstructing the plot.</li>
 <li><strong>**kwargs</strong> – can be:
-- any selections of coordinates of fit_ds, besides xname.
+- any selections of coordinates of
+<code class="xref py py-attr docutils literal"><span class="pre">fit_ds</span></code>.
 Keywords should be names of dims, values either single
 coordinate valuesor lists of coordinate values.
-- kwargs passed to matplotlib.pyplot.errorbar</li>
+- kwargs passed to <code class="docutils literal"><span class="pre">errorbar</span></code></li>
 </ul>
 </td>
 </tr>
@@ -480,13 +512,27 @@ coordinate valuesor lists of coordinate values.
 <p>Class which all other analysis classes should inherit from. Implements
 functions which allow fitting data using arbitrary functions and
 saving/loading of entire datasets to/from netcdf files to avoid overhead.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sweep_ds</strong> (<em>xarray.Dataset</em>) – Dataset containing the data</li>
+<li><strong>coords</strong> (<em>xarray.coords</em>) – <code class="docutils literal"><span class="pre">coords</span></code> of <code class="xref py py-attr docutils literal"><span class="pre">sweep_ds</span></code></li>
+<li><strong>dims</strong> (<em>xarray.dims</em>) – <code class="docutils literal"><span class="pre">dims</span></code> of <code class="xref py py-attr docutils literal"><span class="pre">sweep_ds</span></code></li>
+<li><strong>data_vars</strong> (<em>xarray.data_vars</em>) – <code class="docutils literal"><span class="pre">data_vars</span></code> of <code class="xref py py-attr docutils literal"><span class="pre">sweep_ds</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="analysis.baseAnalysis.baseAnalysis.load_sweep">
 <code class="descname">load_sweep</code><span class="sig-paren">(</span><em>direc</em>, <em>series_file=None</em>, <em>procedure_files=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis/baseAnalysis.html#baseAnalysis.load_sweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.baseAnalysis.baseAnalysis.load_sweep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads all of the data from procedure data files into a dataset
 object.</p>
 <p>This general import method depends on procedure_swept_col and
-series_swept_params being defined in __init__ of the child <a href="#id3"><span class="problematic" id="id4">*</span></a>Analysis
+series_swept_params being defined in <code class="docutils literal"><span class="pre">__init__</span></code> of the child <code class="docutils literal"><span class="pre">*Analysis</span></code>
 classes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -517,7 +563,7 @@ classes.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>direc</strong> (<em>str</em>) – Directory the netCDF file is in</li>
 <li><strong>fname</strong> (<em>str</em>) – Name of the netCDF file</li>
-<li><strong>is_sweep_ds</strong> (<em>bool</em>) – If <code class="code docutils literal"><span class="pre">True</span></code>, puts this dataset into sweep_ds.</li>
+<li><strong>is_sweep_ds</strong> (<em>bool</em>) – If <code class="docutils literal"><span class="pre">True</span></code>, puts this dataset into <code class="docutils literal"><span class="pre">sweep_ds</span></code>.</li>
 </ul>
 </td>
 </tr>
