@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>AMR Analysis Class &mdash; Ralph Group Analysis 0.1alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Second Harmonic Hall Analysis Class" href="Hall2HarmAnalysis.html" />
+    <link rel="prev" title="Welcome to Ralph Group Analysis’s documentation!" href="../index.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Ralph Group Analysis
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Analysis Classes:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">AMR Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Hall2HarmAnalysis.html">Second Harmonic Hall Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="baseAnalysis.html">Base Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="daedalusSTFMRAnalysis.html">Daedalus STFMR Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kavliSTFMRAnalysis.html">Kavli STFMR Analysis Class</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Procedures:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../procedures/AMRProcedure.html">AMR Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../procedures/Hall2HarmProcedure.html">Second Harmonic Hall Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../procedures/daedalusSTFMRProcedure.html">Daedalus STFMR Procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../procedures/kavliSTFMRProcedure.html">Kavli STFMR Procedure</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ralph Group Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>AMR Analysis Class</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/analysis/AMRAnalysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="amr-analysis-class">
+<h1>AMR Analysis Class<a class="headerlink" href="#amr-analysis-class" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="analysis.analysis.AMRAnalysis.AMRAnalysis">
+<em class="property">class </em><code class="descclassname">analysis.analysis.AMRAnalysis.</code><code class="descname">AMRAnalysis</code><span class="sig-paren">(</span><em>scan_type='angle'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/AMRAnalysis.html#AMRAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.AMRAnalysis.AMRAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.baseAnalysis" title="analysis.analysis.baseAnalysis.baseAnalysis"><code class="xref py py-class docutils literal"><span class="pre">analysis.analysis.baseAnalysis.baseAnalysis</span></code></a></p>
+<p>Class to contain all AMR related functions, and acts as a convenient
+container for importing and storing datasets etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>scan_type</strong> (<em>str</em>) – Should be <code class="docutils literal"><span class="pre">'angle'</span></code> or <code class="docutils literal"><span class="pre">'field'</span></code>, representing what was swept within each
+procedure. Defaults to <code class="docutils literal"><span class="pre">'angle'</span></code></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sweep_ds</strong> (<em>xarray.Dataset</em>) – Dataset containing the data</li>
+<li><strong>procedure_swept_col</strong> (<em>str</em>) – column swept in the procedure</li>
+<li><strong>series_swept_params</strong> (<em>list of str</em>) – parameters swept in the series</li>
+<li><strong>procedure</strong> (<em>pymeasure.experiment.Procedure</em>) – The procedure class which created the data files. Used for importing
+using PyMeasure</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="analysis.analysis.AMRAnalysis.AMRAnalysis.load_sweep">
+<code class="descname">load_sweep</code><span class="sig-paren">(</span><em>direc</em>, <em>series_filename=None</em>, <em>procedure_files=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/AMRAnalysis.html#AMRAnalysis.load_sweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.AMRAnalysis.AMRAnalysis.load_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a wrapper around the general
+<a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.baseAnalysis.load_sweep" title="analysis.analysis.baseAnalysis.baseAnalysis.load_sweep"><code class="xref py py-meth docutils literal"><span class="pre">load_sweep()</span></code></a> function to allow
+for saving wheatstone resistances as attributes of
+<code class="xref py py-attr docutils literal"><span class="pre">sweep_ds</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>direc</strong> (<em>str</em>) – The directory the sweep file is in</li>
+<li><strong>series_file</strong> (<em>str</em>) – The name of the series file</li>
+<li><strong>procedure_files</strong> (<em>list of str</em>) – Any additional procedure files to include.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance">
+<code class="descname">calculate_AMR_resistance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/AMRAnalysis.html#AMRAnalysis.calculate_AMR_resistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the resistance of the sample given the voltage across
+the wheatstone bridge. Saves it as a new <code class="docutils literal"><span class="pre">data_var</span></code> of
+:attr:~.AMRAnalysis.sweep_ds`.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence">
+<code class="descname">plot_AMR_angle_dependence</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_angle_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.AMRAnalysis.AMRAnalysis.plot_AMR_angle_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the calculated AMR as a function of angle. Is a thin wrapper around
+<a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.plot_dataset" title="analysis.analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">plot_dataset()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Passed along directly to <a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.plot_dataset" title="analysis.analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">plot_dataset()</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Just creates the requested plots</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If <a class="reference internal" href="#analysis.analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance" title="analysis.analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance"><code class="xref py py-meth docutils literal"><span class="pre">calculate_AMR_resistance()</span></code></a>
+has not been run.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence">
+<code class="descname">plot_AMR_field_dependence</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/AMRAnalysis.html#AMRAnalysis.plot_AMR_field_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.AMRAnalysis.AMRAnalysis.plot_AMR_field_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the calculated AMR as a function of field strength. Is a thin
+wrapper around <a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.plot_dataset" title="analysis.analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">plot_dataset()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Passed along directly to <a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.plot_dataset" title="analysis.analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal"><span class="pre">plot_dataset()</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Just creates the requested plots</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If <a class="reference internal" href="#analysis.analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance" title="analysis.analysis.AMRAnalysis.AMRAnalysis.calculate_AMR_resistance"><code class="xref py py-meth docutils literal"><span class="pre">calculate_AMR_resistance()</span></code></a>
+has not been run.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.AMRAnalysis.AMRAnalysis.fit_AMR_polycrystalline">
+<code class="descname">fit_AMR_polycrystalline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/AMRAnalysis.html#AMRAnalysis.fit_AMR_polycrystalline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.AMRAnalysis.AMRAnalysis.fit_AMR_polycrystalline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the angular dependence</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.AMRAnalysis.AMRAnalysis.fit_AMR_uniaxial">
+<code class="descname">fit_AMR_uniaxial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/AMRAnalysis.html#AMRAnalysis.fit_AMR_uniaxial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.AMRAnalysis.AMRAnalysis.fit_AMR_uniaxial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the AMR to a uniaxial anisotropy model</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Hall2HarmAnalysis.html" class="btn btn-neutral float-right" title="Second Harmonic Hall Analysis Class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Welcome to Ralph Group Analysis’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Joseph Mittelstaedt, Saba Karimeddiny.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

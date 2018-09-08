@@ -20,6 +20,8 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../analysis/'))
+sys.path.insert(0, os.path.abspath('../../analysis/analysis'))
+sys.path.insert(0, os.path.abspath('../../analysis/procedures'))
 sys.path.insert(0, os.path.abspath('../../'))
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, os.path.abspath('.'))
@@ -112,14 +114,23 @@ html_static_path = ['_static']
 #
 # This is required for the alabaster theme
 # refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
-html_sidebars = {
-    '**': [
-        'about.html',
-        'navigation.html',
-        'relations.html',  # needs 'show_related': True theme option to display
-        'searchbox.html',
-        'donate.html',
-    ]
+# html_sidebars = {
+#     '**': [
+#         'about.html',
+#         'navigation.html',
+#         'relations.html',  # needs 'show_related': True theme option to display
+#         'searchbox.html',
+#         'donate.html',
+#     ]
+# }
+html_theme_options = {
+    'display_version': False,
+    # Toc options
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
 }
 
 
