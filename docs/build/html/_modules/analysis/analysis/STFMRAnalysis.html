@@ -1,0 +1,652 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>analysis.analysis.STFMRAnalysis &mdash; Ralph Group Analysis 0.1alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Ralph Group Analysis
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Analysis Classes:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/baseAnalysis.html">Base Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/STFMRAnalysis.html">STFMR Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/AMRAnalysis.html">AMR Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/HallAnalysis.html">Second Harmonic Hall Analysis Class</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Procedures:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../procedures/STFMRProcedures.html">STFMR Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../procedures/HallProcedures.html">Second Harmonic Hall Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../procedures/AMRProcedures.html">AMR Procedures</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ralph Group Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>analysis.analysis.STFMRAnalysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for analysis.analysis.STFMRAnalysis</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">leastsq</span><span class="p">,</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="k">import</span> <span class="n">savgol_filter</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">pymeasure.experiment</span> <span class="k">import</span> <span class="n">Results</span>
+<span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">baseAnalysis</span><span class="p">,</span> <span class="n">analyzedFit</span><span class="p">,</span> <span class="n">parse_series_file</span><span class="p">,</span> <span class="n">plot_dataset</span>
+<span class="kn">from</span> <span class="nn">.baseAnalysis</span> <span class="k">import</span> <span class="n">get_coord_selection</span><span class="p">,</span> <span class="n">fit_dataset</span><span class="p">,</span> <span class="n">load_procedure_files</span>
+<span class="kn">from</span> <span class="nn">..procedures</span> <span class="k">import</span> <span class="n">STFMRProcedure</span><span class="p">,</span> <span class="n">STFMRCryoProcedure</span>
+<span class="c1"># from .constants import *</span>
+
+<div class="viewcode-block" id="STFMRAnalysis"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.STFMRAnalysis">[docs]</a><span class="k">class</span> <span class="nc">STFMRAnalysis</span><span class="p">(</span><span class="n">baseAnalysis</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to contain all STFMR related functions, and acts as a convenient</span>
+<span class="sd">    container for importing and storing datasets etc.</span>
+<span class="sd">    Note that:</span>
+<span class="sd">    1. this is fairly general, so if you end up sweeping over more stuff</span>
+<span class="sd">    than before, it should be able to handle that transparently.</span>
+<span class="sd">    2. this is written so that if names of parameters or data columns</span>
+<span class="sd">    change, we just need to modify some class variables and all of the</span>
+<span class="sd">    analysis should still work.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    swept_temp : bool</span>
+<span class="sd">        Whether temperature was swept in this scan and hence should be a</span>
+<span class="sd">        dimension of :attr:`.STFMRAnalysis.sweep_ds`</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sweep_ds : xarray.Dataset</span>
+<span class="sd">        Dataset containing the data</span>
+<span class="sd">    procedure_swept_col : str</span>
+<span class="sd">        column swept in the procedure</span>
+<span class="sd">    series_swept_params : list of str</span>
+<span class="sd">        parameters swept in the series</span>
+<span class="sd">    gamma : float</span>
+<span class="sd">        Gyromagnetic Ratio in GHz/T</span>
+<span class="sd">    mu0 : float</span>
+<span class="sd">        Permeability of Free Space</span>
+<span class="sd">    hbar : float</span>
+<span class="sd">        Planck&#39;s Reduced Constant</span>
+<span class="sd">    echarge : float</span>
+<span class="sd">        magnitude of electron charnge</span>
+<span class="sd">    muB : float</span>
+<span class="sd">        Bohr Magneton</span>
+<span class="sd">    procedure : pymeasure.experiment.Procedure</span>
+<span class="sd">        The procedure class which created the data files. Used for importing</span>
+<span class="sd">        using PyMeasure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># PyMeasure procedure names of parameters, for accessing things from</span>
+    <span class="c1"># xarray Datasets</span>
+    <span class="n">BFIELD_DIM</span> <span class="o">=</span> <span class="s1">&#39;field_strength&#39;</span>
+    <span class="n">ANGLE_DIM</span> <span class="o">=</span> <span class="s1">&#39;field_azimuth&#39;</span>
+    <span class="n">FREQUENCY_DIM</span> <span class="o">=</span> <span class="s1">&#39;rf_freq&#39;</span>
+    <span class="n">TEMPERATURE_DIM</span> <span class="o">=</span> <span class="s1">&#39;temperature&#39;</span>
+    <span class="n">X_DATA_VAR</span> <span class="o">=</span> <span class="s1">&#39;X&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">swept_temp</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instantiates the analysis object with an empty dataset with the correct</span>
+<span class="sd">        dimension names. Records the guesses for initial parameters for</span>
+<span class="sd">        fitting of the resonances.</span>
+
+<span class="sd">        Must load data with a separate method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">procedure_swept_col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">series_swept_params</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FREQUENCY_DIM</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">procedue</span> <span class="o">=</span> <span class="n">STFMRProcedure</span>
+
+        <span class="k">if</span> <span class="n">swept_temp</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">series_swept_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPERATURE_DIM</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">procedue</span> <span class="o">=</span> <span class="n">STFMRCryoProcedure</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_ds</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="STFMRAnalysis.load_old_procedures"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.STFMRAnalysis.load_old_procedures">[docs]</a>    <span class="k">def</span> <span class="nf">load_old_procedures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direc</span><span class="p">,</span> <span class="n">series_filenames</span> <span class="o">=</span> <span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads procedures from Neal&#39;s code and makes them work with the rest</span>
+<span class="sd">        of the stuff in here.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        direc : str</span>
+<span class="sd">            Directory containing a bunch of the data files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">procedure_swept_col</span> <span class="o">=</span> <span class="s1">&#39;Magnetic Field (T)&#39;</span>
+        <span class="n">series_swept_params</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;static_angle&#39;</span><span class="p">,</span><span class="s1">&#39;RFfrequency&#39;</span><span class="p">,</span><span class="s1">&#39;temp_goal&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">series_filenames</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="n">series_filenames</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">direc</span><span class="p">)</span>
+
+
+        <span class="n">sweep_ds</span> <span class="o">=</span> <span class="n">load_procedure_files</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">series_filenames</span><span class="p">,</span>
+                                        <span class="n">procedure_swept_col</span><span class="p">,</span> <span class="n">series_swept_params</span><span class="p">)</span>
+        <span class="n">sweep_ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span>
+            <span class="s1">&#39;static_angle&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span>
+            <span class="s1">&#39;RFfrequency&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">FREQUENCY_DIM</span><span class="p">,</span>
+            <span class="s1">&#39;Magnetic Field (T)&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span>
+            <span class="s1">&#39;X Voltage (V)&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_DATA_VAR</span><span class="p">,</span>
+            <span class="s1">&#39;temp_goal&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">TEMPERATURE_DIM</span>
+            <span class="p">},</span>
+            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span> <span class="o">=</span> <span class="n">sweep_ds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">data_vars</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">dims</span></div>
+
+<div class="viewcode-block" id="STFMRAnalysis.separate_field_data"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.STFMRAnalysis.separate_field_data">[docs]</a>    <span class="k">def</span> <span class="nf">separate_field_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi_offset</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Separates the positive and negative field data and assigns the negative</span>
+<span class="sd">        field data to an angle 180 deg from the corresponding positive field</span>
+<span class="sd">        data. Shifts the angle coordinates as well if requested.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        phi_offset : float</span>
+<span class="sd">            Angle to offset the angles by. If ``reverse`` is ``True``, we do</span>
+<span class="sd">            ``phi_offset - phi``, otherwise ``phi - phi_offset``</span>
+<span class="sd">        reverse : bool</span>
+<span class="sd">            Whether to reverse the angular coordinates as well, i.e. go from</span>
+<span class="sd">            increasing phi meaning clockwise to counter-clockwise</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Modifies :attr:`~.STFMRAnalysis.sweep_ds` in-place</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If there is no negative field data. This could either mean none was</span>
+<span class="sd">            taken or that this method has already been used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">nfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">nfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">X_DATA_VAR</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;No negative field data! This method was probably</span>
+<span class="s1">                             already ran&#39;&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Ensuring that the positive and negative fields have the same length,</span>
+        <span class="c1"># dropping low-field data if they do not.</span>
+        <span class="n">plen</span> <span class="o">=</span> <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">nlen</span> <span class="o">=</span> <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">final_len</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">plen</span><span class="p">,</span> <span class="n">nlen</span><span class="p">)</span>
+        <span class="c1"># slicing is different since pfield is 0...max_field and nfield is</span>
+        <span class="c1"># -max_field...0</span>
+        <span class="n">pfield</span> <span class="o">=</span> <span class="n">pfield</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">==</span> <span class="n">pfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">][</span><span class="o">-</span><span class="n">final_len</span><span class="p">:])</span>
+        <span class="n">nfield</span> <span class="o">=</span> <span class="n">nfield</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">==</span> <span class="n">nfield</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">][:</span><span class="n">final_len</span><span class="p">])</span>
+
+        <span class="c1"># Assume positive and negative field points are (nominally) the same.</span>
+        <span class="c1"># This is not actually true since e.g. +-.05 mA current to magnet does</span>
+        <span class="c1"># *not* give the same magnitude of field, but it is pretty close.</span>
+        <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span> <span class="o">=</span> <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">=</span> <span class="mi">180</span> <span class="o">+</span> <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="c1"># QUESTION: is this how we want to handle offsets?</span>
+        <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">-=</span> <span class="n">phi_offset</span>
+        <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">-=</span> <span class="n">phi_offset</span>
+        <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+            <span class="n">nfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">pfield</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pfield</span><span class="p">,</span><span class="n">nfield</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;field_azimuth&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">data_vars</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">omega0</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">Meff</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resonant frequency&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">gamma</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">B</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">+</span> <span class="n">Meff</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">B0</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Meff</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resonant field&quot;&quot;&quot;</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f</span>
+        <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">Meff</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Meff</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">Delta_formula</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Expected formula for the Delta parameter in lorentzians&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">alpha</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f</span><span class="o">/</span><span class="n">gamma</span><span class="o">+</span><span class="n">offset</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sym_lor</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">Delta</span><span class="p">,</span> <span class="n">S</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Symmetric lorentzian&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">S</span><span class="o">*</span><span class="n">Delta</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">-</span> <span class="n">B0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Delta</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">asym_lor</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">Delta</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Asymmetric lorentzian&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">A</span><span class="o">*</span><span class="n">Delta</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">-</span> <span class="n">B0</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">-</span> <span class="n">B0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Delta</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">total_lor</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">Delta</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Symmetric + Asymmetric lorentzian with offset&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">STFMRAnalysis</span><span class="o">.</span><span class="n">sym_lor</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">B0</span><span class="p">,</span><span class="n">Delta</span><span class="p">,</span><span class="n">S</span><span class="p">)</span> <span class="o">+</span> <span class="n">STFMRAnalysis</span><span class="o">.</span><span class="n">asym_lor</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">B0</span><span class="p">,</span><span class="n">Delta</span><span class="p">,</span><span class="n">A</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span>
+
+<div class="viewcode-block" id="STFMRAnalysis.plot_resonances"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.STFMRAnalysis.plot_resonances">[docs]</a>    <span class="k">def</span> <span class="nf">plot_resonances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots just the resonances.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed along directly to :func:`~analysis.analysis.baseAnalysis.plot_dataset`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_DATA_VAR</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="c1"># TODO: make static method. Need to figure out how to deal with the</span>
+    <span class="c1"># guesses for Meff, S/A45 and alpha.</span>
+<div class="viewcode-block" id="STFMRAnalysis.guess_resonance_params"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.STFMRAnalysis.guess_resonance_params">[docs]</a>    <span class="k">def</span> <span class="nf">guess_resonance_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">field_azimuth</span><span class="p">,</span> <span class="n">rf_freq</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Guesses resonance parameters. For use in</span>
+<span class="sd">        :meth:`~.STFMRAnalysis.fit_resonances`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Mixing voltage data to guess parameters of</span>
+<span class="sd">        field : np.ndarray</span>
+<span class="sd">            Field strengths of data points to fit</span>
+<span class="sd">        field_azimuth : float</span>
+<span class="sd">            Azimuthal angle of field with respect to device angle</span>
+<span class="sd">        rf_freq : float</span>
+<span class="sd">            RF frequency of applied current</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            A catchall to deal with any unexpected dimensions of</span>
+<span class="sd">            :attr:`.STFMRAnalysis.sweep_ds` which should not influence the</span>
+<span class="sd">            guesses.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            List of guesses of the resonance parameters. Format:</span>
+<span class="sd">            [B0, Delta, S, A, offset]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">SAsign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">field_azimuth</span> <span class="o">-</span> <span class="mi">90</span><span class="p">)</span><span class="o">*</span><span class="n">deg2rad</span><span class="p">)</span>
+                         <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">((</span><span class="n">field_azimuth</span> <span class="o">-</span> <span class="mi">90</span><span class="p">)</span><span class="o">*</span><span class="n">deg2rad</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.01</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">STFMRAnalysis</span><span class="o">.</span><span class="n">B0</span><span class="p">(</span><span class="n">rf_freq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Meff_guess</span><span class="p">),</span>
+                         <span class="n">STFMRAnalysis</span><span class="o">.</span><span class="n">Delta_formula</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_guess</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rf_freq</span><span class="p">),</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">S45_guess</span><span class="o">*</span><span class="n">SAsign</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A45_guess</span><span class="o">*</span><span class="n">SAsign</span><span class="p">,</span> <span class="n">offset</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="STFMRAnalysis.fit_resonances"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.STFMRAnalysis.fit_resonances">[docs]</a>    <span class="k">def</span> <span class="nf">fit_resonances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Meff_guess</span><span class="p">,</span> <span class="n">alpha_guess</span><span class="p">,</span> <span class="n">S45_guess</span><span class="p">,</span>
+                                 <span class="n">A45_guess</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fits resonances after</span>
+<span class="sd">        :meth:`~.STFMRAnalysis.separate_field_data`</span>
+<span class="sd">        is ran.</span>
+
+<span class="sd">        This uses ``curve_fit`` and is a thin wrapper around</span>
+<span class="sd">        :func:`~analysis.analysis.baseAnalysis.fit_dataset`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Meff_guess : float</span>
+<span class="sd">            guess of Meff</span>
+<span class="sd">        alpha_guess : float</span>
+<span class="sd">            guess of magnet damping</span>
+<span class="sd">        S45_guess : float</span>
+<span class="sd">            Guess of symmetric amplitude of the lorentzian with ang(B, I)=45</span>
+<span class="sd">        A45_guess : float</span>
+<span class="sd">            Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            can be:</span>
+<span class="sd">            - names of ``dims`` of ``ds``</span>
+<span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
+<span class="sd">            are fit to . If no selections given, everything is fit to.</span>
+<span class="sd">            - kwargs of ``curve_fit``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        resonanceFit</span>
+<span class="sd">            Object containing the results of the fitting and convenience</span>
+<span class="sd">            functions for dealing with the fit parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># TODO: check that separate_pnfield_data was ran.</span>
+
+        <span class="c1"># save fit guesses</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Meff_guess</span> <span class="o">=</span> <span class="n">Meff_guess</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_guess</span> <span class="o">=</span> <span class="n">alpha_guess</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">S45_guess</span> <span class="o">=</span> <span class="n">S45_guess</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">A45_guess</span> <span class="o">=</span> <span class="n">A45_guess</span>
+
+        <span class="c1"># Bound parameters so that linewidth is always nonnegative.</span>
+        <span class="n">lobounds</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
+        <span class="n">upbounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+        <span class="n">afit</span> <span class="o">=</span> <span class="n">fit_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="p">,</span> <span class="n">STFMRAnalysis</span><span class="o">.</span><span class="n">total_lor</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">guess_resonance_params</span><span class="p">,</span>
+                           <span class="p">[</span><span class="s1">&#39;B0&#39;</span><span class="p">,</span> <span class="s1">&#39;Delta&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">],</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">BFIELD_DIM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_DATA_VAR</span><span class="p">,</span>
+                           <span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="n">lobounds</span><span class="p">,</span> <span class="n">upbounds</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">resonanceFit</span><span class="o">.</span><span class="n">from_analyzedFit</span><span class="p">(</span><span class="n">afit</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="resonanceFit"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.resonanceFit">[docs]</a><span class="k">class</span> <span class="nc">resonanceFit</span><span class="p">(</span><span class="n">analyzedFit</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to contain methods related to STFMR resonance fit parameters. Wrapper</span>
+<span class="sd">    around :class:`~analysis.analysis.baseAnalysis.analyzedFit`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ANGLE_DIM</span> <span class="o">=</span> <span class="s1">&#39;field_azimuth&#39;</span>
+    <span class="n">FREQUENCY_DIM</span> <span class="o">=</span> <span class="s1">&#39;rf_freq&#39;</span>
+    <span class="n">TEMPERATURE_DIM</span> <span class="o">=</span> <span class="s1">&#39;temperature&#39;</span>
+
+<div class="viewcode-block" id="resonanceFit.from_analyzedFit"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.resonanceFit.from_analyzedFit">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_analyzedFit</span><span class="p">(</span><span class="n">afit</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an instance of this class starting from an analyzedFit instance</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        afit : analysis.analysis.baseAnalysis.analyzedFit instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">resonanceFit</span><span class="p">(</span><span class="n">afit</span><span class="o">.</span><span class="n">fit_ds</span><span class="p">,</span> <span class="n">afit</span><span class="o">.</span><span class="n">main_ds</span><span class="p">,</span> <span class="n">afit</span><span class="o">.</span><span class="n">fit_func</span><span class="p">,</span>
+                            <span class="n">afit</span><span class="o">.</span><span class="n">guess_func</span><span class="p">,</span> <span class="n">afit</span><span class="o">.</span><span class="n">param_names</span><span class="p">,</span> <span class="n">afit</span><span class="o">.</span><span class="n">xname</span><span class="p">,</span>
+                            <span class="n">afit</span><span class="o">.</span><span class="n">yname</span><span class="p">,</span> <span class="n">afit</span><span class="o">.</span><span class="n">yerr_name</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">B0</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Meff</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resonant field&quot;&quot;&quot;</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f</span>
+        <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">Meff</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Meff</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">B0_guess</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Guess function for use with fitting to find Meff. kwargs is used</span>
+<span class="sd">        to catch any possible unexpected fit_ds dims, since these should not</span>
+<span class="sd">        play a role in the fitting</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">Delta_formula</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Expected formula for the Delta parameter in lorentzians&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">alpha</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f</span><span class="o">/</span><span class="n">gamma</span><span class="o">+</span><span class="n">offset</span>
+
+<div class="viewcode-block" id="resonanceFit.fit_ang_dep"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.resonanceFit.fit_ang_dep">[docs]</a>    <span class="k">def</span> <span class="nf">fit_ang_dep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit_func</span><span class="p">,</span> <span class="n">guess_func</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">param_names</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fits angular dependence of some previously fit parameters. Thin wrapper</span>
+<span class="sd">        around :func:`~analysis.analysis.baseAnalysis.fit_dataset`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fit_func : function</span>
+<span class="sd">            function to fit data to</span>
+<span class="sd">        guess_func : function</span>
+<span class="sd">            function to generate guesses of parameters. Arguments must be:</span>
+<span class="sd">            - 1D numpy array of y data</span>
+<span class="sd">            - numpy array of x data</span>
+<span class="sd">            - keyword arguments, with the keywords being all dims of</span>
+<span class="sd">            :attr:`~.analyzedFit.fit_ds` besides ``xname``. Values passed will be</span>
+<span class="sd">            individual floats of coordinate values corresponding to those dims.</span>
+<span class="sd">            All arguments must be accepted, not all must be used.</span>
+<span class="sd">            As a hint, if designing for unexpected dims you can include **kwargs at</span>
+<span class="sd">            the end. This will accept any keword arguments not explicitly defined</span>
+<span class="sd">            by you and just do nothing with them.</span>
+<span class="sd">            Must return a list of guesses to the parameters, in the order given</span>
+<span class="sd">            in ``param_names``</span>
+<span class="sd">        param_names : list of str</span>
+<span class="sd">            list of fit parameter names, in the order they are returned</span>
+<span class="sd">            by ``guess_func``</span>
+<span class="sd">        yname : str</span>
+<span class="sd">            the name of the ``dim`` containing data to be fit to</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            can be:</span>
+<span class="sd">            - names of ``dims`` of :attr:`~.analyzedFit.fit_ds`</span>
+<span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
+<span class="sd">            are fit to . If no selections given, everything is fit to.</span>
+<span class="sd">            - kwargs of ``curve_fit``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        analyzedFit</span>
+<span class="sd">            Object containing all results of fitting and some convenience methods.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span><span class="p">(</span><span class="n">fit_func</span><span class="p">,</span> <span class="n">guess_func</span><span class="p">,</span> <span class="n">param_names</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">ANGLE_DIM</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="resonanceFit.find_Meff"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.resonanceFit.find_Meff">[docs]</a>    <span class="k">def</span> <span class="nf">find_Meff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fits the resonat field as a function of frequency to find the effective</span>
+<span class="sd">        magnetization assuming Kittel&#39;s formula holds.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            can be:</span>
+<span class="sd">            - names of ``dims`` of ``fit_ds``</span>
+<span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
+<span class="sd">            are fit to . If no selections given, everything is fit to.</span>
+<span class="sd">            - kwargs of ``curve_fit``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        analyzedFit</span>
+<span class="sd">            An object showing the result of the fitting. Contains the effective</span>
+<span class="sd">            magnetization as a function of any other dimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span><span class="p">(</span><span class="n">resonanceFit</span><span class="o">.</span><span class="n">B0</span><span class="p">,</span> <span class="n">resonanceFit</span><span class="o">.</span><span class="n">B0_guess</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Meff&#39;</span><span class="p">],</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">FREQUENCY_DIM</span><span class="p">,</span> <span class="s1">&#39;B0&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="resonanceFit.calculate_SHE"><a class="viewcode-back" href="../../../analysis/STFMRAnalysis.html#analysis.analysis.STFMRAnalysis.resonanceFit.calculate_SHE">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_SHE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Meff</span><span class="p">,</span> <span class="n">tmag</span><span class="p">,</span> <span class="n">tnm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the spin Hall efficiency assuming we only have</span>
+<span class="sd">        &quot;standard&quot; torques in our system, i.e. a field-like torque from an</span>
+<span class="sd">        Oersted field and a y AD torque.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Meff : xarray.Dataset</span>
+<span class="sd">            Dataset of the effective magnetization which has coordinates</span>
+<span class="sd">            commensurate with that of ``fit_ds``. Can use the ``fit_ds``</span>
+<span class="sd">            attribute of the output of find_Meff.</span>
+<span class="sd">        tmag : float</span>
+<span class="sd">            thickness of the magnetic layer, in m</span>
+<span class="sd">        tnm : float</span>
+<span class="sd">            thickness of the normal metal, in m</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        xarray.DataArray</span>
+<span class="sd">            A DataArray with the same dimensions and coordinates as ``fit_ds``</span>
+<span class="sd">            containing the calculated SHE.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">SHE</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_ds</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">]</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_ds</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">echarge</span><span class="o">*</span><span class="n">mu0</span><span class="o">*</span><span class="n">Meff</span> \
+               <span class="o">*</span><span class="n">tmag</span><span class="o">*</span><span class="n">tnm</span><span class="o">/</span><span class="n">hbar</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">Meff</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_ds</span><span class="p">[</span><span class="s1">&#39;B0&#39;</span><span class="p">])</span>
+        <span class="n">SHE</span> <span class="o">=</span> <span class="n">SHE</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;SHE&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SHE</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Joseph Mittelstaedt, Saba Karimeddiny
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

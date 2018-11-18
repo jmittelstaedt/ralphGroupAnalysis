@@ -1,0 +1,506 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>STFMR Analysis Class &mdash; Ralph Group Analysis 0.1alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AMR Analysis Class" href="AMRAnalysis.html" />
+    <link rel="prev" title="Base Analysis Class" href="baseAnalysis.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Ralph Group Analysis
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Analysis Classes:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="baseAnalysis.html">Base Analysis Class</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">STFMR Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AMRAnalysis.html">AMR Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HallAnalysis.html">Second Harmonic Hall Analysis Class</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Procedures:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../procedures/STFMRProcedures.html">STFMR Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../procedures/HallProcedures.html">Second Harmonic Hall Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../procedures/AMRProcedures.html">AMR Procedures</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ralph Group Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>STFMR Analysis Class</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/analysis/STFMRAnalysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="stfmr-analysis-class">
+<h1>STFMR Analysis Class<a class="headerlink" href="#stfmr-analysis-class" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="analysis.analysis.STFMRAnalysis.STFMRAnalysis">
+<em class="property">class </em><code class="descclassname">analysis.analysis.STFMRAnalysis.</code><code class="descname">STFMRAnalysis</code><span class="sig-paren">(</span><em>swept_temp=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#STFMRAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.STFMRAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.baseAnalysis" title="analysis.analysis.baseAnalysis.baseAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">analysis.analysis.baseAnalysis.baseAnalysis</span></code></a></p>
+<p>Class to contain all STFMR related functions, and acts as a convenient
+container for importing and storing datasets etc.
+Note that:
+1. this is fairly general, so if you end up sweeping over more stuff
+than before, it should be able to handle that transparently.
+2. this is written so that if names of parameters or data columns
+change, we just need to modify some class variables and all of the
+analysis should still work.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>swept_temp</strong> (<em>bool</em>) – Whether temperature was swept in this scan and hence should be a
+dimension of <code class="xref py py-attr docutils literal notranslate"><span class="pre">STFMRAnalysis.sweep_ds</span></code></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sweep_ds</strong> (<em>xarray.Dataset</em>) – Dataset containing the data</li>
+<li><strong>procedure_swept_col</strong> (<em>str</em>) – column swept in the procedure</li>
+<li><strong>series_swept_params</strong> (<em>list of str</em>) – parameters swept in the series</li>
+<li><strong>gamma</strong> (<em>float</em>) – Gyromagnetic Ratio in GHz/T</li>
+<li><strong>mu0</strong> (<em>float</em>) – Permeability of Free Space</li>
+<li><strong>hbar</strong> (<em>float</em>) – Planck’s Reduced Constant</li>
+<li><strong>echarge</strong> (<em>float</em>) – magnitude of electron charnge</li>
+<li><strong>muB</strong> (<em>float</em>) – Bohr Magneton</li>
+<li><strong>procedure</strong> (<em>pymeasure.experiment.Procedure</em>) – The procedure class which created the data files. Used for importing
+using PyMeasure</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="analysis.analysis.STFMRAnalysis.STFMRAnalysis.load_old_procedures">
+<code class="descname">load_old_procedures</code><span class="sig-paren">(</span><em>direc</em>, <em>series_filenames=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#STFMRAnalysis.load_old_procedures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.STFMRAnalysis.load_old_procedures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads procedures from Neal’s code and makes them work with the rest
+of the stuff in here.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>direc</strong> (<em>str</em>) – Directory containing a bunch of the data files.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.STFMRAnalysis.STFMRAnalysis.separate_field_data">
+<code class="descname">separate_field_data</code><span class="sig-paren">(</span><em>phi_offset=0.0</em>, <em>reverse=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#STFMRAnalysis.separate_field_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.STFMRAnalysis.separate_field_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separates the positive and negative field data and assigns the negative
+field data to an angle 180 deg from the corresponding positive field
+data. Shifts the angle coordinates as well if requested.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>phi_offset</strong> (<em>float</em>) – Angle to offset the angles by. If <code class="docutils literal notranslate"><span class="pre">reverse</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, we do
+<code class="docutils literal notranslate"><span class="pre">phi_offset</span> <span class="pre">-</span> <span class="pre">phi</span></code>, otherwise <code class="docutils literal notranslate"><span class="pre">phi</span> <span class="pre">-</span> <span class="pre">phi_offset</span></code></li>
+<li><strong>reverse</strong> (<em>bool</em>) – Whether to reverse the angular coordinates as well, i.e. go from
+increasing phi meaning clockwise to counter-clockwise</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Modifies <code class="xref py py-attr docutils literal notranslate"><span class="pre">sweep_ds</span></code> in-place</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If there is no negative field data. This could either mean none was
+taken or that this method has already been used.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.STFMRAnalysis.STFMRAnalysis.plot_resonances">
+<code class="descname">plot_resonances</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#STFMRAnalysis.plot_resonances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.STFMRAnalysis.plot_resonances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots just the resonances.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Passed along directly to <a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.plot_dataset" title="analysis.analysis.baseAnalysis.plot_dataset"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_dataset()</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.STFMRAnalysis.STFMRAnalysis.guess_resonance_params">
+<code class="descname">guess_resonance_params</code><span class="sig-paren">(</span><em>X</em>, <em>field</em>, <em>field_azimuth</em>, <em>rf_freq</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#STFMRAnalysis.guess_resonance_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.STFMRAnalysis.guess_resonance_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guesses resonance parameters. For use in
+<a class="reference internal" href="#analysis.analysis.STFMRAnalysis.STFMRAnalysis.fit_resonances" title="analysis.analysis.STFMRAnalysis.STFMRAnalysis.fit_resonances"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_resonances()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – Mixing voltage data to guess parameters of</li>
+<li><strong>field</strong> (<em>np.ndarray</em>) – Field strengths of data points to fit</li>
+<li><strong>field_azimuth</strong> (<em>float</em>) – Azimuthal angle of field with respect to device angle</li>
+<li><strong>rf_freq</strong> (<em>float</em>) – RF frequency of applied current</li>
+<li><strong>**kwargs</strong> – A catchall to deal with any unexpected dimensions of
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">STFMRAnalysis.sweep_ds</span></code> which should not influence the
+guesses.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of guesses of the resonance parameters. Format:
+[B0, Delta, S, A, offset]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.STFMRAnalysis.STFMRAnalysis.fit_resonances">
+<code class="descname">fit_resonances</code><span class="sig-paren">(</span><em>Meff_guess</em>, <em>alpha_guess</em>, <em>S45_guess</em>, <em>A45_guess</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#STFMRAnalysis.fit_resonances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.STFMRAnalysis.fit_resonances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits resonances after
+<a class="reference internal" href="#analysis.analysis.STFMRAnalysis.STFMRAnalysis.separate_field_data" title="analysis.analysis.STFMRAnalysis.STFMRAnalysis.separate_field_data"><code class="xref py py-meth docutils literal notranslate"><span class="pre">separate_field_data()</span></code></a>
+is ran.</p>
+<p>This uses <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code> and is a thin wrapper around
+<a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.fit_dataset" title="analysis.analysis.baseAnalysis.fit_dataset"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_dataset()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Meff_guess</strong> (<em>float</em>) – guess of Meff</li>
+<li><strong>alpha_guess</strong> (<em>float</em>) – guess of magnet damping</li>
+<li><strong>S45_guess</strong> (<em>float</em>) – Guess of symmetric amplitude of the lorentzian with ang(B, I)=45</li>
+<li><strong>A45_guess</strong> (<em>float</em>) – Guess of antisymmetric amplitude of the lorentzian with ang(B, I)=45</li>
+<li><strong>**kwargs</strong> – can be:
+- names of <code class="docutils literal notranslate"><span class="pre">dims</span></code> of <code class="docutils literal notranslate"><span class="pre">ds</span></code>
+values should eitherbe single coordinate values or lists of coordinate
+values of those <code class="docutils literal notranslate"><span class="pre">dims</span></code>. Only data with coordinates given by selections
+are fit to . If no selections given, everything is fit to.
+- kwargs of <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Object containing the results of the fitting and convenience
+functions for dealing with the fit parameters</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#analysis.analysis.STFMRAnalysis.resonanceFit" title="analysis.analysis.STFMRAnalysis.resonanceFit">resonanceFit</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="analysis.analysis.STFMRAnalysis.resonanceFit">
+<em class="property">class </em><code class="descclassname">analysis.analysis.STFMRAnalysis.</code><code class="descname">resonanceFit</code><span class="sig-paren">(</span><em>fit_ds</em>, <em>main_ds</em>, <em>fit_func</em>, <em>guess_func</em>, <em>param_names</em>, <em>xname</em>, <em>yname</em>, <em>yerr_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#resonanceFit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.resonanceFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.analyzedFit" title="analysis.analysis.baseAnalysis.analyzedFit"><code class="xref py py-class docutils literal notranslate"><span class="pre">analysis.analysis.baseAnalysis.analyzedFit</span></code></a></p>
+<p>Class to contain methods related to STFMR resonance fit parameters. Wrapper
+around <a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.analyzedFit" title="analysis.analysis.baseAnalysis.analyzedFit"><code class="xref py py-class docutils literal notranslate"><span class="pre">analyzedFit</span></code></a></p>
+<dl class="staticmethod">
+<dt id="analysis.analysis.STFMRAnalysis.resonanceFit.from_analyzedFit">
+<em class="property">static </em><code class="descname">from_analyzedFit</code><span class="sig-paren">(</span><em>afit</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#resonanceFit.from_analyzedFit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.resonanceFit.from_analyzedFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an instance of this class starting from an analyzedFit instance</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>afit</strong> (<em>analysis.analysis.baseAnalysis.analyzedFit instance</em>) – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.STFMRAnalysis.resonanceFit.fit_ang_dep">
+<code class="descname">fit_ang_dep</code><span class="sig-paren">(</span><em>fit_func</em>, <em>guess_func</em>, <em>yname</em>, <em>param_names</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#resonanceFit.fit_ang_dep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.resonanceFit.fit_ang_dep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits angular dependence of some previously fit parameters. Thin wrapper
+around <a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.fit_dataset" title="analysis.analysis.baseAnalysis.fit_dataset"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_dataset()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fit_func</strong> (<em>function</em>) – function to fit data to</li>
+<li><strong>guess_func</strong> (<em>function</em>) – function to generate guesses of parameters. Arguments must be:
+- 1D numpy array of y data
+- numpy array of x data
+- keyword arguments, with the keywords being all dims of
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">fit_ds</span></code> besides <code class="docutils literal notranslate"><span class="pre">xname</span></code>. Values passed will be
+individual floats of coordinate values corresponding to those dims.
+All arguments must be accepted, not all must be used.
+As a hint, if designing for unexpected dims you can include <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs at
+the end. This will accept any keword arguments not explicitly defined
+by you and just do nothing with them.
+Must return a list of guesses to the parameters, in the order given
+in <code class="docutils literal notranslate"><span class="pre">param_names</span></code></li>
+<li><strong>param_names</strong> (<em>list of str</em>) – list of fit parameter names, in the order they are returned
+by <code class="docutils literal notranslate"><span class="pre">guess_func</span></code></li>
+<li><strong>yname</strong> (<em>str</em>) – the name of the <code class="docutils literal notranslate"><span class="pre">dim</span></code> containing data to be fit to</li>
+<li><strong>**kwargs</strong> – can be:
+- names of <code class="docutils literal notranslate"><span class="pre">dims</span></code> of <code class="xref py py-attr docutils literal notranslate"><span class="pre">fit_ds</span></code>
+values should eitherbe single coordinate values or lists of coordinate
+values of those <code class="docutils literal notranslate"><span class="pre">dims</span></code>. Only data with coordinates given by selections
+are fit to . If no selections given, everything is fit to.
+- kwargs of <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Object containing all results of fitting and some convenience methods.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.analyzedFit" title="analysis.analysis.baseAnalysis.analyzedFit">analyzedFit</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.STFMRAnalysis.resonanceFit.find_Meff">
+<code class="descname">find_Meff</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#resonanceFit.find_Meff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.resonanceFit.find_Meff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the resonat field as a function of frequency to find the effective
+magnetization assuming Kittel’s formula holds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – can be:
+- names of <code class="docutils literal notranslate"><span class="pre">dims</span></code> of <code class="docutils literal notranslate"><span class="pre">fit_ds</span></code>
+values should eitherbe single coordinate values or lists of coordinate
+values of those <code class="docutils literal notranslate"><span class="pre">dims</span></code>. Only data with coordinates given by selections
+are fit to . If no selections given, everything is fit to.
+- kwargs of <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An object showing the result of the fitting. Contains the effective
+magnetization as a function of any other dimensions.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="baseAnalysis.html#analysis.analysis.baseAnalysis.analyzedFit" title="analysis.analysis.baseAnalysis.analyzedFit">analyzedFit</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="analysis.analysis.STFMRAnalysis.resonanceFit.calculate_SHE">
+<code class="descname">calculate_SHE</code><span class="sig-paren">(</span><em>Meff</em>, <em>tmag</em>, <em>tnm</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/analysis/STFMRAnalysis.html#resonanceFit.calculate_SHE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.analysis.STFMRAnalysis.resonanceFit.calculate_SHE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the spin Hall efficiency assuming we only have
+“standard” torques in our system, i.e. a field-like torque from an
+Oersted field and a y AD torque.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Meff</strong> (<em>xarray.Dataset</em>) – Dataset of the effective magnetization which has coordinates
+commensurate with that of <code class="docutils literal notranslate"><span class="pre">fit_ds</span></code>. Can use the <code class="docutils literal notranslate"><span class="pre">fit_ds</span></code>
+attribute of the output of find_Meff.</li>
+<li><strong>tmag</strong> (<em>float</em>) – thickness of the magnetic layer, in m</li>
+<li><strong>tnm</strong> (<em>float</em>) – thickness of the normal metal, in m</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A DataArray with the same dimensions and coordinates as <code class="docutils literal notranslate"><span class="pre">fit_ds</span></code>
+containing the calculated SHE.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">xarray.DataArray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="AMRAnalysis.html" class="btn btn-neutral float-right" title="AMR Analysis Class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="baseAnalysis.html" class="btn btn-neutral" title="Base Analysis Class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Joseph Mittelstaedt, Saba Karimeddiny
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

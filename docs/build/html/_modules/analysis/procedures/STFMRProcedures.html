@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>analysis.procedures.STFMRProcedures &mdash; Ralph Group Analysis 0.1alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Ralph Group Analysis
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Analysis Classes:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/baseAnalysis.html">Base Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/STFMRAnalysis.html">STFMR Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/AMRAnalysis.html">AMR Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/HallAnalysis.html">Second Harmonic Hall Analysis Class</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Procedures:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../procedures/STFMRProcedures.html">STFMR Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../procedures/HallProcedures.html">Second Harmonic Hall Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../procedures/AMRProcedures.html">AMR Procedures</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ralph Group Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>analysis.procedures.STFMRProcedures</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for analysis.procedures.STFMRProcedures</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pymeasure.experiment</span> <span class="k">import</span> <span class="n">Procedure</span>
+<span class="kn">from</span> <span class="nn">pymeasure.experiment</span> <span class="k">import</span> <span class="n">FloatParameter</span><span class="p">,</span> <span class="n">BooleanParameter</span><span class="p">,</span> <span class="n">Parameter</span>
+
+<div class="viewcode-block" id="STFMRProcedure"><a class="viewcode-back" href="../../../procedures/STFMRProcedures.html#analysis.procedures.STFMRProcedures.STFMRProcedure">[docs]</a><span class="k">class</span> <span class="nc">STFMRProcedure</span><span class="p">(</span><span class="n">Procedure</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Daedalus STFMR procedure scanning field strength.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    field_strength_start : float</span>
+<span class="sd">        Starting field strength in Tesla</span>
+<span class="sd">    field_strength_end : float</span>
+<span class="sd">        Final field strength in Tesla</span>
+<span class="sd">    field_strength_step : float</span>
+<span class="sd">        Step size of the field strength in Tesla</span>
+<span class="sd">    field_azimuth : float</span>
+<span class="sd">        Azimuthal field angle during the sweep</span>
+<span class="sd">    rf_freq : float</span>
+<span class="sd">        Frequency of the RF current</span>
+<span class="sd">    rf_power : float</span>
+<span class="sd">        Power of the RF current</span>
+<span class="sd">    field_swap : bool</span>
+<span class="sd">        Whether we swapped the field direction, to record both positive and</span>
+<span class="sd">        negative field strength</span>
+<span class="sd">    sample_name : str</span>
+<span class="sd">        Name of the sampe</span>
+<span class="sd">    DATA_COLUMNS : list of str</span>
+<span class="sd">        Names of the data taken</span>
+<span class="sd">    delay : float</span>
+<span class="sd">        Delay between taking data points in seconds</span>
+<span class="sd">    sensitivity : float</span>
+<span class="sd">        Sensitivity of the lockin in volts</span>
+<span class="sd">    time_constant : float</span>
+<span class="sd">        Time constant of the lockin in seconds</span>
+<span class="sd">    mag_calib_name : str</span>
+<span class="sd">        Name of the magnet calibration file.</span>
+<span class="sd">    field_polar : float</span>
+<span class="sd">        polar field angle of the field. Zero is in-plane in degrees</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sample_name</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;Sample Name&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="n">field_azimuth</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Magnetic Field Azimuthal Angle&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">field_polar</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Magnetic Field Polar Angle&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+    <span class="n">field_strength_start</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Start Magnetic Field&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">field_strength_end</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;End Magnetic Field&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">field_strength_step</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Magnetic Field Step&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">mag_calib_name</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;Magnet Calibration Filename&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;./proj_field&#39;</span><span class="p">)</span>
+    <span class="n">delay</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Delay&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">field_swap</span> <span class="o">=</span> <span class="n">BooleanParameter</span><span class="p">(</span><span class="s2">&quot;Swap Field&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">rf_freq</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;RF Frequency&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;GHz&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">12.0</span><span class="p">)</span>
+    <span class="n">rf_power</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;RF Power&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;dBmW&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">18.0</span><span class="p">)</span>
+
+    <span class="n">sensitivity</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Lockin Sensitivity&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">time_constant</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Lockin Time Constant&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="n">DATA_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="s2">&quot;field_strength&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="STFMRCryoProcedure"><a class="viewcode-back" href="../../../procedures/STFMRProcedures.html#analysis.procedures.STFMRProcedures.STFMRCryoProcedure">[docs]</a><span class="k">class</span> <span class="nc">STFMRCryoProcedure</span><span class="p">(</span><span class="n">Procedure</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Kavli STFMR procedure scanning field strength.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    field_strength_start : float</span>
+<span class="sd">        Starting field strength in Tesla</span>
+<span class="sd">    field_strength_end : float</span>
+<span class="sd">        Final field strength in Tesla</span>
+<span class="sd">    field_strength_step : float</span>
+<span class="sd">        Step size of the field strength in Tesla</span>
+<span class="sd">    field_azimuth : float</span>
+<span class="sd">        Azimuthal field angle during the sweep</span>
+<span class="sd">    rf_freq : float</span>
+<span class="sd">        Frequency of the RF current</span>
+<span class="sd">    rf_power : float</span>
+<span class="sd">        Power of the RF current</span>
+<span class="sd">    temperature : float</span>
+<span class="sd">        Temperature set point for the sweep</span>
+<span class="sd">    control_temp : bool</span>
+<span class="sd">        Whether the temperature was equilibrated Automatically</span>
+<span class="sd">    equilibration_time : float</span>
+<span class="sd">        The time which was waited for the temperature to equilibrate, if handled</span>
+<span class="sd">        automatically.</span>
+<span class="sd">    field_swap : bool</span>
+<span class="sd">        Whether we swapped the field direction, to record both positive and</span>
+<span class="sd">        negative field strength</span>
+<span class="sd">    sample_name : str</span>
+<span class="sd">        Name of the sampe</span>
+<span class="sd">    DATA_COLUMNS : list of str</span>
+<span class="sd">        Names of the data taken</span>
+<span class="sd">    delay : float</span>
+<span class="sd">        Delay between taking data points in seconds</span>
+<span class="sd">    sensitivity : float</span>
+<span class="sd">        Sensitivity of the lockin in volts</span>
+<span class="sd">    time_constant : float</span>
+<span class="sd">        Time constant of the lockin in seconds</span>
+<span class="sd">    current2field_calib_name : str</span>
+<span class="sd">        Name of the magnet calibration file going from current to field</span>
+<span class="sd">    field2current_calib_name : str</span>
+<span class="sd">        Name of the magnet calibration file going from field to current</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sample_name</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;Sample Name&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="n">field_strength_start</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Start Magnetic Field&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">field_strength_end</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;End Magnetic Field&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">field_strength_step</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Magnetic Field Step&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">field_azimuth</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Magnetic Field Azimuthal Angle&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">current2field_calib_name</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;Current to Magnetic Field Calibration&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;./current2mag_calib.csv&#39;</span><span class="p">)</span>
+    <span class="n">field2current_calib_name</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;Magnetic Field to Current Calibration&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;./mag2current_calib.csv&#39;</span><span class="p">)</span>
+    <span class="n">delay</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Delay&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">field_swap</span> <span class="o">=</span> <span class="n">BooleanParameter</span><span class="p">(</span><span class="s2">&quot;Swap Field&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">rf_freq</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;RF Frequency&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;GHz&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">9.0</span><span class="p">)</span>
+    <span class="n">rf_power</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;RF Power&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;dBmW&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">15.0</span><span class="p">)</span>
+
+    <span class="n">temperature</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;temperature Setpoint&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">20.</span><span class="p">)</span>
+    <span class="n">control_temp</span> <span class="o">=</span> <span class="n">BooleanParameter</span><span class="p">(</span><span class="s2">&quot;Automatically Change Setpoint&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">equilibration_time</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Temp Equilibration Time&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1800.</span><span class="p">)</span>
+
+    <span class="n">sensitivity</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Lockin Sensitivity&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">time_constant</span> <span class="o">=</span> <span class="n">FloatParameter</span><span class="p">(</span><span class="s2">&quot;Lockin Time Constant&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="n">DATA_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;field_strength&quot;</span><span class="p">,</span><span class="s2">&quot;magnet_current&quot;</span><span class="p">,</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="s2">&quot;true_angle&quot;</span><span class="p">,</span><span class="s2">&quot;real_temperature&quot;</span><span class="p">,</span><span class="s2">&quot;elapsed_time&quot;</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Joseph Mittelstaedt, Saba Karimeddiny
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
