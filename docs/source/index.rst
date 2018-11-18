@@ -8,18 +8,17 @@ Welcome to Ralph Group Analysis's documentation!
 
    analysis/baseAnalysis
    analysis/STFMRAnalysis
-   analysis/HallAnalysis
    analysis/AMRAnalysis
+   analysis/HallAnalysis
 
 .. toctree::
    :maxdepth: 2
    :caption: Procedures:
    :glob:
 
-   procedures/kavliSTFMRProcedure
-   procedures/daedalusSTFMRProcedure
-   procedures/Hall2HarmProcedure
-   procedures/AMRProcedure
+   procedures/STFMRProcedures
+   procedures/HallProcedures
+   procedures/AMRProcedures
 
 Indices and tables
 ==================
