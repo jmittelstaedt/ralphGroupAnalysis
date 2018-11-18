@@ -1,5 +1,5 @@
-Daedalus STFMR Analysis Class
-#############################
+STFMR Analysis Class
+####################
 
 .. autoclass:: analysis.analysis.STFMRAnalysis.STFMRAnalysis
     :members: load_old_procedures, separate_field_data, guess_resonance_params,
