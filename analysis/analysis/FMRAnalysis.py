@@ -6,7 +6,7 @@ from scipy.optimize import curve_fit
 
 from pymeasure.experiment import Results
 
-import .constants
+# import .constants
 from .baseAnalysis import parse_series_file
 from ..procedures import FMRAnalogTrace, FMRDigitalTrace
 

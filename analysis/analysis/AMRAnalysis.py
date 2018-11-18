@@ -11,7 +11,7 @@ from .baseAnalysis import baseAnalysis, parse_series_file, plot_dataset
 from .baseAnalysis import fit_dataset, load_procedure_files
 from ..procedures import AMRAngProcedure, AMRFieldProcedure
 from ..procedures import AMRCryoAngProcedure, AMRCryoFieldProcedure
-from .constants import *
+# from .constants import *
 
 class AMRAnalysis(baseAnalysis):
     """

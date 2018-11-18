@@ -11,7 +11,7 @@ from pymeasure.experiment import Results
 from .baseAnalysis import baseAnalysis, analyzedFit, parse_series_file, plot_dataset
 from .baseAnalysis import get_coord_selection, fit_dataset, load_procedure_files
 from ..procedures import STFMRProcedure, STFMRCryoProcedure
-from .constants import *
+# from .constants import *
 
 class STFMRAnalysis(baseAnalysis):
     """

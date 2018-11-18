@@ -76,17 +76,15 @@
               <p class="caption"><span class="caption-text">Analysis Classes:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../analysis/baseAnalysis.html">Base Analysis Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../analysis/kavliSTFMRAnalysis.html">Kavli STFMR Analysis Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../analysis/daedalusSTFMRAnalysis.html">Daedalus STFMR Analysis Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../analysis/Hall2HarmAnalysis.html">Second Harmonic Hall Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/STFMRAnalysis.html">STFMR Analysis Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../analysis/AMRAnalysis.html">AMR Analysis Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/HallAnalysis.html">Second Harmonic Hall Analysis Class</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Procedures:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../procedures/kavliSTFMRProcedure.html">Kavli STFMR Procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../procedures/daedalusSTFMRProcedure.html">Daedalus STFMR Procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../procedures/Hall2HarmProcedure.html">Second Harmonic Hall Procedures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../procedures/AMRProcedure.html">AMR Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../procedures/STFMRProcedures.html">STFMR Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../procedures/HallProcedures.html">Second Harmonic Hall Procedures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../procedures/AMRProcedures.html">AMR Procedures</a></li>
 </ul>
 
             
@@ -184,7 +182,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    series_filenames : list of str</span>
+<span class="sd">    data_fnames : list of str</span>
 <span class="sd">        filenames (names only) of all procedure data files</span>
 <span class="sd">    procedure_swept_col : str</span>
 <span class="sd">        name of procedure column swept</span>
@@ -202,21 +200,20 @@
 
         <span class="c1"># extract all the filenames, representing files from a particular</span>
         <span class="c1"># procedure, AND all parameters swept in the series.</span>
-        <span class="n">series_filenames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">data_fnames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;# swept series parameter&#39;</span><span class="p">):</span>
                 <span class="n">series_swept_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
             <span class="k">elif</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">series_filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">data_fnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
-        <span class="k">return</span> <span class="n">series_filenames</span><span class="p">,</span> <span class="n">procedure_swept_col</span><span class="p">,</span> <span class="n">series_swept_params</span></div>
+        <span class="k">return</span> <span class="n">data_fnames</span><span class="p">,</span> <span class="n">procedure_swept_col</span><span class="p">,</span> <span class="n">series_swept_params</span></div>
 
-<div class="viewcode-block" id="load_procedure_files"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.load_procedure_files">[docs]</a><span class="k">def</span> <span class="nf">load_procedure_files</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">series_filenames</span><span class="p">,</span> <span class="n">procedure_swept_col</span><span class="p">,</span>
-                         <span class="n">series_swept_params</span><span class="p">,</span> <span class="n">procedure</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="load_procedure_files"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.load_procedure_files">[docs]</a><span class="k">def</span> <span class="nf">load_procedure_files</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">data_fnames</span><span class="p">,</span> <span class="n">procedure_swept_col</span><span class="p">,</span> <span class="n">series_swept_params</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Loads data from all procedure datafiles, and returns a Dataset containing</span>
+<span class="sd">    Loads data from all data files, and returns a Dataset containing</span>
 <span class="sd">    it all. The output of :func:`~.parse_series_file` can be passed (almost)</span>
 <span class="sd">    directly to this function.</span>
 
@@ -224,15 +221,21 @@
 <span class="sd">    ----------</span>
 <span class="sd">    direc : str</span>
 <span class="sd">        directory containing all of the procedure data files</span>
-<span class="sd">    series_filenames : list of str</span>
+<span class="sd">    data_fnames : list of str</span>
 <span class="sd">        filenames of all of the procedures</span>
 <span class="sd">    procedure_swept_col : str</span>
 <span class="sd">        the data column swept in each procedure</span>
 <span class="sd">    series_swept_params : list of str</span>
 <span class="sd">        The procedure parameters swept in the series</span>
-<span class="sd">    procedure : pymeasure.experiment.Procedure</span>
-<span class="sd">        The procedure class which created the data files. Used for importing </span>
-<span class="sd">        using PyMeasure</span>
+<span class="sd">    parser : func</span>
+<span class="sd">        Function which accepts a directory, a data filename, a string representing</span>
+<span class="sd">        the swept data column, a list of strings representing swept parameters</span>
+<span class="sd">        in the series of sweeps and optional keyword arguments. It must return</span>
+<span class="sd">        a numpy array of the swept column data, a dictionary of 1d numpy arrays</span>
+<span class="sd">        of each of the other data columns, and a dictionary of the values of the</span>
+<span class="sd">        parameters which were swept in the series.</span>
+<span class="sd">    kwargs</span>
+<span class="sd">        Keyword arguments passed along to the ``parser`` function</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -241,59 +244,41 @@
 <span class="sd">        the swept one), and dimensions and coordinates corresponding to the</span>
 <span class="sd">        swept data column and the swept series parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">swept_col_data</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">param_values</span> <span class="o">=</span> <span class="n">parser</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">data_fnames</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                <span class="n">procedure_swept_col</span><span class="p">,</span>
+                                                <span class="n">series_swept_params</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">col_size</span> <span class="o">=</span> <span class="n">swept_col_data</span><span class="o">.</span><span class="n">size</span>
 
-    <span class="c1"># load example result</span>
-    <span class="n">ex_result</span> <span class="o">=</span> <span class="n">Results</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span><span class="n">series_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-                             <span class="n">procedure</span><span class="p">)</span>
-
-    <span class="c1"># record data columns, except one we swept over. Will handle it separately</span>
-    <span class="n">data_cols</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ex_result</span><span class="o">.</span><span class="n">procedure</span><span class="o">.</span><span class="n">DATA_COLUMNS</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="n">procedure_swept_col</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="n">data_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
-    <span class="n">col_size</span> <span class="o">=</span> <span class="n">ex_result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">data_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">size</span>
+    <span class="c1"># Make tuple of new dimension names</span>
     <span class="n">new_dims</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">procedure_swept_col</span><span class="p">]</span> <span class="o">+</span> <span class="n">series_swept_params</span><span class="p">)</span>
-    <span class="n">swept_col_data</span> <span class="o">=</span> <span class="n">ex_result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">procedure_swept_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
     <span class="c1"># need data_var data to have the correct shape as an array so that</span>
     <span class="c1"># all coordinates are taken seriously by the dataset. This exists to</span>
     <span class="c1"># reshape the data column into the correct shape</span>
     <span class="n">reshape_helper</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">series_swept_params</span><span class="p">)</span>
 
-    <span class="c1"># we need to get the ball rolling. Add the first data to growing_ds</span>
-    <span class="c1"># create data_vars, appropriately reshaped</span>
-    <span class="n">new_data_vars</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data_cols</span><span class="p">:</span>
-        <span class="n">new_data_vars</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">new_dims</span><span class="p">,</span>
-            <span class="n">ex_result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">col_size</span><span class="p">,</span><span class="o">*</span><span class="n">reshape_helper</span><span class="p">)</span>
-        <span class="p">)</span>
-    <span class="c1"># create new columns, with all from series_swept_params only having one</span>
-    <span class="c1"># coordinate value (hence the need for reshaping)</span>
-    <span class="n">new_coords</span> <span class="o">=</span> <span class="p">{</span><span class="n">procedure_swept_col</span><span class="p">:</span> <span class="n">swept_col_data</span><span class="p">}</span>
-    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">series_swept_params</span><span class="p">:</span>
-        <span class="n">new_coords</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">ex_result</span><span class="o">.</span><span class="n">procedure</span><span class="p">,</span><span class="n">param</span><span class="p">)]</span>
+    <span class="c1"># Create an empty Dataset which we will add all of our actual data to</span>
+    <span class="n">growing_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
 
-    <span class="n">growing_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_vars</span><span class="o">=</span><span class="n">new_data_vars</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">new_coords</span><span class="p">)</span>
+    <span class="c1"># load the rest of the procedure data files using the same method as above</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">data_fnames</span><span class="p">:</span>
+        <span class="n">swept_col_data</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">param_values</span> <span class="o">=</span> <span class="n">parser</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span>
+                                                    <span class="n">procedure_swept_col</span><span class="p">,</span>
+                                                    <span class="n">series_swept_params</span><span class="p">,</span>
+                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="c1"># load the rest of the procedure data files</span>
-    <span class="c1"># if ur lookin here b/c you got an error and were trying to load A SINGLE</span>
-    <span class="c1"># procedure data file 1. i&#39;m sorry this is implemented poorly 2. ur a dumbass</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">series_filenames</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-        <span class="n">rslt</span> <span class="o">=</span> <span class="n">Results</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="n">procedure</span><span class="p">)</span>
-
-        <span class="c1"># new data vars (but same dims)</span>
+        <span class="c1"># Add data to the data variables, appropriately reshaped</span>
         <span class="n">new_data_vars</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data_cols</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">data_vals</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">new_data_vars</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">new_dims</span><span class="p">,</span>
-                <span class="n">rslt</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">col_size</span><span class="p">,</span><span class="o">*</span><span class="n">reshape_helper</span><span class="p">)</span>
+                <span class="n">data_vals</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">col_size</span><span class="p">,</span> <span class="o">*</span><span class="n">reshape_helper</span><span class="p">)</span>
             <span class="p">)</span>
-        <span class="c1"># new coords (but same dims)</span>
-        <span class="n">new_coords</span> <span class="o">=</span> <span class="p">{</span><span class="n">procedure_swept_col</span><span class="p">:</span> <span class="n">swept_col_data</span><span class="p">}</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">series_swept_params</span><span class="p">:</span>
-            <span class="n">new_coords</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">rslt</span><span class="o">.</span><span class="n">procedure</span><span class="p">,</span><span class="n">param</span><span class="p">)]</span>
+
+        <span class="c1"># Create coordinate dictionary, putting all single value coordinates</span>
+        <span class="c1"># into lists of size 1 so xarray is happy.</span>
+        <span class="n">new_coords</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">param_values</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">new_coords</span><span class="p">[</span><span class="n">procedure_swept_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">swept_col_data</span>
 
         <span class="c1"># make dataset corresponding to new procedure data file</span>
         <span class="n">fresh_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_vars</span><span class="o">=</span><span class="n">new_data_vars</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">new_coords</span><span class="p">)</span>
@@ -316,10 +301,9 @@
     <span class="c1"># sort so all coordinates are in a sensible order</span>
     <span class="n">growing_ds</span> <span class="o">=</span> <span class="n">growing_ds</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">growing_ds</span><span class="o">.</span><span class="n">dims</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">growing_ds</span> <span class="c1"># it is now fullly grown :&#39;)</span></div>
+    <span class="k">return</span> <span class="n">growing_ds</span></div>
 
-<div class="viewcode-block" id="get_coord_selection"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.get_coord_selection">[docs]</a><span class="k">def</span> <span class="nf">get_coord_selection</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">drop_dim</span><span class="p">,</span> <span class="n">gen_empty_ds</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                        <span class="n">new_dvar_names</span> <span class="o">=</span> <span class="p">[],</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
+<div class="viewcode-block" id="get_coord_selection"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.get_coord_selection">[docs]</a><span class="k">def</span> <span class="nf">get_coord_selection</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">drop_dim</span><span class="p">,</span> <span class="n">gen_empty_ds</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">new_dvar_names</span> <span class="o">=</span> <span class="p">[],</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates a selection of coordinates from a dataset, dropping one dimension.</span>
 <span class="sd">    Can also generate a new dataset having as coordinates the selected</span>
@@ -409,8 +393,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">remaining_dims</span><span class="p">,</span> <span class="n">coord_combos</span><span class="p">,</span> <span class="n">remaining_ds</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({})</span></div>
 
-<div class="viewcode-block" id="make_fit_dataset_guesses"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.make_fit_dataset_guesses">[docs]</a><span class="k">def</span> <span class="nf">make_fit_dataset_guesses</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">guess_func</span><span class="p">,</span> <span class="n">param_names</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span>
-                      <span class="n">yname</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
+<div class="viewcode-block" id="make_fit_dataset_guesses"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.make_fit_dataset_guesses">[docs]</a><span class="k">def</span> <span class="nf">make_fit_dataset_guesses</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">guess_func</span><span class="p">,</span> <span class="n">param_names</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    creates a dataset of guesses of param_names given ``guess_func``. To be used</span>
 <span class="sd">    in :func:`~.fit_dataset`.</span>
@@ -427,6 +410,9 @@
 <span class="sd">        xname. Values passed will be individual floats of coordinate values</span>
 <span class="sd">        corresponding to those dims.</span>
 <span class="sd">        All arguments must be accepted, not all must be used.</span>
+<span class="sd">        As a hint, if designing for unexpected dims you can include **kwargs at</span>
+<span class="sd">        the end. This will accept any keword arguments not explicitly defined</span>
+<span class="sd">        by you and just do nothing with them.</span>
 <span class="sd">        Must return a list of guesses to the parameters, in the order given in</span>
 <span class="sd">        param_names</span>
 <span class="sd">    param_names : list of str</span>
@@ -477,8 +463,7 @@
 
     <span class="k">return</span> <span class="n">guess_ds</span></div>
 
-<div class="viewcode-block" id="fit_dataset"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.fit_dataset">[docs]</a><span class="k">def</span> <span class="nf">fit_dataset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">fit_func</span><span class="p">,</span> <span class="n">guess_func</span><span class="p">,</span> <span class="n">param_names</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span>
-                <span class="n">yname</span><span class="p">,</span> <span class="n">yerr_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="fit_dataset"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.fit_dataset">[docs]</a><span class="k">def</span> <span class="nf">fit_dataset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">fit_func</span><span class="p">,</span> <span class="n">guess_func</span><span class="p">,</span> <span class="n">param_names</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">yerr_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fits values in a dataset to a function. Returns an</span>
 <span class="sd">    :class:`~.analyzedFit` object</span>
@@ -496,6 +481,9 @@
 <span class="sd">        - keyword arguments, with the keywords being all dims of ds besides</span>
 <span class="sd">        xname. Values passed will be individual floats of coordinate values</span>
 <span class="sd">        corresponding to those dims.</span>
+<span class="sd">        As a hint, if designing for unexpected dims you can include **kwargs at</span>
+<span class="sd">        the end. This will accept any keword arguments not explicitly defined</span>
+<span class="sd">        by you and just do nothing with them.</span>
 <span class="sd">        All arguments must be accepted, not all must be used.</span>
 <span class="sd">        Must return a list of guesses to the parameters, in the order given in</span>
 <span class="sd">        ``param_names``</span>
@@ -566,9 +554,26 @@
         <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">param_names</span><span class="p">:</span>
             <span class="n">guess</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">guesses</span><span class="p">[</span><span class="n">pname</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">selection_dict</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
 
+        <span class="c1"># Deal with any possible spurious data</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ydata</span><span class="p">)):</span>
+            <span class="c1"># there is no meaningful data. Fill fit results with nan&#39;s</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">param_names</span><span class="p">):</span>
+                <span class="n">fit_ds</span><span class="p">[</span><span class="n">pname</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">selection_dict</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="n">fit_ds</span><span class="p">[</span><span class="n">pname</span><span class="o">+</span><span class="s1">&#39;_err&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">selection_dict</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># remove bad datapoints</span>
+            <span class="n">good_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">ydata</span><span class="p">)</span>
+            <span class="n">xdata</span> <span class="o">=</span> <span class="n">xdata</span><span class="p">[</span><span class="n">good_pts</span><span class="p">]</span>
+            <span class="n">ydata</span> <span class="o">=</span> <span class="n">ydata</span><span class="p">[</span><span class="n">good_pts</span><span class="p">]</span>
+        <span class="c1"># TODO: If number of y data points left over are less than number of</span>
+        <span class="c1"># params, there will probably be an error raised by curve_fit. This</span>
+        <span class="c1"># should be handled more gracefully, probably just fill the fit</span>
+        <span class="c1"># parameters with nan&#39;s again.</span>
+
         <span class="c1"># load yerr data if given</span>
         <span class="k">if</span> <span class="n">yerr_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">yerr</span> <span class="o">=</span> <span class="n">remaining_ds</span><span class="p">[</span><span class="n">yerr_name</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">selection_dict</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">yerr</span> <span class="o">=</span> <span class="n">remaining_ds</span><span class="p">[</span><span class="n">yerr_name</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">selection_dict</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">good_pts</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">yerr</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -593,8 +598,7 @@
         <span class="n">yerr_name</span>
     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">yerr_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">hide_large_errors</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">yerr_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hide_large_errors</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">show_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots some data in ``ds``.</span>
 
@@ -617,6 +621,8 @@
 <span class="sd">        of the data will be rendered smaller with arrows to denote these errors</span>
 <span class="sd">        are only &quot;bounds&quot; on the actual error. Will also move outliers to the</span>
 <span class="sd">        mean of the data and give them the same error bars as above.</span>
+<span class="sd">    show_legend : bool</span>
+<span class="sd">        Whether the legend should be rendered if the plots are overlaid</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Can either be:</span>
 <span class="sd">        - names of ``dims`` of ``ds``</span>
@@ -655,7 +661,11 @@
     <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">coord_combos</span><span class="p">:</span>
         <span class="n">selection_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">remaining_dims</span><span class="p">,</span> <span class="n">combo</span><span class="p">))</span>
         <span class="n">ydata</span> <span class="o">=</span> <span class="n">remaining_ds</span><span class="p">[</span><span class="n">yname</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">selection_dict</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">label</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="o">*</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">,&#39;</span><span class="o">%</span><span class="nb">tuple</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="c1"># don&#39;t plot if there are only nan&#39;s</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ydata</span><span class="p">))</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="o">*</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># remove trailing comma</span>
         <span class="k">if</span> <span class="n">yerr_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -680,16 +690,85 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">yname</span><span class="p">)</span>
         <span class="n">title_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selection_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">title_str</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%g</span><span class="s1">, &#39;</span><span class="o">%</span><span class="n">item</span>
+            <span class="n">title_str</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">, &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># get rid of trailing comma and space</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">overlay</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">overlay</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Legend: (&#39;</span>
-                  <span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">*</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">,&#39;</span><span class="o">%</span><span class="nb">tuple</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                  <span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> vs </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">yname</span><span class="p">,</span> <span class="n">xname</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">show_legend</span><span class="p">:</span>
+            <span class="n">legend_title</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">*</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">,&#39;</span><span class="o">%</span><span class="nb">tuple</span><span class="p">(</span><span class="n">selection_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">legend_title</span> <span class="o">=</span> <span class="n">legend_title</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># remove trailing comma</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">legend_title</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="combine_new_dim"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.combine_new_dim">[docs]</a><span class="k">def</span> <span class="nf">combine_new_dim</span><span class="p">(</span><span class="n">ds_dict</span><span class="p">,</span> <span class="n">new_dim_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Combines a dictionary of datasets along a new dimension using dictionary keys</span>
+<span class="sd">    as the new coordinates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds_dict : dict</span>
+<span class="sd">        Dictionary of xarray Datasets or instances of some subclass of</span>
+<span class="sd">        :class:`~.analyzedFit` or :class:`~.baseAnalysis`</span>
+<span class="sd">    new_dim_name : str</span>
+<span class="sd">        The name of the newly created dimension</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xarray.Dataset</span>
+<span class="sd">        Merged instance of whatever objects were input, with the other</span>
+<span class="sd">        meta-parameters of that object staying the same.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the values of the input dictionary were of an unrecognized type</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">test_element</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ds_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">expanded_dss</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_element</span><span class="p">,</span> <span class="n">baseAnalysis</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">expanded_dss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">new_dim_name</span><span class="p">))</span>
+            <span class="n">expanded_dss</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">new_dim_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">new_obj</span> <span class="o">=</span> <span class="n">test_element</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>
+        <span class="n">new_obj</span><span class="o">.</span><span class="n">procedure_swept_col</span> <span class="o">=</span> <span class="n">test_element</span><span class="o">.</span><span class="n">procedure_swept_col</span>
+        <span class="n">new_obj</span><span class="o">.</span><span class="n">series_swept_params</span> <span class="o">=</span> <span class="n">test_element</span><span class="o">.</span><span class="n">series_swept_params</span>
+        <span class="n">new_obj</span><span class="o">.</span><span class="n">procedue</span> <span class="o">=</span> <span class="n">test_element</span><span class="o">.</span><span class="n">procedure</span>
+        <span class="n">new_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">expanded_dss</span><span class="p">,</span> <span class="n">new_dim_name</span><span class="p">)</span>
+        <span class="n">new_obj</span><span class="o">.</span><span class="n">sweep_ds</span> <span class="o">=</span> <span class="n">new_ds</span>
+        <span class="n">new_obj</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">new_obj</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">coords</span>
+        <span class="n">new_obj</span><span class="o">.</span><span class="n">data_vars</span> <span class="o">=</span> <span class="n">new_obj</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">data_vars</span>
+        <span class="n">new_obj</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="n">new_obj</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">dims</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_element</span><span class="p">,</span> <span class="n">analyzedFit</span><span class="p">):</span>
+        <span class="n">expanded_main_dss</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">expanded_dss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">fit_ds</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">new_dim_name</span><span class="p">))</span>
+            <span class="n">expanded_main_dss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">main_ds</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">new_dim_name</span><span class="p">))</span>
+            <span class="n">expanded_dss</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">new_dim_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">new_main_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">expanded_main_dss</span><span class="p">,</span> <span class="n">new_dim_name</span><span class="p">)</span>
+        <span class="n">new_fit_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">expanded_dss</span><span class="p">,</span> <span class="n">new_dim_name</span><span class="p">)</span>
+        <span class="n">new_obj</span> <span class="o">=</span> <span class="n">test_element</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">new_fit_ds</span><span class="p">,</span> <span class="n">new_main_ds</span><span class="p">,</span>
+                                         <span class="n">test_element</span><span class="o">.</span><span class="n">fit_func</span><span class="p">,</span>
+                                         <span class="n">test_element</span><span class="o">.</span><span class="n">guess_func</span><span class="p">,</span>
+                                         <span class="n">test_element</span><span class="o">.</span><span class="n">param_names</span><span class="p">,</span>
+                                         <span class="n">test_element</span><span class="o">.</span><span class="n">xname</span><span class="p">,</span>
+                                         <span class="n">test_element</span><span class="o">.</span><span class="n">yname</span><span class="p">,</span>
+                                         <span class="n">test_element</span><span class="o">.</span><span class="n">yerr_name</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_element</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_element</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">expanded_dss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">new_dim_name</span><span class="p">))</span>
+            <span class="n">expanded_dss</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">new_dim_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">new_obj</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">expanded_dss</span><span class="p">,</span> <span class="n">new_dim_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Dictionary values were not of a known type. Values</span>
+<span class="s2">                         must either inherit from baseAnalysis, analyzedFit</span>
+<span class="s2">                         or be xarray Datasets or DataArrays&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">new_obj</span></div>
 
 <div class="viewcode-block" id="analyzedFit"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.analyzedFit">[docs]</a><span class="k">class</span> <span class="nc">analyzedFit</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -843,6 +922,10 @@
             <span class="n">fit_params</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">selected_ds</span><span class="p">[</span><span class="n">param</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span>
                           <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">]</span>
 
+            <span class="c1"># don&#39;t plot if there is no meaningful data</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">fit_params</span><span class="p">)):</span>
+                <span class="k">continue</span>
+
             <span class="c1"># fit the function and plot</span>
             <span class="n">fit_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_func</span><span class="p">(</span><span class="n">fit_dom</span><span class="p">,</span> <span class="o">*</span><span class="n">fit_params</span><span class="p">)</span>
             <span class="c1"># overlay data if requested</span>
@@ -877,7 +960,7 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yname</span><span class="p">)</span>
             <span class="n">title_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
             <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selection_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">title_str</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%g</span><span class="s1">, &#39;</span><span class="o">%</span><span class="n">item</span>
+                <span class="n">title_str</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">, &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># get rid of trailing comma and space</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
@@ -920,7 +1003,60 @@
         <span class="k">if</span> <span class="n">yerr_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">yerr_name</span> <span class="o">=</span> <span class="n">yname</span> <span class="o">+</span> <span class="s1">&#39;_err&#39;</span>
 
-        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_ds</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">yerr_name</span><span class="o">=</span><span class="n">yerr_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+        <span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_ds</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">yname</span><span class="p">,</span> <span class="n">yerr_name</span><span class="o">=</span><span class="n">yerr_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="analyzedFit.fit_params"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.analyzedFit.fit_params">[docs]</a>    <span class="k">def</span> <span class="nf">fit_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit_func</span><span class="p">,</span> <span class="n">guess_func</span><span class="p">,</span> <span class="n">param_names</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span>
+                    <span class="n">yname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fits the fit parameters in :attr:`~.analyzedFit.fit_ds` to some</span>
+<span class="sd">        function.</span>
+
+<span class="sd">        the y errors are assumed to be stored in the form yname + &#39;_err&#39;, as</span>
+<span class="sd">        this should be the default output of :func:`~.fit_dataset` which is what</span>
+<span class="sd">        should have made this :class:`~.analyzedFit` object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fit_func : function</span>
+<span class="sd">            function to fit data to</span>
+<span class="sd">        guess_func : function</span>
+<span class="sd">            function to generate guesses of parameters. Arguments must be:</span>
+<span class="sd">            - 1D numpy array of y data</span>
+<span class="sd">            - numpy array of x data</span>
+<span class="sd">            - keyword arguments, with the keywords being all dims of</span>
+<span class="sd">            :attr:`~.analyzedFit.fit_ds` besides ``xname``. Values passed will be</span>
+<span class="sd">            individual floats of coordinate values corresponding to those dims.</span>
+<span class="sd">            All arguments must be accepted, not all must be used.</span>
+<span class="sd">            As a hint, if designing for unexpected dims you can include **kwargs at</span>
+<span class="sd">            the end. This will accept any keword arguments not explicitly defined</span>
+<span class="sd">            by you and just do nothing with them.</span>
+<span class="sd">            Must return a list of guesses to the parameters, in the order given</span>
+<span class="sd">            in ``param_names``</span>
+
+<span class="sd">        param_names : list of str</span>
+<span class="sd">            list of fit parameter names, in the order they are returned</span>
+<span class="sd">            by ``guess_func``</span>
+<span class="sd">        xname : str</span>
+<span class="sd">            the name of the ``dim`` of :attr:`~.analyzedFit.fit_ds` to be fit</span>
+<span class="sd">            along</span>
+<span class="sd">        yname : str</span>
+<span class="sd">            the name of the ``dim`` containing data to be fit to</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            can be:</span>
+<span class="sd">            - names of ``dims`` of :attr:`~.analyzedFit.fit_ds`</span>
+<span class="sd">            values should eitherbe single coordinate values or lists of coordinate</span>
+<span class="sd">            values of those ``dims``. Only data with coordinates given by selections</span>
+<span class="sd">            are fit to . If no selections given, everything is fit to.</span>
+<span class="sd">            - kwargs of ``curve_fit``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        analyzedFit</span>
+<span class="sd">            Object containing all results of fitting and some convenience methods.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">fit_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_ds</span><span class="p">,</span> <span class="n">fit_func</span><span class="p">,</span> <span class="n">guess_func</span><span class="p">,</span> <span class="n">param_names</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span>
+                           <span class="n">yname</span><span class="p">,</span> <span class="n">yname</span><span class="o">+</span><span class="s1">&#39;_err&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="baseAnalysis"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.baseAnalysis">[docs]</a><span class="k">class</span> <span class="nc">baseAnalysis</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -939,7 +1075,7 @@
 <span class="sd">    data_vars : xarray.data_vars</span>
 <span class="sd">        ``data_vars`` of :attr:`~analysis.baseAnalysis.baseAnalysis.sweep_ds`</span>
 <span class="sd">    procedure : pymeasure.experiment.Procedure</span>
-<span class="sd">        The procedure class which created the data files. Used for importing </span>
+<span class="sd">        The procedure class which created the data files. Used for importing</span>
 <span class="sd">        using PyMeasure</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -951,6 +1087,51 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">data_vars</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">dims</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">procedure</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="baseAnalysis.parse_data_file"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.baseAnalysis.parse_data_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_data_file</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">data_fname</span><span class="p">,</span> <span class="n">swept_col</span><span class="p">,</span> <span class="n">swept_params</span><span class="p">,</span> <span class="n">procedure</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads information from a particular pymeaure data file and returns it in</span>
+<span class="sd">        an internally usable format</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        direc : str</span>
+<span class="sd">            Directory containing the data file</span>
+<span class="sd">        data_fname : str</span>
+<span class="sd">            Name of the data file</span>
+<span class="sd">        swept_col : str</span>
+<span class="sd">            Name of the swept column</span>
+<span class="sd">        swept_params : list of str</span>
+<span class="sd">            The names of the parameters which were swept</span>
+<span class="sd">        procedue : pymeasure.Procedure or None</span>
+<span class="sd">            Procedure to use in loading the Results object. if ``None`` uses the</span>
+<span class="sd">            one found in the pymeasure data file.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        swept_col_data : numpy.array</span>
+<span class="sd">            Array containing the swept column data values</span>
+<span class="sd">        data : dict</span>
+<span class="sd">            Dictonary where the key is a name of a data column and the value is</span>
+<span class="sd">            a numpy array of values to use.</span>
+<span class="sd">        param_values : dict</span>
+<span class="sd">            A dictonary where the key is the name of a parameter and the value is</span>
+<span class="sd">            its value for this particular data file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">rslt</span> <span class="o">=</span> <span class="n">Results</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">data_fname</span><span class="p">),</span> <span class="n">procedure</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">rslt</span><span class="o">.</span><span class="n">procedure</span><span class="o">.</span><span class="n">DATA_COLUMNS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="n">swept_col</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">rslt</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">swept_col_data</span> <span class="o">=</span> <span class="n">rslt</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">swept_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">param_values</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">swept_params</span><span class="p">:</span>
+            <span class="n">param_values</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">rslt</span><span class="o">.</span><span class="n">procedure</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">swept_col_data</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">param_values</span></div>
 
 <div class="viewcode-block" id="baseAnalysis.load_sweep"><a class="viewcode-back" href="../../../analysis/baseAnalysis.html#analysis.analysis.baseAnalysis.baseAnalysis.load_sweep">[docs]</a>    <span class="k">def</span> <span class="nf">load_sweep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direc</span><span class="p">,</span> <span class="n">series_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">procedure_files</span> <span class="o">=</span> <span class="p">[]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -965,8 +1146,8 @@
 <span class="sd">        ----------</span>
 <span class="sd">        direc : str</span>
 <span class="sd">            The directory the sweep file is in</span>
-<span class="sd">        series_file : str</span>
-<span class="sd">            The name of the series file</span>
+<span class="sd">        series_file : str or list of str</span>
+<span class="sd">            The name of the series file(s)</span>
 <span class="sd">        procedure_files : list of str</span>
 <span class="sd">            Any additional procedure files to include.</span>
 
@@ -981,25 +1162,39 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">direc</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Given directory does not exist!&quot;</span><span class="p">)</span>
 
-        <span class="n">swept_params</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_swept_params</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">all_procedure_files</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># import procedure data files from sweep files</span>
-        <span class="k">if</span> <span class="n">series_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">series_file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">all_procedure_files</span><span class="p">,</span> <span class="n">procedure_swept_col</span><span class="p">,</span> \
-             <span class="n">swept_params</span> <span class="o">=</span> <span class="n">parse_series_file</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">series_file</span><span class="p">)</span>
+             <span class="n">all_swept_params</span> <span class="o">=</span> <span class="n">parse_series_file</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">series_file</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">series_file</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">sfile</span> <span class="ow">in</span> <span class="n">series_file</span><span class="p">:</span>
+                <span class="n">auto_procedure_files</span><span class="p">,</span> <span class="n">procedure_swept_col</span><span class="p">,</span> \
+                 <span class="n">swept_params</span> <span class="o">=</span> <span class="n">parse_series_file</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">sfile</span><span class="p">)</span>
+                <span class="n">all_procedure_files</span> <span class="o">+=</span> <span class="n">auto_procedure_files</span>
+                <span class="n">all_swept_params</span> <span class="o">+=</span> <span class="n">swept_params</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># Assumed none given</span>
+            <span class="k">pass</span>
 
         <span class="c1"># combine with any explicitly given procedure data files</span>
         <span class="n">all_procedure_files</span> <span class="o">+=</span> <span class="n">procedure_files</span>
 
+        <span class="c1"># make all are unique</span>
+        <span class="n">all_swept_params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_swept_params</span><span class="p">))</span>
+        <span class="n">all_procedure_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_procedure_files</span><span class="p">))</span>
+
         <span class="c1"># ensure all expected swept params are included</span>
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">series_swept_params</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">swept_params</span><span class="p">:</span>
-                <span class="n">swept_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_swept_params</span><span class="p">:</span>
+                <span class="n">all_swept_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span> <span class="o">=</span> <span class="n">load_procedure_files</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">all_procedure_files</span><span class="p">,</span>
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">procedure_swept_col</span><span class="p">,</span>
-                                                 <span class="n">swept_params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">procedure</span><span class="p">)</span>
+                                                 <span class="n">all_swept_params</span><span class="p">,</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">parse_data_file</span><span class="p">,</span> <span class="c1"># TODO: make sure this works!! want subclasses to use their own if overwritten</span>
+                                                 <span class="n">procedure</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">procedure</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">coords</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">dims</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_ds</span><span class="o">.</span><span class="n">data_vars</span></div>
@@ -1079,7 +1274,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Joseph Mittelstaedt, Saba Karimeddiny.
+        &copy; Copyright 2018, Joseph Mittelstaedt, Saba Karimeddiny
 
     </p>
   </div>
@@ -1098,20 +1293,14 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'0.1alpha',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 

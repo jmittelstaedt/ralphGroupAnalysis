@@ -10,7 +10,7 @@ from pymeasure.experiment import Results
 from .baseAnalysis import baseAnalysis, plot_dataset, fit_dataset
 from ..procedures import HallAngProcedure, HallFieldProcedure
 from ..procedures import HallCryoAngProcedure, HallCryoFieldProcedure
-from .constants import deg2rad, rad2deg
+# from .constants import deg2rad, rad2deg
 
 class HallAnalysis(baseAnalysis):
     """
