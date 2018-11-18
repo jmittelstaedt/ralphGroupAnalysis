@@ -10,9 +10,10 @@ import pandas as pd
 from pymeasure.experiment import Results
 from .baseAnalysis import baseAnalysis, analyzedFit, parse_series_file, plot_dataset
 from .baseAnalysis import get_coord_selection, fit_dataset, load_procedure_files
-from ..procedures import kavli_STFMRProcedure
+from ..procedures import STFMRProcedure, STFMRCryoProcedure
+from .constants import *
 
-class kavli_STFMRAnalysis(baseAnalysis):
+class STFMRAnalysis(baseAnalysis):
     """
     Class to contain all STFMR related functions, and acts as a convenient
     container for importing and storing datasets etc.
@@ -23,12 +24,16 @@ class kavli_STFMRAnalysis(baseAnalysis):
     change, we just need to modify some class variables and all of the
     analysis should still work.
 
+    Parameters
+    ----------
+    swept_temp : bool
+        Whether temperature was swept in this scan and hence should be a
+        dimension of :attr:`.STFMRAnalysis.sweep_ds`
+
     Attributes
     ----------
     sweep_ds : xarray.Dataset
         Dataset containing the data
-    resonance_fits : baseAnalysis.analyzedFit
-        fit object
     procedure_swept_col : str
         column swept in the procedure
     series_swept_params : list of str
@@ -44,7 +49,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
     muB : float
         Bohr Magneton
     procedure : pymeasure.experiment.Procedure
-        The procedure class which created the data files. Used for importing 
+        The procedure class which created the data files. Used for importing
         using PyMeasure
     """
 
@@ -56,16 +61,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
     TEMPERATURE_DIM = 'temperature'
     X_DATA_VAR = 'X'
 
-    gamma = 2*np.pi*28.024 #GHz*Radians/T
-    mu0 = 4*np.pi*1e-7 #N/A^2 i.e. T*m/A   SI for LYFE!!!!!
-    hbar = 6.626*1e-34/(2*np.pi)
-    echarge = 1.602e-19
-    muB = 9.27400968*10**(-24)
-    rad2deg = 180.0/np.pi
-    deg2rad = np.pi/180.0
-
-    # TODO: Give each one a name for plotting results? Could be useful.
-    def __init__(self):
+    def __init__(self, swept_temp = False):
         """
         Instantiates the analysis object with an empty dataset with the correct
         dimension names. Records the guesses for initial parameters for
@@ -76,12 +72,14 @@ class kavli_STFMRAnalysis(baseAnalysis):
 
         super().__init__()
         self.procedure_swept_col = self.BFIELD_DIM
-        self.series_swept_params = [self.ANGLE_DIM, self.FREQUENCY_DIM,
-                                    self.TEMPERATURE_DIM]
-        self.procedue = kavli_STFMRProcedure
+        self.series_swept_params = [self.ANGLE_DIM, self.FREQUENCY_DIM]
+        self.procedue = STFMRProcedure
+
+        if swept_temp:
+            self.series_swept_params.append(self.TEMPERATURE_DIM)
+            self.procedue = STFMRCryoProcedure
 
         self.fit_ds = None
-        self.resonance_fits = None
 
     def load_old_procedures(self, direc, series_filenames = []):
         """
@@ -114,45 +112,6 @@ class kavli_STFMRAnalysis(baseAnalysis):
         self.data_vars = self.sweep_ds.data_vars
         self.dims = self.sweep_ds.dims
 
-    def load_sweeps(self, direc, sweep_files):
-        """
-        Loads data from a set of sweep files, each at a different temperature
-
-        Combines the data filenames from all of the sweep files and runs
-        :func:`~analysis.analysis.baseAnalysis.load_procedure_files` on them.
-
-        Parameters
-        ----------
-        sweep_files : list of str
-            a list of sweep files
-        """
-
-        if not os.path.isdir(direc):
-            raise ImportError("Given directory does not exist!")
-
-        all_procedure_files = []
-        all_swept_params = []
-
-        for sfile in sweep_files:
-            procedure_files, procedure_swept_col, \
-             swept_params = parse_series_file(direc, sfile)
-            all_procedure_files += procedure_files
-            all_swept_params += swept_params
-
-        all_swept_params = list(set(all_swept_params)) # make all params unique
-
-        # ensure all expected swept params are included
-        for param in self.series_swept_params:
-            if param not in all_swept_params:
-                all_swept_params.append(param)
-
-        self.sweep_ds = load_procedure_files(direc, all_procedure_files,
-                                                 self.procedure_swept_col,
-                                                 all_swept_params)
-        self.coords = self.sweep_ds.coords
-        self.dims = self.sweep_ds.dims
-        self.data_vars = self.sweep_ds.data_vars
-
     def separate_field_data(self, phi_offset=0., reverse=False):
         """
         Separates the positive and negative field data and assigns the negative
@@ -171,7 +130,7 @@ class kavli_STFMRAnalysis(baseAnalysis):
         Returns
         -------
         None
-            Modifies :attr:`~.kavli_STFMRAnalysis.sweep_ds` in-place
+            Modifies :attr:`~.STFMRAnalysis.sweep_ds` in-place
 
         Raises
         ------
@@ -213,30 +172,36 @@ class kavli_STFMRAnalysis(baseAnalysis):
         self.dims = self.sweep_ds.dims
         self.data_vars = self.sweep_ds.data_vars
 
-    def omega0(self, B, Meff):
+    @staticmethod
+    def omega0(B, Meff):
         """Resonant frequency"""
-        return self.gamma*np.sqrt(abs(B)*(abs(B) + Meff))
+        return gamma*np.sqrt(abs(B)*(abs(B) + Meff))
 
-    def B0(self, f, Meff):
+    @staticmethod
+    def B0(f, Meff):
         """Resonant field"""
         w = 2*np.pi*f
-        return 0.5*(-Meff + np.sqrt(Meff**2 + 4*w**2/(self.gamma)**2))
+        return 0.5*(-Meff + np.sqrt(Meff**2 + 4*w**2/(gamma)**2))
 
-    def Delta_formula(self, alpha, offset, f):
+    @staticmethod
+    def Delta_formula(alpha, offset, f):
         """Expected formula for the Delta parameter in lorentzians"""
-        return alpha*2*np.pi*f/self.gamma+offset
+        return alpha*2*np.pi*f/gamma+offset
 
-    def sym_lor(self, B, B0, Delta, S):
+    @staticmethod
+    def sym_lor(B, B0, Delta, S):
         """Symmetric lorentzian"""
         return S*Delta**2/((np.abs(B) - B0)**2 + Delta**2)
 
-    def asym_lor(self, B, B0, Delta, A):
+    @staticmethod
+    def asym_lor(B, B0, Delta, A):
         """Asymmetric lorentzian"""
         return A*Delta*(np.abs(B) - B0)/((np.abs(B) - B0)**2 + Delta**2)
 
-    def total_lor(self, B, B0, Delta, S, A, offset):
+    @staticmethod
+    def total_lor(B, B0, Delta, S, A, offset):
         """Symmetric + Asymmetric lorentzian with offset"""
-        return self.sym_lor(B,B0,Delta,S) + self.asym_lor(B,B0,Delta,A) + offset
+        return STFMRAnalysis.sym_lor(B,B0,Delta,S) + STFMRAnalysis.asym_lor(B,B0,Delta,A) + offset
 
     def plot_resonances(self, **kwargs):
         """
@@ -250,11 +215,13 @@ class kavli_STFMRAnalysis(baseAnalysis):
 
         plot_dataset(self.sweep_ds, self.BFIELD_DIM, self.X_DATA_VAR, **kwargs)
 
+    # TODO: make static method. Need to figure out how to deal with the
+    # guesses for Meff, S/A45 and alpha.
     def guess_resonance_params(self, X, field, field_azimuth, rf_freq,
-                               temperature):
+                               **kwargs):
         """
         Guesses resonance parameters. For use in
-        :meth:`~.kavli_STFMRAnalysis.fit_resonances`.
+        :meth:`~.STFMRAnalysis.fit_resonances`.
 
         Parameters
         ----------
@@ -266,8 +233,10 @@ class kavli_STFMRAnalysis(baseAnalysis):
             Azimuthal angle of field with respect to device angle
         rf_freq : float
             RF frequency of applied current
-        temperature : float
-            Temperature measurements were made at
+        **kwargs
+            A catchall to deal with any unexpected dimensions of
+            :attr:`.STFMRAnalysis.sweep_ds` which should not influence the
+            guesses.
 
         Returns
         -------
@@ -277,18 +246,18 @@ class kavli_STFMRAnalysis(baseAnalysis):
         """
 
         offset = X.mean()
-        SAsign = np.sign(np.sin(2*(field_azimuth - 90)*self.deg2rad)
-                         * np.cos((field_azimuth - 90)*self.deg2rad)) + 0.01
+        SAsign = np.sign(np.sin(2*(field_azimuth - 90)*deg2rad)
+                         * np.cos((field_azimuth - 90)*deg2rad)) + 0.01
 
-        return np.array([self.B0(rf_freq, self.Meff_guess),
-                         self.Delta_formula(self.alpha_guess, 0, rf_freq),
+        return np.array([STFMRAnalysis.B0(rf_freq, self.Meff_guess),
+                         STFMRAnalysis.Delta_formula(self.alpha_guess, 0, rf_freq),
                          self.S45_guess*SAsign, self.A45_guess*SAsign, offset])
 
     def fit_resonances(self, Meff_guess, alpha_guess, S45_guess,
                                  A45_guess, **kwargs):
         """
         Fits resonances after
-        :meth:`~.kavli_STFMRAnalysis.separate_field_data`
+        :meth:`~.STFMRAnalysis.separate_field_data`
         is ran.
 
         This uses ``curve_fit`` and is a thin wrapper around
@@ -314,9 +283,9 @@ class kavli_STFMRAnalysis(baseAnalysis):
 
         Returns
         -------
-        None
-            Saves the results into :attr:`~.kavli_STFMRAnalysis.resonance_fits`
-            as an :class:`~analysis.analysis.baseAnalysis.analyzedFit` object
+        resonanceFit
+            Object containing the results of the fitting and convenience
+            functions for dealing with the fit parameters
         """
 
         # TODO: check that separate_pnfield_data was ran.
@@ -331,14 +300,58 @@ class kavli_STFMRAnalysis(baseAnalysis):
         lobounds = [-np.inf, 0, -np.inf, -np.inf, -np.inf]
         upbounds = np.inf
 
-        self.resonance_fits = fit_dataset(self.sweep_ds, self.total_lor,
-                                   self.guess_resonance_params,
-                                   ['B0', 'Delta', 'S', 'A', 'offset'],
-                                   self.BFIELD_DIM, self.X_DATA_VAR,
-                                   bounds = (lobounds, upbounds), **kwargs)
+        afit = fit_dataset(self.sweep_ds, STFMRAnalysis.total_lor,
+                           self.guess_resonance_params,
+                           ['B0', 'Delta', 'S', 'A', 'offset'],
+                           self.BFIELD_DIM, self.X_DATA_VAR,
+                           bounds = (lobounds, upbounds), **kwargs)
 
-    def fit_param_ang_dep(self, fit_func, guess_func, yname,
-                                         param_names,  **kwargs):
+        return resonanceFit.from_analyzedFit(afit)
+
+class resonanceFit(analyzedFit):
+    """
+    Class to contain methods related to STFMR resonance fit parameters. Wrapper
+    around :class:`~analysis.analysis.baseAnalysis.analyzedFit`
+    """
+
+    ANGLE_DIM = 'field_azimuth'
+    FREQUENCY_DIM = 'rf_freq'
+    TEMPERATURE_DIM = 'temperature'
+
+    @staticmethod
+    def from_analyzedFit(afit):
+        """
+        Returns an instance of this class starting from an analyzedFit instance
+
+        Parameters
+        ----------
+        afit : analysis.analysis.baseAnalysis.analyzedFit instance
+        """
+        return resonanceFit(afit.fit_ds, afit.main_ds, afit.fit_func,
+                            afit.guess_func, afit.param_names, afit.xname,
+                            afit.yname, afit.yerr_name)
+
+    @staticmethod
+    def B0(f, Meff):
+        """Resonant field"""
+        w = 2*np.pi*f
+        return 0.5*(-Meff + np.sqrt(Meff**2 + 4*w**2/(gamma)**2))
+
+    @staticmethod
+    def B0_guess(B, f, **kwargs):
+        """
+        Guess function for use with fitting to find Meff. kwargs is used
+        to catch any possible unexpected fit_ds dims, since these should not
+        play a role in the fitting
+        """
+        return [1]
+
+    @staticmethod
+    def Delta_formula(alpha, offset, f):
+        """Expected formula for the Delta parameter in lorentzians"""
+        return alpha*2*np.pi*f/gamma+offset
+
+    def fit_ang_dep(self, fit_func, guess_func, yname, param_names, **kwargs):
         """
         Fits angular dependence of some previously fit parameters. Thin wrapper
         around :func:`~analysis.analysis.baseAnalysis.fit_dataset`.
@@ -346,24 +359,28 @@ class kavli_STFMRAnalysis(baseAnalysis):
         Parameters
         ----------
         fit_func : function
-            Function to fit
+            function to fit data to
         guess_func : function
             function to generate guesses of parameters. Arguments must be:
             - 1D numpy array of y data
             - numpy array of x data
-            - keyword arguments, with the keywords being all ``dims`` of ``ds`` besides
-            ``xname``. Values passed will be individual floats of coordinate values
-            corresponding to those ``dims``.
+            - keyword arguments, with the keywords being all dims of
+            :attr:`~.analyzedFit.fit_ds` besides ``xname``. Values passed will be
+            individual floats of coordinate values corresponding to those dims.
             All arguments must be accepted, not all must be used.
-            Must return a list of guesses to the parameters, in the order given in
-            param_names
-        yname : str
-            Name of parameter (``data_var``) which we will fit over
+            As a hint, if designing for unexpected dims you can include **kwargs at
+            the end. This will accept any keword arguments not explicitly defined
+            by you and just do nothing with them.
+            Must return a list of guesses to the parameters, in the order given
+            in ``param_names``
         param_names : list of str
-            Names of parameters of ``fit_func``, in order.
+            list of fit parameter names, in the order they are returned
+            by ``guess_func``
+        yname : str
+            the name of the ``dim`` containing data to be fit to
         **kwargs
             can be:
-            - names of ``dims`` of ``ds``
+            - names of ``dims`` of :attr:`~.analyzedFit.fit_ds`
             values should eitherbe single coordinate values or lists of coordinate
             values of those ``dims``. Only data with coordinates given by selections
             are fit to . If no selections given, everything is fit to.
@@ -371,13 +388,63 @@ class kavli_STFMRAnalysis(baseAnalysis):
 
         Returns
         -------
-        None
-            Saves resulting :class:`~analysis.analysis.baseAnalysis.analyzedFit` object
-            to a new attribute, named ``(yname)_azimuth_fit``
+        analyzedFit
+            Object containing all results of fitting and some convenience methods.
         """
-        if self.resonance_fits is None:
-            raise AttributeError("Need to run fit_resonances first")
 
-        setattr(self, yname + '_azimuth_fit', fit_dataset(
-            self.resonance_fits.fit_ds, fit_func, guess_func, param_names,
-                          self.ANGLE_DIM, yname, yname+'_err', **kwargs))
+        return self.fit_params(fit_func, guess_func, param_names,
+                          self.ANGLE_DIM, yname, **kwargs)
+
+    def find_Meff(self, **kwargs):
+        """
+        Fits the resonat field as a function of frequency to find the effective
+        magnetization assuming Kittel's formula holds.
+
+        Parameters
+        ----------
+        **kwargs
+            can be:
+            - names of ``dims`` of ``fit_ds``
+            values should eitherbe single coordinate values or lists of coordinate
+            values of those ``dims``. Only data with coordinates given by selections
+            are fit to . If no selections given, everything is fit to.
+            - kwargs of ``curve_fit``
+
+        Returns
+        -------
+        analyzedFit
+            An object showing the result of the fitting. Contains the effective
+            magnetization as a function of any other dimensions.
+        """
+
+        return self.fit_params(resonanceFit.B0, resonanceFit.B0_guess, ['Meff'],
+                               self.FREQUENCY_DIM, 'B0', **kwargs)
+
+    def calculate_SHE(self, Meff, tmag, tnm):
+        """
+        Calculates the spin Hall efficiency assuming we only have
+        "standard" torques in our system, i.e. a field-like torque from an
+        Oersted field and a y AD torque.
+
+        Parameters
+        ----------
+        Meff : xarray.Dataset
+            Dataset of the effective magnetization which has coordinates
+            commensurate with that of ``fit_ds``. Can use the ``fit_ds``
+            attribute of the output of find_Meff.
+        tmag : float
+            thickness of the magnetic layer, in m
+        tnm : float
+            thickness of the normal metal, in m
+
+        Returns
+        -------
+        xarray.DataArray
+            A DataArray with the same dimensions and coordinates as ``fit_ds``
+            containing the calculated SHE.
+        """
+
+        SHE = self.fit_ds['S']/self.fit_ds['A']*echarge*mu0*Meff \
+               *tmag*tnm/hbar*np.sqrt(1 + Meff/self.fit_ds['B0'])
+        SHE = SHE.rename('SHE')
+        return SHE

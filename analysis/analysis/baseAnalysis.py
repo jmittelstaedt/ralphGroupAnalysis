@@ -32,7 +32,7 @@ def parse_series_file(direc, series_fname):
 
     Returns
     -------
-    series_filenames : list of str
+    data_fnames : list of str
         filenames (names only) of all procedure data files
     procedure_swept_col : str
         name of procedure column swept
@@ -50,21 +50,20 @@ def parse_series_file(direc, series_fname):
 
         # extract all the filenames, representing files from a particular
         # procedure, AND all parameters swept in the series.
-        series_filenames = []
+        data_fnames = []
         for line in f:
             if line.lower().startswith('# swept series parameter'):
                 series_swept_params.append(line.split(':')[1].strip())
             elif line[0] == '#':
                 continue
             else:
-                series_filenames.append(line.strip())
+                data_fnames.append(line.strip())
 
-        return series_filenames, procedure_swept_col, series_swept_params
+        return data_fnames, procedure_swept_col, series_swept_params
 
-def load_procedure_files(direc, series_filenames, procedure_swept_col,
-                         series_swept_params, procedure = None):
+def load_procedure_files(direc, data_fnames, procedure_swept_col, series_swept_params, parser, **kwargs):
     """
-    Loads data from all procedure datafiles, and returns a Dataset containing
+    Loads data from all data files, and returns a Dataset containing
     it all. The output of :func:`~.parse_series_file` can be passed (almost)
     directly to this function.
 
@@ -72,15 +71,21 @@ def load_procedure_files(direc, series_filenames, procedure_swept_col,
     ----------
     direc : str
         directory containing all of the procedure data files
-    series_filenames : list of str
+    data_fnames : list of str
         filenames of all of the procedures
     procedure_swept_col : str
         the data column swept in each procedure
     series_swept_params : list of str
         The procedure parameters swept in the series
-    procedure : pymeasure.experiment.Procedure
-        The procedure class which created the data files. Used for importing 
-        using PyMeasure
+    parser : func
+        Function which accepts a directory, a data filename, a string representing
+        the swept data column, a list of strings representing swept parameters
+        in the series of sweeps and optional keyword arguments. It must return
+        a numpy array of the swept column data, a dictionary of 1d numpy arrays
+        of each of the other data columns, and a dictionary of the values of the
+        parameters which were swept in the series.
+    kwargs
+        Keyword arguments passed along to the ``parser`` function
 
     Returns
     -------
@@ -89,59 +94,41 @@ def load_procedure_files(direc, series_filenames, procedure_swept_col,
         the swept one), and dimensions and coordinates corresponding to the
         swept data column and the swept series parameters.
     """
+    swept_col_data, data, param_values = parser(direc, data_fnames[0],
+                                                procedure_swept_col,
+                                                series_swept_params, **kwargs)
+    col_size = swept_col_data.size
 
-    # load example result
-    ex_result = Results.load(os.path.join(direc,series_filenames[0]),
-                             procedure)
-
-    # record data columns, except one we swept over. Will handle it separately
-    data_cols = []
-    for col in ex_result.procedure.DATA_COLUMNS:
-        if col == procedure_swept_col:
-            continue
-        data_cols.append(col)
-    col_size = ex_result.data[data_cols[0]].size
+    # Make tuple of new dimension names
     new_dims = tuple([procedure_swept_col] + series_swept_params)
-    swept_col_data = ex_result.data[procedure_swept_col].values
 
     # need data_var data to have the correct shape as an array so that
     # all coordinates are taken seriously by the dataset. This exists to
     # reshape the data column into the correct shape
     reshape_helper = [1]*len(series_swept_params)
 
-    # we need to get the ball rolling. Add the first data to growing_ds
-    # create data_vars, appropriately reshaped
-    new_data_vars = {}
-    for col in data_cols:
-        new_data_vars[col] = (
-            new_dims,
-            ex_result.data[col].values.reshape(col_size,*reshape_helper)
-        )
-    # create new columns, with all from series_swept_params only having one
-    # coordinate value (hence the need for reshaping)
-    new_coords = {procedure_swept_col: swept_col_data}
-    for param in series_swept_params:
-        new_coords[param] = [getattr(ex_result.procedure,param)]
+    # Create an empty Dataset which we will add all of our actual data to
+    growing_ds = xr.Dataset()
 
-    growing_ds = xr.Dataset(data_vars=new_data_vars, coords=new_coords)
+    # load the rest of the procedure data files using the same method as above
+    for f in data_fnames:
+        swept_col_data, data, param_values = parser(direc, f,
+                                                    procedure_swept_col,
+                                                    series_swept_params,
+                                                    **kwargs)
 
-    # load the rest of the procedure data files
-    # if ur lookin here b/c you got an error and were trying to load A SINGLE
-    # procedure data file 1. i'm sorry this is implemented poorly 2. ur a dumbass
-    for f in series_filenames[1:]:
-        rslt = Results.load(os.path.join(direc, f), procedure)
-
-        # new data vars (but same dims)
+        # Add data to the data variables, appropriately reshaped
         new_data_vars = {}
-        for col in data_cols:
+        for col, data_vals in data.items():
             new_data_vars[col] = (
                 new_dims,
-                rslt.data[col].values.reshape(col_size,*reshape_helper)
+                data_vals.reshape(col_size, *reshape_helper)
             )
-        # new coords (but same dims)
-        new_coords = {procedure_swept_col: swept_col_data}
-        for param in series_swept_params:
-            new_coords[param] = [getattr(rslt.procedure,param)]
+
+        # Create coordinate dictionary, putting all single value coordinates
+        # into lists of size 1 so xarray is happy.
+        new_coords = {k: [v] for k, v in param_values.items()}
+        new_coords[procedure_swept_col] = swept_col_data
 
         # make dataset corresponding to new procedure data file
         fresh_ds = xr.Dataset(data_vars=new_data_vars, coords=new_coords)
@@ -164,10 +151,9 @@ def load_procedure_files(direc, series_filenames, procedure_swept_col,
     # sort so all coordinates are in a sensible order
     growing_ds = growing_ds.sortby(list(growing_ds.dims))
 
-    return growing_ds # it is now fullly grown :')
+    return growing_ds
 
-def get_coord_selection(ds, drop_dim, gen_empty_ds = True,
-                        new_dvar_names = [], **selections):
+def get_coord_selection(ds, drop_dim, gen_empty_ds = True, new_dvar_names = [], **selections):
     """
     Generates a selection of coordinates from a dataset, dropping one dimension.
     Can also generate a new dataset having as coordinates the selected
@@ -257,8 +243,7 @@ def get_coord_selection(ds, drop_dim, gen_empty_ds = True,
     else:
         return remaining_dims, coord_combos, remaining_ds, xr.Dataset({})
 
-def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
-                      yname, **selections):
+def make_fit_dataset_guesses(ds, guess_func, param_names, xname, yname, **selections):
     """
     creates a dataset of guesses of param_names given ``guess_func``. To be used
     in :func:`~.fit_dataset`.
@@ -275,6 +260,9 @@ def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
         xname. Values passed will be individual floats of coordinate values
         corresponding to those dims.
         All arguments must be accepted, not all must be used.
+        As a hint, if designing for unexpected dims you can include **kwargs at
+        the end. This will accept any keword arguments not explicitly defined
+        by you and just do nothing with them.
         Must return a list of guesses to the parameters, in the order given in
         param_names
     param_names : list of str
@@ -325,8 +313,7 @@ def make_fit_dataset_guesses(ds, guess_func, param_names, xname,
 
     return guess_ds
 
-def fit_dataset(ds, fit_func, guess_func, param_names, xname,
-                yname, yerr_name = None, **kwargs):
+def fit_dataset(ds, fit_func, guess_func, param_names, xname, yname, yerr_name = None, **kwargs):
     """
     Fits values in a dataset to a function. Returns an
     :class:`~.analyzedFit` object
@@ -344,6 +331,9 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
         - keyword arguments, with the keywords being all dims of ds besides
         xname. Values passed will be individual floats of coordinate values
         corresponding to those dims.
+        As a hint, if designing for unexpected dims you can include **kwargs at
+        the end. This will accept any keword arguments not explicitly defined
+        by you and just do nothing with them.
         All arguments must be accepted, not all must be used.
         Must return a list of guesses to the parameters, in the order given in
         ``param_names``
@@ -414,9 +404,26 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
         for pname in param_names:
             guess.append(float(guesses[pname].sel(selection_dict).values))
 
+        # Deal with any possible spurious data
+        if np.all(np.isnan(ydata)):
+            # there is no meaningful data. Fill fit results with nan's
+            for i, pname in enumerate(param_names):
+                fit_ds[pname].loc[selection_dict] = np.nan
+                fit_ds[pname+'_err'].loc[selection_dict] = np.nan
+            continue
+        else:
+            # remove bad datapoints
+            good_pts = np.isfinite(ydata)
+            xdata = xdata[good_pts]
+            ydata = ydata[good_pts]
+        # TODO: If number of y data points left over are less than number of
+        # params, there will probably be an error raised by curve_fit. This
+        # should be handled more gracefully, probably just fill the fit
+        # parameters with nan's again.
+
         # load yerr data if given
         if yerr_name is not None:
-            yerr = remaining_ds[yerr_name].sel(selection_dict).values
+            yerr = remaining_ds[yerr_name].sel(selection_dict).values[good_pts]
         else:
             yerr = None
 
@@ -441,8 +448,7 @@ def fit_dataset(ds, fit_func, guess_func, param_names, xname,
         yerr_name
     )
 
-def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None,
-                 hide_large_errors = False, **kwargs):
+def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None, hide_large_errors = False, show_legend=True, **kwargs):
     """
     Plots some data in ``ds``.
 
@@ -465,6 +471,8 @@ def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None,
         of the data will be rendered smaller with arrows to denote these errors
         are only "bounds" on the actual error. Will also move outliers to the
         mean of the data and give them the same error bars as above.
+    show_legend : bool
+        Whether the legend should be rendered if the plots are overlaid
     **kwargs
         Can either be:
         - names of ``dims`` of ``ds``
@@ -503,7 +511,11 @@ def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None,
     for combo in coord_combos:
         selection_dict = dict(zip(remaining_dims, combo))
         ydata = remaining_ds[yname].sel(selection_dict).values
-        label = len(selection_dict.values())*'%g,'%tuple(selection_dict.values())
+        # don't plot if there are only nan's
+        if np.all(np.isnan(ydata)) == True:
+            continue
+        label = (len(selection_dict.values())*'{},').format(*tuple(selection_dict.values()))
+        label = label[:-1] # remove trailing comma
         if yerr_name is None:
             plt.plot(xdata, ydata, label=label, **plot_kwargs)
         else:
@@ -528,16 +540,85 @@ def plot_dataset(ds, xname, yname, overlay=False, yerr_name=None,
         plt.ylabel(yname)
         title_str = ''
         for item in selection_dict.items():
-            title_str += '%s: %g, '%item
+            title_str += '{}: {}, '.format(*item)
         plt.title(title_str[:-2]) # get rid of trailing comma and space
         if not overlay:
             plt.show()
     if overlay:
-        plt.title('Legend: ('
-                  +len(selection_dict.keys())*'%s,'%tuple(selection_dict.keys())
-                  +')')
-        plt.legend()
+        plt.title('%s vs %s'%(yname, xname))
+        if show_legend:
+            legend_title = len(selection_dict.keys())*'%s,'%tuple(selection_dict.keys())
+            legend_title = legend_title[:-1] # remove trailing comma
+            plt.legend(title=legend_title)
         plt.show()
+
+def combine_new_dim(ds_dict, new_dim_name):
+    """
+    Combines a dictionary of datasets along a new dimension using dictionary keys
+    as the new coordinates.
+
+    Parameters
+    ----------
+    ds_dict : dict
+        Dictionary of xarray Datasets or instances of some subclass of
+        :class:`~.analyzedFit` or :class:`~.baseAnalysis`
+    new_dim_name : str
+        The name of the newly created dimension
+
+    Returns
+    -------
+    xarray.Dataset
+        Merged instance of whatever objects were input, with the other
+        meta-parameters of that object staying the same.
+
+    Raises
+    ------
+    ValueError
+        If the values of the input dictionary were of an unrecognized type
+    """
+
+    test_element = list(ds_dict.values())[0]
+    expanded_dss = []
+
+    if isinstance(test_element, baseAnalysis):
+        for k, v in ds_dict.items():
+            expanded_dss.append(v.sweep_ds.expand_dims(new_dim_name))
+            expanded_dss[-1][new_dim_name] = [k]
+        new_obj = test_element.__class__()
+        new_obj.procedure_swept_col = test_element.procedure_swept_col
+        new_obj.series_swept_params = test_element.series_swept_params
+        new_obj.procedue = test_element.procedure
+        new_ds = xr.concat(expanded_dss, new_dim_name)
+        new_obj.sweep_ds = new_ds
+        new_obj.coords = new_obj.sweep_ds.coords
+        new_obj.data_vars = new_obj.sweep_ds.data_vars
+        new_obj.dims = new_obj.sweep_ds.dims
+    elif isinstance(test_element, analyzedFit):
+        expanded_main_dss = []
+        for k, v in ds_dict.items():
+            expanded_dss.append(v.fit_ds.expand_dims(new_dim_name))
+            expanded_main_dss.append(v.main_ds.expand_dims(new_dim_name))
+            expanded_dss[-1][new_dim_name] = [k]
+        new_main_ds = xr.concat(expanded_main_dss, new_dim_name)
+        new_fit_ds = xr.concat(expanded_dss, new_dim_name)
+        new_obj = test_element.__class__(new_fit_ds, new_main_ds,
+                                         test_element.fit_func,
+                                         test_element.guess_func,
+                                         test_element.param_names,
+                                         test_element.xname,
+                                         test_element.yname,
+                                         test_element.yerr_name)
+    elif isinstance(test_element, xr.Dataset) or isinstance(test_element, xr.DataArray):
+        for k, v in ds_dict.items():
+            expanded_dss.append(v.expand_dims(new_dim_name))
+            expanded_dss[-1][new_dim_name] = [k]
+        new_obj = xr.concat(expanded_dss, new_dim_name)
+    else:
+        raise ValueError("""Dictionary values were not of a known type. Values
+                         must either inherit from baseAnalysis, analyzedFit
+                         or be xarray Datasets or DataArrays""")
+
+    return new_obj
 
 class analyzedFit():
     """
@@ -691,6 +772,10 @@ class analyzedFit():
             fit_params = [float(selected_ds[param].values) for param
                           in self.param_names]
 
+            # don't plot if there is no meaningful data
+            if np.all(np.isnan(fit_params)):
+                continue
+
             # fit the function and plot
             fit_range = self.fit_func(fit_dom, *fit_params)
             # overlay data if requested
@@ -725,7 +810,7 @@ class analyzedFit():
             plt.ylabel(self.yname)
             title_str = ''
             for item in selection_dict.items():
-                title_str += '%s: %g, '%item
+                title_str += '{}: {}, '.format(*item)
             plt.title(title_str[:-2]) # get rid of trailing comma and space
             plt.show()
 
@@ -770,6 +855,59 @@ class analyzedFit():
 
         plot_dataset(self.fit_ds, xname, yname, yerr_name=yerr_name, **kwargs)
 
+    def fit_params(self, fit_func, guess_func, param_names, xname,
+                    yname, **kwargs):
+        """
+        Fits the fit parameters in :attr:`~.analyzedFit.fit_ds` to some
+        function.
+
+        the y errors are assumed to be stored in the form yname + '_err', as
+        this should be the default output of :func:`~.fit_dataset` which is what
+        should have made this :class:`~.analyzedFit` object.
+
+        Parameters
+        ----------
+        fit_func : function
+            function to fit data to
+        guess_func : function
+            function to generate guesses of parameters. Arguments must be:
+            - 1D numpy array of y data
+            - numpy array of x data
+            - keyword arguments, with the keywords being all dims of
+            :attr:`~.analyzedFit.fit_ds` besides ``xname``. Values passed will be
+            individual floats of coordinate values corresponding to those dims.
+            All arguments must be accepted, not all must be used.
+            As a hint, if designing for unexpected dims you can include **kwargs at
+            the end. This will accept any keword arguments not explicitly defined
+            by you and just do nothing with them.
+            Must return a list of guesses to the parameters, in the order given
+            in ``param_names``
+
+        param_names : list of str
+            list of fit parameter names, in the order they are returned
+            by ``guess_func``
+        xname : str
+            the name of the ``dim`` of :attr:`~.analyzedFit.fit_ds` to be fit
+            along
+        yname : str
+            the name of the ``dim`` containing data to be fit to
+        **kwargs
+            can be:
+            - names of ``dims`` of :attr:`~.analyzedFit.fit_ds`
+            values should eitherbe single coordinate values or lists of coordinate
+            values of those ``dims``. Only data with coordinates given by selections
+            are fit to . If no selections given, everything is fit to.
+            - kwargs of ``curve_fit``
+
+        Returns
+        -------
+        analyzedFit
+            Object containing all results of fitting and some convenience methods.
+        """
+
+        return fit_dataset(self.fit_ds, fit_func, guess_func, param_names, xname,
+                           yname, yname+'_err', **kwargs)
+
 class baseAnalysis():
     """
     Class which all other analysis classes should inherit from. Implements
@@ -787,7 +925,7 @@ class baseAnalysis():
     data_vars : xarray.data_vars
         ``data_vars`` of :attr:`~analysis.baseAnalysis.baseAnalysis.sweep_ds`
     procedure : pymeasure.experiment.Procedure
-        The procedure class which created the data files. Used for importing 
+        The procedure class which created the data files. Used for importing
         using PyMeasure
     """
 
@@ -799,6 +937,51 @@ class baseAnalysis():
         self.data_vars = self.sweep_ds.data_vars
         self.dims = self.sweep_ds.dims
         self.procedure = None
+
+    @staticmethod
+    def parse_data_file(direc, data_fname, swept_col, swept_params, procedure=None):
+        """
+        Loads information from a particular pymeaure data file and returns it in
+        an internally usable format
+
+        Parameters
+        ----------
+        direc : str
+            Directory containing the data file
+        data_fname : str
+            Name of the data file
+        swept_col : str
+            Name of the swept column
+        swept_params : list of str
+            The names of the parameters which were swept
+        procedue : pymeasure.Procedure or None
+            Procedure to use in loading the Results object. if ``None`` uses the
+            one found in the pymeasure data file.
+
+        Returns
+        -------
+        swept_col_data : numpy.array
+            Array containing the swept column data values
+        data : dict
+            Dictonary where the key is a name of a data column and the value is
+            a numpy array of values to use.
+        param_values : dict
+            A dictonary where the key is the name of a parameter and the value is
+            its value for this particular data file
+        """
+
+        rslt = Results.load(os.path.join(direc, data_fname), procedure)
+        data = {}
+        for col in rslt.procedure.DATA_COLUMNS:
+            if col == swept_col:
+                continue
+            data[col] = rslt.data[col].values
+        swept_col_data = rslt.data[swept_col].values
+        param_values = {}
+        for param in swept_params:
+            param_values[param] = getattr(rslt.procedure, param)
+
+        return swept_col_data, data, param_values
 
     def load_sweep(self, direc, series_file = None, procedure_files = []):
         """
@@ -813,8 +996,8 @@ class baseAnalysis():
         ----------
         direc : str
             The directory the sweep file is in
-        series_file : str
-            The name of the series file
+        series_file : str or list of str
+            The name of the series file(s)
         procedure_files : list of str
             Any additional procedure files to include.
 
@@ -829,25 +1012,39 @@ class baseAnalysis():
         if not os.path.isdir(direc):
             raise ImportError("Given directory does not exist!")
 
-        swept_params = []
+        all_swept_params = []
         all_procedure_files = []
 
         # import procedure data files from sweep files
-        if series_file is not None:
+        if isinstance(series_file, str):
             all_procedure_files, procedure_swept_col, \
-             swept_params = parse_series_file(direc, series_file)
+             all_swept_params = parse_series_file(direc, series_file)
+        elif isinstance(series_file, list):
+            for sfile in series_file:
+                auto_procedure_files, procedure_swept_col, \
+                 swept_params = parse_series_file(direc, sfile)
+                all_procedure_files += auto_procedure_files
+                all_swept_params += swept_params
+        else: # Assumed none given
+            pass
 
         # combine with any explicitly given procedure data files
         all_procedure_files += procedure_files
 
+        # make all are unique
+        all_swept_params = list(set(all_swept_params))
+        all_procedure_files = list(set(all_procedure_files))
+
         # ensure all expected swept params are included
         for param in self.series_swept_params:
-            if param not in swept_params:
-                swept_params.append(param)
+            if param not in all_swept_params:
+                all_swept_params.append(param)
 
         self.sweep_ds = load_procedure_files(direc, all_procedure_files,
                                                  self.procedure_swept_col,
-                                                 swept_params, self.procedure)
+                                                 all_swept_params,
+                                                 self.__class__.parse_data_file, # TODO: make sure this works!! want subclasses to use their own if overwritten
+                                                 procedure=self.procedure)
         self.coords = self.sweep_ds.coords
         self.dims = self.sweep_ds.dims
         self.data_vars = self.sweep_ds.data_vars
