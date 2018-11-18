@@ -7,9 +7,8 @@ Welcome to Ralph Group Analysis's documentation!
    :glob:
 
    analysis/baseAnalysis
-   analysis/kavliSTFMRAnalysis
-   analysis/daedalusSTFMRAnalysis
-   analysis/Hall2HarmAnalysis
+   analysis/STFMRAnalysis
+   analysis/HallAnalysis
    analysis/AMRAnalysis
 
 .. toctree::
