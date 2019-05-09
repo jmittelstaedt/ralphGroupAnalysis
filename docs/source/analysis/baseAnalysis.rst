@@ -1,6 +1,6 @@
 Base Analysis Class
 ###################
 
-.. automodule:: analysis.analysis.baseAnalysis
+.. automodule:: analysis.baseAnalysis
     :members:
     :show-inheritance:

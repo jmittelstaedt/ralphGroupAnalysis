@@ -1,6 +1,6 @@
 MuMax Analysis
 ##############
 
-.. automodule:: analysis.analysis.mumaxAnalysis
+.. automodule:: analysis.mumaxAnalysis
     :members:
     :show-inheritance:

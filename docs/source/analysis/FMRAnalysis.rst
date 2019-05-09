@@ -1,6 +1,6 @@
 FMR Analysis
 ############
 
-.. automodule:: analysis.analysis.FMRAnalysis
+.. automodule:: analysis.FMRAnalysis
     :members:
     :show-inheritance:

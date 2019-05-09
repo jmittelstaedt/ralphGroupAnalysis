@@ -1,6 +1,6 @@
 Converters
 ##########
 
-.. automodule:: analysis.analysis.converters
+.. automodule:: analysis.converters
     :members:
     :show-inheritance:

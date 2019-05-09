@@ -1,6 +1,6 @@
 Parsers
 #######
 
-.. automodule:: analysis.analysis.parsers
+.. automodule:: analysis.parsers
     :members:
     :show-inheritance:
