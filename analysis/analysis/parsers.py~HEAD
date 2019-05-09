@@ -1,0 +1,83 @@
+import os
+import re
+
+import pandas as pd
+import numpy as np
+
+from pymeasure.experiment import Results
+
+def pymeasure_parser(direc, data_fname, swept_column, swept_params, codename_converter = {}):
+    """
+    Parses information out of a pymeasure data file without using Results.load()
+
+    Parameters
+    ----------
+    direc : str
+        directory containig file
+    data_fname : str
+        filename
+    swept_column : str
+        name of data column which was swept
+    swept_params : list of str
+        The names of the parameters swept
+    codename_converter : dict
+        Dictionary where keys are the plain names of the parameters in the
+        pymeasure procedure, and the value is a tuple whose first element is a
+        string of the codename of the parameter and the second is a function to
+        cast the value (int, float, bool, str etc.)
+
+    Returns
+    -------
+    swept_col_data : numpy.array
+        Array containing the swept column data values
+    data : dict
+        Dictonary where the key is a name of a data column and the value is
+        a numpy array of values to use.
+    param_values : dict
+        A dictonary where the key is the name of a parameter and the value is
+        its value for this particular data file
+    """
+
+    full_fname = os.path.join(direc,data_fname)
+
+    header = ''
+    header_read = False
+    header_size = 0
+    parameters = {}
+    with open(full_fname) as f:
+        line = f.readline()
+        while not header_read:
+            if line.startswith(Results.COMMENT+'\t'): # is a parameter line
+                header_size += 1
+                regex = (Results.COMMENT+"\t(?P<name>[^:]+):\s(?P<value>[^\s]+)"
+                         "(?:\s(?P<units>.+))?")
+                search = re.search(regex, line)
+                if search is None:
+                    raise Exception("Error parsing header line %s." % line)
+                else:
+                    parameters[search.group('name')] = search.group("value")
+            else:
+                header_read = True
+
+    # convert parameters to dictionary of codenames
+    param_values = {}
+    for k, v in parameters.items():
+        if k in swept_params:
+            codename = codename_converter[k][0]
+            converted_val = codename_converter[k][1](v)
+            decoded_params[codename] = converted_val
+
+    param_values = {k, v for }
+
+    # retrieving data
+    data_df = pd.read_csv(full_fname, comment='#')
+    data_dict = data_df.to_dict('list') # converts to a dictionary
+    data_dict = {k: np.array(v) for k, v in data_ditc.items()}
+
+    # separate swept column data from the non-swept columns
+    if swept_column not in data_dict.keys():
+        raise KeyError("%s was not found in the data file columns!"%swept_column)
+    swept_col_data = data_dict[swept_column]
+    data = {k, v for k, v in data_dict.item() if k!=swept_column}
+
+    return swept_col_data, data, param_values

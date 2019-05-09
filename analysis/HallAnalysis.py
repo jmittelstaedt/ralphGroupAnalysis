@@ -6,11 +6,10 @@ import matplotlib.pyplot as plt
 import xarray as xr
 from scipy.optimize import leastsq, curve_fit
 
-from pymeasure.experiment import Results
-from .baseAnalysis import baseAnalysis, plot_dataset, fit_dataset
-from ..procedures import HallAngProcedure, HallFieldProcedure
-from ..procedures import HallCryoAngProcedure, HallCryoFieldProcedure
-# from .constants import deg2rad, rad2deg
+from .baseAnalysis import baseAnalysis
+from .dataset_manipulation import plot_dataset, fit_dataset
+from .converters import HallConverter
+from .constants import deg2rad, rad2deg
 
 class HallAnalysis(baseAnalysis):
     """
@@ -31,9 +30,6 @@ class HallAnalysis(baseAnalysis):
         column swept in the procedure
     series_swept_params : list of str
         parameters swept in the series
-    procedure : pymeasure.experiment.Procedure
-        The procedure class which created the data files. Used for importing
-        using PyMeasure
     """
 
     BFIELD_DIM = 'field_strength'
@@ -55,34 +51,32 @@ class HallAnalysis(baseAnalysis):
             if scan_type.lower() == 'angle':
                 self.procedure_swept_col = self.ANGLE_DIM
                 self.series_swept_params = [self.BFIELD_DIM, self.TEMP_DIM]
-                self.procedure = HallCryoAngProcedure
             elif scan_type.lower() == 'field':
                 self.procedure_swept_col = self.BFIELD_DIM
                 self.series_swept_params = [self.ANGLE_DIM, self.TEMP_DIM]
-                self.procedure = HallCryoFieldProcedure
             else:
                 raise ValueError("scan_type must be 'field' or 'angle'")
         else:
             if scan_type.lower() == 'angle':
                 self.procedure_swept_col = self.ANGLE_DIM
                 self.series_swept_params = [self.BFIELD_DIM]
-                self.procedure = HallAngProcedure
             elif scan_type.lower() == 'field':
                 self.procedure_swept_col = self.BFIELD_DIM
                 self.series_swept_params = [self.ANGLE_DIM]
-                self.procedure = HallFieldProcedure
             else:
                 raise ValueError("scan_type must be 'field' or 'angle'")
+
+        self.codename_converter = HallConverter
 
     def plot_2harm_angle_dependence(self, **kwargs):
         """
         Plots the second harmonic voltage as a function of field angle.
-        Is a thin wrapper around :func:`~analysis.analysis.baseAnalysis.plot_dataset`.
+        Is a thin wrapper around :func:`~dataset_manipulation.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`~analysis.analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~dataset_manipulation.plot_dataset`
 
         Returns
         -------
@@ -96,12 +90,12 @@ class HallAnalysis(baseAnalysis):
     def plot_2harm_field_dependence(self, **kwargs):
         """
         Plots the second harmonic voltage as a function of field strength. Is a
-        thin wrapper around :func:`~analysis.analysis.baseAnalysis.plot_dataset`.
+        thin wrapper around :func:`~dataset_manipulation.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`~analysis.analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~dataset_manipulation.plot_dataset`
 
         Returns
         -------
@@ -115,12 +109,12 @@ class HallAnalysis(baseAnalysis):
     def plot_1harm_field_dependence(self, **kwargs):
         """
         Plots the first harmonic voltage as a function of field strength. Is a
-        thin wrapper around :func:`~analysis.analysis.baseAnalysis.plot_dataset`.
+        thin wrapper around :func:`~dataset_manipulation.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`~analysis.analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~dataset_manipulation.plot_dataset`
 
         Returns
         -------
@@ -134,12 +128,12 @@ class HallAnalysis(baseAnalysis):
     def plot_1harm_angle_dependence(self, **kwargs):
         """
         Plots the first harmonic voltage as a function of field angle. Is a
-        thin wrapper around :func:`~analysis.analysis.baseAnalysis.plot_dataset`.
+        thin wrapper around :func:`~dataset_manipulation.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`~analysis.analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~dataset_manipulation.plot_dataset`
 
         Returns
         -------
@@ -169,7 +163,7 @@ class HallAnalysis(baseAnalysis):
         return 0.5*IRp*np.sin(2*deg2rad*(phi-phi0)) + offset
 
     @staticmethod
-    def first_harmonic_guess(X1, phi, **kwargs):
+    def first_harmonic_guess(phi, X1, **kwargs):
         """
         Function for generating guesses for
         :meth:`~.HallAnalysis.first_harmonic_model`

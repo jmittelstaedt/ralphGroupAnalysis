@@ -1,5 +1,7 @@
-from .analysis import AMRAnalysis
-from .analysis import STFMRAnalysis
-from .analysis import HallAnalysis
-from .analysis import FMRAnalysis
-from .analysis import fit_dataset, plot_dataset, combine_new_dim
+from .AMRAnalysis import AMRAnalysis
+from .STFMRAnalysis import STFMRAnalysis, STFMRAnalysis2Res
+from .HallAnalysis import HallAnalysis
+from .FMRAnalysis import FMRAnalysis
+from .mumaxAnalysis import mumaxSTFMRAnalysis
+from .dataset_manipulation import fit_dataset, plot_dataset
+from .baseAnalysis import combine_new_dim

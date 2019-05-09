@@ -11,15 +11,6 @@ Welcome to Ralph Group Analysis's documentation!
    analysis/AMRAnalysis
    analysis/HallAnalysis
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Procedures:
-   :glob:
-
-   procedures/STFMRProcedures
-   procedures/HallProcedures
-   procedures/AMRProcedures
-
 Indices and tables
 ==================
 

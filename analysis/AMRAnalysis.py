@@ -6,12 +6,11 @@ import matplotlib.pyplot as plt
 import xarray as xr
 from scipy.optimize import leastsq, curve_fit
 
-from pymeasure.experiment import Results
-from .baseAnalysis import baseAnalysis, parse_series_file, plot_dataset
-from .baseAnalysis import fit_dataset, load_procedure_files
-from ..procedures import AMRAngProcedure, AMRFieldProcedure
-from ..procedures import AMRCryoAngProcedure, AMRCryoFieldProcedure
-# from .constants import *
+from .baseAnalysis import baseAnalysis, parse_series_file, load_procedure_files
+from .dataset_manipulation import fit_dataset, plot_dataset
+from .converters import AMRConverter
+from .parsers import extract_parameters
+from .constants import *
 
 class AMRAnalysis(baseAnalysis):
     """
@@ -35,9 +34,6 @@ class AMRAnalysis(baseAnalysis):
         column swept in the procedure
     series_swept_params : list of str
         parameters swept in the series
-    procedure : pymeasure.experiment.Procedure
-        The procedure class which created the data files. Used for importing
-        using PyMeasure
     """
 
     BFIELD_DIM = 'field_strength'
@@ -51,7 +47,7 @@ class AMRAnalysis(baseAnalysis):
 
     def __init__(self, scan_type='angle', swept_temp = False):
         """
-        Instantiates the analysis object with a nonsensical empty dataset.
+        InstantiaAMRCryoAngProceduretes the analysis object with a nonsensical empty dataset.
         Must load data with a separate method.
         Sets swept procedure column and series swept params, depending on
         what scan_type is. Should be angle for angle sweep procedure, or field
@@ -62,29 +58,26 @@ class AMRAnalysis(baseAnalysis):
             if scan_type.lower() == 'angle':
                 self.procedure_swept_col = self.ANGLE_DIM
                 self.series_swept_params = [self.BFIELD_DIM, self.TEMP_DIM]
-                self.procedure = AMRCryoAngProcedure
             elif scan_type.lower() == 'field':
                 self.procedure_swept_col = self.BFIELD_DIM
                 self.series_swept_params = [self.ANGLE_DIM, self.TEMP_DIM]
-                self.procedure = AMRCryoFieldProcedure
             else:
                 raise ValueError("scan_type must be 'field' or 'angle'")
         else:
             if scan_type.lower() == 'angle':
                 self.procedure_swept_col = self.ANGLE_DIM
                 self.series_swept_params = [self.BFIELD_DIM]
-                self.procedure = AMRAngProcedure
             elif scan_type.lower() == 'field':
                 self.procedure_swept_col = self.BFIELD_DIM
                 self.series_swept_params = [self.ANGLE_DIM]
-                self.procedure = AMRFieldProcedure
             else:
                 raise ValueError("scan_type must be 'field' or 'angle'")
+        self.codename_converter = AMRConverter
 
     def load_sweep(self, direc, series_filename = None, procedure_files = []):
         """
         This is a wrapper around the general
-        :meth:`~analysis.analysis.baseAnalysis.baseAnalysis.load_sweep` function to allow
+        :meth:`~baseAnalysis.baseAnalysis.load_sweep` function to allow
         for saving wheatstone resistances as attributes of
         :attr:`~.AMRAnalysis.sweep_ds`
 
@@ -98,7 +91,6 @@ class AMRAnalysis(baseAnalysis):
             Any additional procedure files to include.
         """
 
-        # TODO: check if this actually works
         super().load_sweep(direc, series_filename, procedure_files)
 
         # use one procedure to extract Wheatstone voltage and resistances
@@ -108,12 +100,18 @@ class AMRAnalysis(baseAnalysis):
             all_procedure_files, _, _ = parse_series_file(direc, series_filename[0])
         else:
             all_procedure_files = procedure_files
-        ex_result = Results.load(os.path.join(direc,all_procedure_files[0]))
+
+        resistances = extract_parameters(os.path.join(direc,all_procedure_files[0]),
+                                         [self.WHEATSTONE_R1,
+                                          self.WHEATSTONE_R2,
+                                          self.WHEATSTONE_R3,
+                                          self.WHEATSTONE_VOLTAGE],
+                                         self.codename_converter)
         self.sweep_ds.attrs = {
-            "R1": getattr(ex_result.procedure,self.WHEATSTONE_R1),
-            "R2": getattr(ex_result.procedure,self.WHEATSTONE_R2),
-            "R3": getattr(ex_result.procedure,self.WHEATSTONE_R3),
-            "Vs": getattr(ex_result.procedure,self.WHEATSTONE_VOLTAGE)
+            "R1": resistances[self.WHEATSTONE_R1],
+            "R2": resistances[self.WHEATSTONE_R2],
+            "R3": resistances[self.WHEATSTONE_R3],
+            "Vs": resistances[self.WHEATSTONE_VOLTAGE]
         }
 
     @staticmethod
@@ -180,12 +178,12 @@ class AMRAnalysis(baseAnalysis):
     def plot_AMR_angle_dependence(self, **kwargs):
         """
         Plots the calculated AMR as a function of angle. Is a thin wrapper around
-        :func:`~analysis.analysis.baseAnalysis.plot_dataset`.
+        :func:`~dataset_manipulation.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`~analysis.analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~dataset_manipulation.plot_dataset`
 
         Returns
         -------
@@ -209,12 +207,12 @@ class AMRAnalysis(baseAnalysis):
     def plot_AMR_field_dependence(self, **kwargs):
         """
         Plots the calculated AMR as a function of field strength. Is a thin
-        wrapper around :func:`~analysis.analysis.baseAnalysis.plot_dataset`.
+        wrapper around :func:`~dataset_manipulation.plot_dataset`.
 
         Parameters
         ----------
         **kwargs
-            Passed along directly to :func:`~analysis.analysis.baseAnalysis.plot_dataset`
+            Passed along directly to :func:`~dataset_manipulation.plot_dataset`
 
         Returns
         -------
@@ -255,7 +253,7 @@ class AMRAnalysis(baseAnalysis):
         return R0amr + 0.5*Ramr*np.cos(2*deg2rad*phiM)
 
     @staticmethod
-    def guess_uniaxial(resistance, phi, **kwargs):
+    def guess_uniaxial(phi, resistance, **kwargs):
         """
         Generates guess parameters for modelling AMR with uniaxial anisotropy.
         For use with make_fit_dataset_guesses.
@@ -295,7 +293,7 @@ class AMRAnalysis(baseAnalysis):
         return R0amr + 0.5*Ramr*np.cos(2*deg2rad*(phi-phi0))
 
     @staticmethod
-    def guess_polycrystaline(resistance, phi, field_azimuth):
+    def guess_polycrystaline(phi, resistance, field_azimuth):
         """
         Generates guess parameters for modelling AMR with no crysal anisotropy.
         For use with make_fit_dataset_guesses.
