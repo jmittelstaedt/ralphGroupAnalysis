@@ -6,10 +6,15 @@ Welcome to Ralph Group Analysis's documentation!
    :caption: Analysis Classes:
    :glob:
 
+   analysis/dataset_manipulation
    analysis/baseAnalysis
+   analysis/parsers
+   analysis/converters
    analysis/STFMRAnalysis
+   analysis/FMRAnalysis
    analysis/AMRAnalysis
    analysis/HallAnalysis
+   analysis/mumaxAnalysis
 
 Indices and tables
 ==================
